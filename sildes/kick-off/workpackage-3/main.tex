@@ -1,0 +1,60 @@
+\documentclass[10pt]{beamer}
+\usepackage{etex}
+\usepackage[utf8x]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{bbm}
+
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{listings}
+
+\setbeamertemplate{bibliography item}{[\theenumiv]}
+
+\input{theme/theme}
+
+\newcommand{\mq}[1]{\glqq#1\grqq}
+
+\newcommand{\backupbegin}{
+    \newcounter{finalframe}
+    \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+    \setcounter{framenumber}{\value{finalframe}}
+}
+% registered, copyright und trademark zeichen
+\def\TReg{\textsuperscript{\textregistered}}
+\def\TCop{\textsuperscript{\textcopyright}}
+\def\TTra{\textsuperscript{\texttrademark}}
+
+\newcommand\Small{\fontsize{9}{9.0}\selectfont}
+\newcommand*\LSTfont{\Small\ttfamily}
+
+\date{8. Februar 2016}
+\institute[ZIH TUD]{Zentrum f\"{u}r Informationsdienste und Hochleistungsrechnen -- TU Dresden}
+\title[LCTP]{Vorstellung Workpackage 3 ADA-FS}
+\subtitle{ADA-FS Kick-Off}
+\author[Oeste]{Sebastian Oeste}
+
+\room{WIL A315}
+\address{Zellscher Weg 12}
+\city{Dresden}
+\phone{+49 351 463-32041}
+\email{sebastian.oeste@tu-dresden.de}
+\xmpp{soeste@tu-dresden.de}
+
+\setbeamercovered{transparent}
+
+%\captionsetup[figure]{labelformat=empty} needs \usepackage{caption}
+
+\begin{document}
+\zihmaketitle
+\begin{frame}{Gliederung}
+    \tableofcontents
+\end{frame}
+
+\input{resource_topology_discovery}
+\input{integrated_monitoring}
+\input{monitoring_access}
+
+\end{document}
