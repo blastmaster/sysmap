@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 # Script contains different useful functions
 # Marc-Andre Vef
-# Version 0.1 (06/19/2015)
+# Version 0.2 (06/19/2015)
 
-import os
+# import os
 import sys
-import shutil
+# import shutil
 import time
+import collections
 from subprocess import Popen, PIPE
 
 
@@ -65,11 +66,11 @@ def exec_shell(cmd, suppress_output=False):
 
     Args:
         cmd (str): The command to be executed.
-        suppress_output (bool): Surpresses command output. Defaults to False.
+        suppress_output (bool): Suppresses command line output. Defaults to False.
 
     Returns:
-        (str): Last line of executed command output.
-
+        (namedtuple(shell_out[err=(str), output=(str))): Executed cmd output in output
+                                                         Err is filled if a cmd error is encountered else ''
     Raises:
         OSError: If command could not be executed.
     """
@@ -77,21 +78,35 @@ def exec_shell(cmd, suppress_output=False):
         if cmd == '':
             raise OSError("Command string is empty.")
         # simulate change directory to where mdtest executable is located
-        modified_cmd = '%s' % cmd
-        p = Popen(modified_cmd, shell=True, stdout=PIPE, stderr=PIPE)
+        p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE, bufsize=1)
+        shell_out = ''
         # Poll process for new output until finished
-        output = ''
-        while True:
-            nextline = p.stdout.readline()
-            if nextline == '' and p.poll() is not None:
-                break
-            output = nextline
+        for line in iter(p.stdout.readline, ''):
             if not suppress_output:
                 curr_time = time.strftime('[%H:%M:%S]  ')
-                sys.stdout.write('%s%s' % (curr_time, nextline))
+                sys.stdout.write('%s%s' % (curr_time, line))
                 sys.stdout.flush()
+            shell_out += line
         stdout, stderr = p.communicate()
-        return output.strip()
+        out_tuple = collections.namedtuple('shell_out', ['err', 'output'])
+        return out_tuple(err=stderr.strip(), output=shell_out.strip())
     except OSError as e:
         print 'ERR when executing shell command'
         print e.strerror
+
+
+def check_shell_out(msg):
+    """Function prints err msg from shell.
+
+        Args:
+            msg(str): The message to be printed
+
+        Returns:
+            (bool): True if no error
+
+        Raises:
+            OSError: if msg is not empty
+    """
+    if msg != '':
+        raise OSError('OSError: Cmd output failed with\n %s', msg)
+    return True
