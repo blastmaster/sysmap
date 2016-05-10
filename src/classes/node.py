@@ -29,7 +29,7 @@ class Node(object):
         self._manager = manager
         self._nsds = []
 
-    def gen_nsds(self):
+    def gen_scale_nsds(self):
         """
         Generates a list of stanza strings for the given node object for all devices.
         Example for a generated NSD per device:

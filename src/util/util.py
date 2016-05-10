@@ -96,17 +96,17 @@ def exec_shell(cmd, suppress_output=False):
 
 
 def check_shell_out(msg):
-    """Function prints err msg from shell.
+    """Function looks for an error in namedtuple of exec_shell and returns the output string only if valid
 
         Args:
-            msg(str): The message to be printed
+            msg((namedtuple(shell_out[err=(str), output=(str)))): The message to be printed
 
         Returns:
-            (bool): True if no error
+            (str): Returns the msg output if no error
 
         Raises:
-            OSError: if msg is not empty
+            OSError: if shell_out contains an error
     """
-    if msg != '':
-        raise OSError('OSError: Cmd output failed with\n %s', msg)
-    return True
+    if msg.err != '':
+        raise OSError('Shell command failed with\n\t%s' % msg.err)
+    return msg.output
