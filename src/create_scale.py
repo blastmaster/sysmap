@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import os
 import time
+import argparse
 
 from util import util
 from util.util import tprint
@@ -46,7 +46,8 @@ class CreateScaleProto(object):
             only (Dict[str:bool]): Dictionary of all parts that should be executed during the init of Scale.
         """
         exec_all = True
-        if len(only) > 0:
+
+        if any(v for v in only.itervalues()):
             exec_all = False
             # set dependencies
             if only.get('crnsd_only'):
@@ -234,73 +235,38 @@ class CreateScaleProto(object):
 
 
 if __name__ == "__main__":
-    usage = """
-        MANUAL
-
-        This script initiates a Spectrum Scale cluster, including NSDs, and file system. All based on a configuration
-        file and executed in order automatically. The user may also only specify parts of the process to be executed.
-
-        USAGE   :   python create_scale.py [option]
-        Option  :
-            -conf           *Path to the config file of the temporary cluster.
-            -pretend        No execution of Scale commands. However, the stanza file will be created.
-            -cluster        Creates _only_ the Scale cluster for the given configuration.
-            -stanza         Build _only_ the stanza file for the given configuration.
-            -nsd            Creates _only_ the nsd file for the given configuration.
-                            Note: The stanza file will be generated as well.
-            -startup        Startup Scale _only_.
-            -fs             Creates _only_ the file system for the given configuration.
-                            Note: Stanza file and nsd creation will be done as well.
-            -mountfs        Mounts _only_ the file system for the given file system name in the configuration file.
-                            Note: Scale will be started.
-
-            * are always mandatory
-            Example: python create_scale.py -conf ~/path/to/conf_file -cluster
-        """
-
-    # parsing input
-    conf, run_all, crcluster_only, build_stanza_only, crnsd_only, startup_only, crfs_only, mountfs_only, pretend = \
-        '', True, False, False, False, False, False, False, False
-
-    while len(sys.argv) > 1:
-        option = sys.argv[1]
-        del sys.argv[1]
-        if option == '-conf':
-            conf = sys.argv[1]
-            del sys.argv[1]
-        elif option == '-cluster':
-            crcluster_only = True
-            run_all = False
-        elif option == '-stanza':
-            build_stanza_only = True
-            run_all = False
-        elif option == '-nsd':
-            crnsd_only = True
-            build_stanza_only = True
-            run_all = False
-        elif option == '-startup':
-            startup_only = True
-            run_all = False
-        elif option == '-fs':
-            crfs_only = True
-            build_stanza_only = True
-            crnsd_only = True
-            run_all = False
-        elif option == '-mountfs':
-            mountfs_only = True
-            run_all = False
-        elif option == '-pretend':
-            pretend = True
-        else:
-            raise Exception('Unexpected Argument "%s". Exiting...' % option)
-    if conf == '':
-        raise Exception('No path to configuration file given. It is mandatory. Exiting...')
-
-    scale = CreateScaleProto(conf, pretend)
-    if run_all:
-        scale.init_system()
-    else:
-        scale.init_system(crcluster_only=crcluster_only, build_stanza_only=build_stanza_only, crnsd_only=crnsd_only,
-                          startup_only=startup_only, crfs_only=crfs_only, mountfs_only=mountfs_only)
+    # Init parser
+    parser = argparse.ArgumentParser(description='This script initiates a Spectrum Scale cluster, including NSDs, \
+and file system. \nAll based on a configuration file and executed \
+in order automatically. \nThe user may also only specify parts of \
+the process to be executed.', formatter_class=argparse.RawTextHelpFormatter)
+    # positional arguments
+    parser.add_argument('conf', type=str,
+                        help='Path to the config file of the temporary cluster')
+    # optional arguments
+    parser.add_argument('-p', '--pretend', action='store_true',
+                        help='''No execution of file system commands
+The stanza file will be created''')
+    parser.add_argument('--crcluster', action='store_true',
+                        help='Creates _only_ the Scale cluster for the given configuration')
+    parser.add_argument('--crstanza', action='store_true',
+                        help='Build _only_ the stanza file for the given configuration')
+    parser.add_argument('--crnsd', action='store_true',
+                        help='''Creates _only_ the nsd file for the given configuration
+Note: The stanza file will be generated as well''')
+    parser.add_argument('--startup', action='store_true',
+                        help='Startup Scale _only_')
+    parser.add_argument('--crfs', action='store_true',
+                        help='''Creates _only_ the file system for the given configuration
+Note: Stanza file and nsd creation will be done as well''')
+    parser.add_argument('--mntfs', action='store_true',
+                        help='''Mounts _only_ the file system for the given file system name
+Note: Scale will be started''')
+    args = parser.parse_args()
+    # create prototype object
+    scale = CreateScaleProto(args.conf, args.pretend)
+    scale.init_system(crcluster_only=args.crcluster, build_stanza_only=args.crstanza,
+                      crnsd_only=args.crnsd, startup_only=args.startup, crfs_only=args.crfs,
+                      mountfs_only=args.mntfs)
 
     print '\nNothing left to do; exiting. :)'
