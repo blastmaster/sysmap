@@ -10,7 +10,6 @@ from util.util import tprint
 from classes.node import Node
 
 __author__ = "Marc-Andre Vef"
-__version__ = "0.5"
 __email__ = "vef@uni-mainz.de"
 
 
@@ -132,13 +131,13 @@ class CreateScaleProto(object):
     def cr_cluster(self):
         """Function adds the nodes to Scale cluster including mgr nodes"""
         tprint('Creating Scale cluster...')
-        mmcrcluster = 'mmcrcluster -N '
+        cmd = 'mmcrcluster -N '
         # Add nodes to command
         for node in self._nodes:
-            mmcrcluster += '%s:quorum' % node.nodename
-            mmcrcluster += '-manager,' if node.manager else '-client,'
+            cmd += '%s:quorum' % node.nodename
+            cmd += '-manager,' if node.manager else '-client,'
         # Add primary node. Take the first node in the list self.nodes. also remove last comma
-        mmcrcluster = '%s -p %s -C' % (mmcrcluster[0:-1], self._nodes[0].nodename)
+        cmd = '%s -p %s -C' % (cmd[0:-1], self._nodes[0].nodename)
 
         # add ssh and scp binaries for execution
         ssh_path = util.check_shell_out(util.exec_shell('which ssh', suppress_output=True))
@@ -147,12 +146,12 @@ class CreateScaleProto(object):
         scp_path = util.check_shell_out(util.exec_shell('which scp', suppress_output=True))
         if not os.path.exists(scp_path):
             raise Exception('ERR: scp not found in path %s. Exiting...' % scp_path)
-        mmcrcluster = '%s -r %s -R %s' % (mmcrcluster, ssh_path, scp_path)
+        cmd = '%s -r %s -R %s' % (cmd, ssh_path, scp_path)
         # Execute command
         if self._pretend:
-            tprint('Would execute if not pretending:\n\t%s' % mmcrcluster)
+            tprint('Would execute if not pretending:\n\t%s' % cmd)
         else:
-            util.check_shell_out(util.exec_shell(mmcrcluster))
+            util.check_shell_out(util.exec_shell(cmd))
         tprint('Cluster created.\n')
 
     def verify_nodes(self):
@@ -184,12 +183,12 @@ class CreateScaleProto(object):
     def create_nsds(self):
         """Function creates NSDs from the earlier generated stanze build"""
         tprint('Creating Scale NSDs from stanza file...')
-        mmcrnsd = 'mmcrnsd -F %s' % self._stanza_path
+        cmd = 'mmcrnsd -F %s' % self._stanza_path
         # Execute command
         if self._pretend:
-            tprint('Would execute if not pretending:\n\t%s' % mmcrnsd)
+            tprint('Would execute if not pretending:\n\t%s' % cmd)
         else:
-            util.check_shell_out(util.exec_shell(mmcrnsd))
+            util.check_shell_out(util.exec_shell(cmd))
         tprint('NSDs created.\n')
 
     def verify_nsds(self):
@@ -199,36 +198,36 @@ class CreateScaleProto(object):
     def startup_scale(self):
         """Function starts daemons of all nodes belonging to the cluster"""
         tprint('Start up Spectrum Scale...')
-        mmstartup = 'mmstartup -a'
+        cmd = 'mmstartup -a'
         # Execute command
         if self._pretend:
-            tprint('Would execute if not pretending:\n\t%s' % mmstartup)
+            tprint('Would execute if not pretending:\n\t%s' % cmd)
         else:
-            util.check_shell_out(util.exec_shell(mmstartup))
+            util.check_shell_out(util.exec_shell(cmd))
         tprint('Startup complete.\n')
 
     def create_fs(self):
         """Function creates file system with specified parameters on the specified nsd"""
         tprint('Creating file system %s with default parameters...' % self._fsname)
         # TODO version must be removed if cluster is configured properly...
-        mmcrfs = 'mmcrfs /dev/%s -F %s --version=4.1.1.0' % (self._fsname, self._stanza_path)
+        cmd = 'mmcrfs /dev/%s -F %s --version=4.1.1.0' % (self._fsname, self._stanza_path)
         # Execute command
         if self._pretend:
-            tprint('Would execute if not pretending:\n\t%s' % mmcrfs)
+            tprint('Would execute if not pretending:\n\t%s' % cmd)
         else:
-            util.check_shell_out(util.exec_shell(mmcrfs))
+            util.check_shell_out(util.exec_shell(cmd))
         tprint('Creating complete.\n')
         pass
 
     def mount_fs(self):
         """Function mounts the file system on the specified mountpoint"""
         tprint('Mounting file system %s at /gpfs/%s...' % (self._fsname, self._fsname))
-        mmmount = 'mmmount %s all' % self._fsname
+        cmd = 'mmmount %s all' % self._fsname
         # Execute command
         if self._pretend:
-            tprint('Would execute if not pretending:\n\t%s' % mmmount)
+            tprint('Would execute if not pretending:\n\t%s' % cmd)
         else:
-            util.check_shell_out(util.exec_shell(mmmount))
+            util.check_shell_out(util.exec_shell(cmd))
         # Just give it some time to propagate the command through the cluster
         # time.sleep(5)
         tprint('Mounting complete.')
@@ -252,7 +251,7 @@ The stanza file will be created''')
     parser.add_argument('--crstanza', action='store_true',
                         help='Build _only_ the stanza file for the given configuration')
     parser.add_argument('--crnsd', action='store_true',
-                        help='''Creates _only_ the nsd file for the given configuration
+                        help='''Creates _only_ the NSDs for the given configuration
 Note: The stanza file will be generated as well''')
     parser.add_argument('--startup', action='store_true',
                         help='Startup Scale _only_')
