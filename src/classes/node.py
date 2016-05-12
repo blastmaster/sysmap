@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 __author__ = "Marc-Andre Vef"
-__version__ = "1.0"
 __email__ = "vef@uni-mainz.de"
 
 
@@ -18,7 +17,7 @@ class Node(object):
         _nodename (str): Node name in the cluster.
         _devices (List[str]): List of storage devices accessible by the node.
         _manager (bool): If assigned manager node.
-        _nsds (List[str]): List of stanza strings, including line breaks
+        _nsds (List[str]): List of stanza strings, including line breaks.
 
     """
     def __init__(self, nodename="", devices=None, manager=False):
@@ -56,6 +55,16 @@ class Node(object):
                   'pool=system\n' % (device, self._nodename.upper(), device.split('/')[-1].upper(), self._nodename)
             self._nsds.append(nsd)
         return ''.join(self._nsds)
+
+    def gen_scale_nsd_names(self):
+        """
+        Generates a list of NSD names based on the devices of the node.
+        Example: TMPSCALE_ARGON_SSD, ...
+
+        Returns:
+            List[str]: List of Scale NSD names for object node
+        """
+        return ['TMPSCALE_%s_%s' % (self._nodename.upper(), device.split('/')[-1].upper()) for device in self._devices]
 
     @property
     def nodename(self):
