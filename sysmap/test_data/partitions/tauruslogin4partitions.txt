@@ -1,0 +1,9 @@
+major minor  #blocks  name
+
+   8        0  487849984 sda
+   8        1     512000 sda1
+   8        2  102400000 sda2
+   8        3   65536000 sda3
+   8        4          1 sda4
+   8        5   20480000 sda5
+   8        6  298917888 sda6
