@@ -6,6 +6,8 @@
 #include <regex>
 #include <vector>
 
+namespace adafs {
+
 /**
  * Get Partitions of a System by parsing /proc/partitions.
  *
@@ -107,6 +109,7 @@ std::vector<Partition> load_partitions(const std::string& fname)
     return partitions;
 }
 
+} /* closing namespace adafs */
 
 /**
  * just some testing

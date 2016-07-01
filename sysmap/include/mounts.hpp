@@ -9,40 +9,10 @@
 
 #include <mntent.h>
 
+#include "utils.hpp"
 
-/**
- * utility function to split strings by an given delimiter
- * return the fields in a vector.
- */
-static
-std::vector<std::string>& split(const std::string& str, const char* delim, std::vector<std::string> &elems)
-{
-    std::stringstream stream(str);
-    std::string item;
 
-    while (getline(stream, item, *delim)) {
-        elems.push_back(item);
-    }
-
-    return elems;
-}
-
-// OVERLOAD
-static
-std::vector<std::string> split(const std::string& str, const char* delim)
-{
-    std::vector<std::string> vec;
-    return split(str, delim, vec);
-}
-
-// OVERLOAD
-static
-std::vector<std::string> split(const char* str, const char* delim)
-{
-    std::string tmp(str);
-    return split(tmp, delim);
-}
-
+namespace adafs {
 
 /**
  * structure representing a mount entry.
@@ -62,7 +32,7 @@ struct mount_entry
         device_name(mnt.mnt_fsname),
         mountpoint(mnt.mnt_dir),
         fs_type(mnt.mnt_type),
-        mount_opts(split(mnt.mnt_opts, ",")),
+        mount_opts(utils::split(mnt.mnt_opts, ",")),
         dump_freq(mnt.mnt_freq),
         pass_number(mnt.mnt_passno) {}
 
@@ -97,7 +67,7 @@ void load_mounts(const std::string& fname)
 
     for (std::string line; getline(in, line);) {
         std::vector<std::string> entry;
-        entry = split(line, " ", entry);
+        entry = utils::split(line, " ", entry);
         for (auto &x : entry) {
             std::cout << "Entry: " << x << "\n";
         }
@@ -125,6 +95,7 @@ std::vector<mount_entry> load_mount_with_getmntent(const std::string& fname)
     return v_me;
 }
 
+} /* closing namespace adafs */
 
 //int main()
 //{

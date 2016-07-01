@@ -1,8 +1,9 @@
-
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
 #include "partitions.hpp"
+
+using namespace adafs;
 
 
 TEST_CASE("load partitions from proc/partitions", "[partitions]") {
