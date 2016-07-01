@@ -111,21 +111,4 @@ std::vector<Partition> load_partitions(const std::string& fname)
 
 } /* closing namespace adafs */
 
-/**
- * just some testing
- */
-//int main()
-//{
-    //std::vector<std::string> test_files { "taurus_data/loginpartitions.txt",
-                                          //"taurus_data/prometheuspartions.txt",
-                                          //"taurus_data/taurusi6612partitions.txt" };
-    //for (const auto& f : test_files) {
-        //std::cout << f << "\n";
-        //load_partitions(f);
-        //std::cout << "\n\n";
-    //}
-
-    //return 0;
-//}
-
 #endif /* __ADAFS_PARTITIONS_HPP__ */

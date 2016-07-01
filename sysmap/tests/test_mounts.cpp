@@ -6,11 +6,11 @@
 using namespace adafs;
 
 
-TEST_CASE("load mounts from proc/mounts", "[mounts]") {
+TEST_CASE("load mounts with getmntent from proc/mounts", "[mounts]") {
     std::string filename {"../test_data/mounts/prometheusprocmounts.txt"};
     auto mvec = load_mount_with_getmntent(filename);
 
-    REQUIRE( mvec.size() == 29 );
+    REQUIRE(mvec.size() == 29);
 
     SECTION("test first mount entry in vector") {
         auto entry = mvec[0];
