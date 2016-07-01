@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -96,26 +95,5 @@ std::vector<mount_entry> load_mount_with_getmntent(const std::string& fname)
 }
 
 } /* closing namespace adafs */
-
-//int main()
-//{
-    //std::vector<std::string> test_files { "test_data/mounts/prometheusprocmounts.txt",
-                                          //"test_data/mounts/prometheusmtab.txt",
-                                          //"test_data/mounts/prometheusfstab.txt" };
-
-    ////TODO
-    ////load_mounts(filename);
-    //for (auto& fn : test_files) {
-        //auto v = load_mount_with_getmntent(fn);
-        //std::cout << "================================================================================\n";
-        //std::cout << fn << "\n\n";
-        //for (auto& x : v) {
-            //std::cout << x << "\n";
-            //std::cout << "--------------------\n\n";
-        //}
-    //}
-
-    //return 0;
-//}
 
 #endif /* __ADAFS_MOUNTS_HPP__ */
