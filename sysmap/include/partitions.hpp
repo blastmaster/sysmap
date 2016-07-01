@@ -1,5 +1,5 @@
-#ifndef __PARTITIONS_HPP__
-#define __PARTITIONS_HPP__
+#ifndef __ADAFS_PARTITIONS_HPP__
+#define __ADAFS_PARTITIONS_HPP__
 
 #include <iostream>
 #include <fstream>
@@ -128,4 +128,4 @@ std::vector<Partition> load_partitions(const std::string& fname)
     //return 0;
 //}
 
-#endif /* __PARTITIONS_HPP__ */
+#endif /* __ADAFS_PARTITIONS_HPP__ */
