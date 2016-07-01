@@ -35,6 +35,30 @@ struct mount_entry
         dump_freq(mnt.mnt_freq),
         pass_number(mnt.mnt_passno) {}
 
+
+    //FIXME this does not work!
+    //because of static istringstream in split_first this will only work once!
+    mount_entry(const std::string& str) :
+        device_name(utils::split_first(str)),
+        mountpoint(utils::split_first(str)),
+        fs_type(utils::split_first(str)),
+        mount_opts(utils::split(utils::split_first(str), ",")),
+        dump_freq(std::stoi(utils::split_first(str))),
+        pass_number(std::stoi(utils::split_first(str))) {}
+
+
+    //FIXME ugly solution but works
+    //here we try to solve the above probleme with a generator like approach
+    //unfortunately we cannot pass the argument as const, while the next method
+    //changes the members!
+    mount_entry(utils::splitter& s) :
+        device_name(s.next()),
+        mountpoint(s.next()),
+        fs_type(s.next()),
+        mount_opts(utils::split(s.next(), ",")),
+        dump_freq(std::stoi(s.next())),
+        pass_number(std::stoi(s.next())) {}
+
 };
 
 // just for debugging
@@ -55,27 +79,26 @@ std::ostream& operator<< (std::ostream& os, const mount_entry& mntent)
 
 
 //FIXME
-void load_mounts(const std::string& fname)
+static
+std::vector<mount_entry> load_mounts(const std::string& fname)
 {
     std::ifstream in(fname);
+    std::vector<mount_entry> v_me;
 
     if (!in) {
         std::cerr << "Error cannot open file stream\n";
-        return;
+        return v_me;
     }
 
     for (std::string line; getline(in, line);) {
-        std::vector<std::string> entry;
-        entry = utils::split(line, " ", entry);
-        for (auto &x : entry) {
-            std::cout << "Entry: " << x << "\n";
-        }
-        std::cout << "--------------------\n";
+        auto sp = utils::splitter(line);
+        v_me.push_back(mount_entry(sp));
+        //v_me.push_back(mount_entry(line));
     }
 
     in.close();
 
-    return;
+    return v_me;
 }
 
 
