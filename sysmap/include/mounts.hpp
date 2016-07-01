@@ -1,5 +1,5 @@
-#ifndef __MOUNTS_HPP__
-#define __MOUNTS_HPP__
+#ifndef __ADAFS_MOUNTS_HPP__
+#define __ADAFS_MOUNTS_HPP__
 
 #include <iostream>
 #include <fstream>
@@ -118,4 +118,4 @@ std::vector<mount_entry> load_mount_with_getmntent(const std::string& fname)
     //return 0;
 //}
 
-#endif /* __MOUNTS_HPP__ */
+#endif /* __ADAFS_MOUNTS_HPP__ */
