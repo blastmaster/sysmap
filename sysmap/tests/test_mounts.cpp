@@ -1,8 +1,9 @@
-
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
 #include "mounts.hpp"
+
+using namespace adafs;
 
 
 TEST_CASE("load mounts from proc/mounts", "[mounts]") {
