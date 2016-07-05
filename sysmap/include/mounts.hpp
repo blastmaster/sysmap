@@ -59,6 +59,22 @@ struct mount_entry
         dump_freq(std::stoi(s.next())),
         pass_number(std::stoi(s.next())) {}
 
+
+    bool operator==(const mount_entry& m)
+    {
+        return (this->device_name == m.device_name &&
+                this->mountpoint == m.mountpoint &&
+                this->fs_type == m.fs_type &&
+                this->mount_opts == m.mount_opts &&
+                this->dump_freq == m.dump_freq &&
+                this->pass_number == m.pass_number);
+    }
+
+    bool operator!=(const mount_entry& m)
+    {
+        return !(*this == m);
+    }
+
 };
 
 // just for debugging
