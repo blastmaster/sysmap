@@ -3,111 +3,69 @@
 
 #include <iostream>
 #include <fstream>
-#include <regex>
 #include <vector>
+
+#include "mounts.hpp"
 
 namespace adafs {
 
-/**
- * Get Partitions of a System by parsing /proc/partitions.
- *
- * Partition is some basic abstraction type for a partition containing the
- * values from /proc/partitions and some utility functions for comparing with
- * other partition objects.
- */
+using Sector = unsigned long long;
+using Byte = unsigned long long;
 
-
-struct Partition {
-    const std::string partition_name;
-    const unsigned int num_blocks;
-    const unsigned int major_dev_num;
-    const unsigned int minor_dev_num;
-
-    Partition(const std::string& name,
-              const unsigned int nb,
-              const unsigned int min,
-              const unsigned int maj) :
-        partition_name(name),
-        num_blocks(nb),
-        major_dev_num(maj),
-        minor_dev_num(min)
-    {}
-
-    bool is_subpartition(const Partition& p) const
-    {
-        return this->major_dev_num == p.major_dev_num;
-    }
-
-    bool operator<(const Partition& p) const
-    {
-        return this->num_blocks < p.num_blocks;
-    }
-
-    bool operator>(const Partition& p) const
-    {
-        return this->num_blocks > p.num_blocks;
-    }
-
-    bool operator==(const Partition& p) const
-    {
-        return (this->major_dev_num == p.major_dev_num && 
-                this->minor_dev_num == p.minor_dev_num &&
-                this->num_blocks == p.num_blocks &&
-                this->partition_name == p.partition_name);
-    }
-
-    bool operator!=(const Partition& p) const
-    {
-        return !(*this == p);
-    }
-};
-
-
-std::ostream& operator<<(std::ostream& os, const Partition& p)
+static std::string read_sysfs_file(const std::string& name)
 {
-    os << "Major Device Number: " << p.major_dev_num << "\n";
-    os << "Minor Device Number: " << p.minor_dev_num << "\n";
-    os << "Number of Blocks: " << p.num_blocks << "\n";
-    os << "Partition name: " << p.partition_name << "\n";
-    return os;
+    std::ifstream in {name};
+    std::string buf;
+    getline(in, buf);
+    return buf;
 }
 
-/**
- * load partitions from /proc/partitions file
- */
-static
-std::vector<Partition> load_partitions(const std::string& fname)
-{
-    std::ifstream in(fname);
-    std::vector<Partition> partitions;
+class Partition {
 
-    if (!in) {
-        std::cerr << "No file!\n";
-        return partitions;
-    }
+    public:
+        Partition(const std::string& dev_path) : device_path{dev_path} {}
 
-    for (std::string line; getline(in, line);) {
-        std::regex pattern(R"(^\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([^0-9]+.*)$)");
-        std::smatch results;
-        if (std::regex_search(line, results, pattern)) {
-            //std::cout << "Match, " << results.size() << " times!\n";
-            //for (size_t i = 0; i < results.size(); ++i) {
-                //std::cout << i << ": " << results[i] << "\n";
-            //}
-            //FIXME; results is of type std::smatch need some better
-            //initialization than this smatch -> string -> const char* -> int
-            //conversion cascade.
-            Partition tmp(results[4],
-                    atoi(results[3].str().c_str()),
-                    atoi(results[2].str().c_str()),
-                    atoi(results[1].str().c_str()));
-            partitions.push_back(tmp);
+        Partition(const Proc_Partition& pp) : device_path{pp.dev_path()},
+                                              partition_number{pp.minor_dev_num},
+                                              device_number{pp.major_dev_num},
+                                              whole_device{false}
+        {
+            //TODO: init sizes
+            static std::string root_sysdev {"/sys/dev/block/"};
+            sector_size = 512; // is this constant? queue/hw_sector_size
+            std::string device_dir = root_sysdev + std::to_string(device_number) +
+                ":" + std::to_string(partition_number) + "/";
+
+            std::string size_file = device_dir + "size";
+            std::string start_file = device_dir + "start";
+
+            size = stoull(read_sysfs_file(size_file));
+            sector_start = stoull(read_sysfs_file(start_file));
+            sector_end = sector_start + size + 1;
+            //TODO: initialize mountpoints
+
         }
-    }
 
-    in.close();
-    return partitions;
-}
+        std::string device_path;
+        int device_number;
+        int partition_number;
+        bool whole_device;      // flag indicating if whole device is used by this partition;
+        //TODO:
+        //Filesystem file_system; // filesytem used on partion
+        //TODO: needs libuuid?
+        //std::string uuid;       // uuid of partition
+        //std::string label;
+        Sector size;            // number of sectors
+        Sector sector_start;    // sector where partition starts
+        Sector sector_end;      // sector where partition ends
+        //TODO:
+        //Sector sectors_used;    // number of sectors used within this partition
+        //Sector sectors_unused;  // number of sectors unused within this partition
+        Byte sector_size;       // size of one sector in bytes
+
+    private:
+        std::vector<mount_entry> _mountpoints;
+};
 
 } /* closing namespace adafs */
 
