@@ -27,7 +27,7 @@ struct mount_entry
     int pass_number;
 
 
-    mount_entry(struct mntent mnt) :
+    mount_entry(const struct mntent& mnt) :
         device_name(mnt.mnt_fsname),
         mountpoint(mnt.mnt_dir),
         fs_type(mnt.mnt_type),
@@ -69,6 +69,7 @@ struct mount_entry
                 this->dump_freq == m.dump_freq &&
                 this->pass_number == m.pass_number);
     }
+
 
     bool operator!=(const mount_entry& m)
     {
