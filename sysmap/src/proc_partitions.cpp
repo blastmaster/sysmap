@@ -43,7 +43,7 @@ void Proc_Partition::load_partitions(const std::string& fname)
     std::ifstream in(fname);
 
     if (!in) {
-        std::cerr << "No file!\n";
+        std::cerr << "No file! " << fname << "\n";
         return;
     }
 
