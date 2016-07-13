@@ -97,7 +97,7 @@ class Partition {
         Byte sector_size;       // size of one sector in bytes
 
     private:
-        std::vector<mount_entry> _mountpoints;
+        std::vector<Mount_entry> _mountpoints;
 };
 
 } /* closing namespace adafs */
