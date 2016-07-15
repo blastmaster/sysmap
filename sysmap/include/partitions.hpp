@@ -78,8 +78,14 @@ class Partition {
             //but then as fs::path?
             uuid = uuid_from_partition(device_path.filename().string());
             //TODO: initialize mountpoints
-
+            for (const auto& m : Mount_entry::mount_entry_cache) {
+                if (m.device_name == device_path.string()) {
+                    _mountpoints.push_back(m);
+                }
+            }
         }
+
+        const std::vector<Mount_entry>& get_mounts() const { return _mountpoints; }
 
         fs::path device_path;
         int device_number;
