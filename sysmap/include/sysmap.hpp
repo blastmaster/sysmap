@@ -25,16 +25,16 @@ public:
     explicit Sysmap() 
     {
         load_topology(&_topology);
-    }
-
-    ~Sysmap()
-    {
-        hwloc_topology_destroy(_topology);
         //TODO: it seems that std::ifstream cannot work with virtual files like
         // /proc/partitions
         //Proc_Partition::load_partitions("test_data/partitions/prometheuspartitions.txt");
         Proc_Partition::load_partitions("/proc/partitions");
         Mount_entry::load_mounts("/proc/mounts");
+    }
+
+    ~Sysmap()
+    {
+        hwloc_topology_destroy(_topology);
     }
 
     void export_xml(const std::string& xmlfilename)
