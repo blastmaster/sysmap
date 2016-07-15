@@ -22,7 +22,7 @@ class Device
             //TODO: initialize _partions
             //init cache
             //TODO: FILENAME
-            Proc_Partition::load_partitions("../test_data/partitions/prometheuspartitions.txt");
+            //Proc_Partition::load_partitions("../test_data/partitions/prometheuspartitions.txt");
             auto dname_sz = _device_name.size();
             for (const auto& x : Proc_Partition::proc_partition_cache) {
                 if (x.second.partition_name.compare(0, dname_sz, _device_name) == 0) {
@@ -34,6 +34,9 @@ class Device
         std::string device_name() const { return _device_name; }
         std::string device_path() const { return _device_path; }
         std::string device_id() const { return _device_id; }
+        unsigned int num_partitions() const { return _partitions.size(); }
+        hwloc_obj_t get_hwloc_ref() const { return _obj_ref; }
+        const std::vector<Partition>& get_partitions() const { return _partitions; }
 
     private:
         const hwloc_obj_t _obj_ref; // reference, where to insert information
