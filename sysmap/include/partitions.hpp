@@ -93,6 +93,7 @@ class Partition {
             }
         }
 
+        int n_mounts() const { return _mountpoints.size(); }
         const std::vector<Mount_entry>& get_mounts() const { return _mountpoints; }
 
         fs::path device_path;
