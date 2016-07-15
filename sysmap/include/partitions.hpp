@@ -72,7 +72,15 @@ class Partition {
             fs::path size_file = device_dir / "size";
             fs::path start_file = device_dir / "start";
             size = stoull(read_sysfs_file(size_file));
-            sector_start = stoull(read_sysfs_file(start_file));
+            //TODO: the whole device has no start file!
+            //here the exception is thrown by stoull.
+            //can we catch them before? sector_start = 0 should be valid.
+            try {
+                sector_start = stoull(read_sysfs_file(start_file));
+            } catch (std::invalid_argument& e) {
+                std::cerr << e.what() << "\n";
+                sector_start = 0;
+            }
             sector_end = sector_start + size - 1;
             //TODO: passing just partition name like "sda1" or path "/dev/sda1"
             //but then as fs::path?
