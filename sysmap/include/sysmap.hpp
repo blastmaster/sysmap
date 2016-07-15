@@ -74,26 +74,32 @@ public:
             std::cerr << "error: creating BlockDeviceInfo object failed!\n";
             return;
         }
-        for (auto& part : dev.get_partitions()) {
-            hwloc_obj_add_info(new_obj, "DevicePath", part.device_path.string().c_str());
-            hwloc_obj_add_info(new_obj, "UUID", part.uuid.c_str());
-            hwloc_obj_add_info(new_obj, "Start", std::to_string(part.sector_start).c_str());
-            hwloc_obj_add_info(new_obj, "End", std::to_string(part.sector_end).c_str());
-            hwloc_obj_add_info(new_obj, "Size", std::to_string(part.size).c_str());
-            // adding a MISC object Mounts under the BlockDeviceInfo
-            hwloc_obj_t mnt_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
-                    new_obj, "Mountpoints");
+        hwloc_obj_t tmp = new_obj;
+        for (const auto& part : dev.get_partitions()) {
+            hwloc_obj_t part_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
+                    tmp, "PartitionInfo");
+            hwloc_obj_add_info(part_obj, "DevicePath", part.device_path.string().c_str());
+            hwloc_obj_add_info(part_obj, "UUID", part.uuid.c_str());
+            hwloc_obj_add_info(part_obj, "Start", std::to_string(part.sector_start).c_str());
+            hwloc_obj_add_info(part_obj, "End", std::to_string(part.sector_end).c_str());
+            hwloc_obj_add_info(part_obj, "Size", std::to_string(part.size).c_str());
+            // adding a MISC object Mounts under the BlockDeviceInfo, if
+            // partition has mounts.
+            if (part.n_mounts() >= 1) {
+                hwloc_obj_t mnt_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
+                        part_obj, "Mountpoints");
 
-            if (!mnt_obj) {
-                std::cerr << "error: creating Mountpoints object failed!\n";
-                return;
-            }
+                if (!mnt_obj) {
+                    std::cerr << "error: creating Mountpoints object failed!\n";
+                    return;
+                }
 
-            for (auto& mnt : part.get_mounts()) {
-                hwloc_obj_add_info(mnt_obj, "DeviceName", mnt.device_name.c_str());
-                hwloc_obj_add_info(mnt_obj, "MountPoint", mnt.mountpoint.c_str());
-                hwloc_obj_add_info(mnt_obj, "FileSystem", mnt.fs_type.c_str());
-                //TODO: add at least mount options
+                for (const auto& mnt : part.get_mounts()) {
+                    hwloc_obj_add_info(mnt_obj, "DeviceName", mnt.device_name.c_str());
+                    hwloc_obj_add_info(mnt_obj, "MountPoint", mnt.mountpoint.c_str());
+                    hwloc_obj_add_info(mnt_obj, "FileSystem", mnt.fs_type.c_str());
+                    //TODO: add at least mount options
+                }
             }
         }
     }
