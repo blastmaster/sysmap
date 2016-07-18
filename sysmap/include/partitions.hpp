@@ -81,6 +81,10 @@ class Partition {
                 std::cerr << e.what() << "\n";
                 sector_start = 0;
             }
+            // Whole disk device, if partition number is 0?
+            if (partition_number == 0) {
+                whole_device = true;
+            }
             sector_end = sector_start + size - 1;
             //TODO: passing just partition name like "sda1" or path "/dev/sda1"
             //but then as fs::path?
