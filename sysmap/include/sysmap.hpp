@@ -25,9 +25,6 @@ public:
     explicit Sysmap() 
     {
         load_topology(&_topology);
-        //TODO: it seems that std::ifstream cannot work with virtual files like
-        // /proc/partitions
-        //Proc_Partition::load_partitions("test_data/partitions/prometheuspartitions.txt");
         Proc_Partition::load_partitions("/proc/partitions");
         Mount_entry::load_mounts("/proc/mounts");
     }
@@ -62,7 +59,7 @@ public:
         return b_devs;
     }
 
-    //TODO: adding device to hwloc topology
+    //TODO: this works but is not that pretty
     void add_to_topology(const Device& dev)
     {
         hwloc_obj_t parent = dev.get_hwloc_ref();
@@ -75,9 +72,12 @@ public:
             return;
         }
         hwloc_obj_t tmp = new_obj;
+        hwloc_obj_t part_obj = new_obj;
         for (const auto& part : dev.get_partitions()) {
-            hwloc_obj_t part_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
-                    tmp, "PartitionInfo");
+            if (! part.whole_device) {
+                part_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
+                        tmp, "PartitionInfo");
+            }
             hwloc_obj_add_info(part_obj, "DevicePath", part.device_path.string().c_str());
             hwloc_obj_add_info(part_obj, "UUID", part.uuid.c_str());
             hwloc_obj_add_info(part_obj, "Start", std::to_string(part.sector_start).c_str());
@@ -109,7 +109,6 @@ private:
     hwloc_topology_t _topology;
 
 };
-
 
 } /* closing namesapce adafs */
 
