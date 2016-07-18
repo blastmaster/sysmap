@@ -85,7 +85,7 @@ public:
             hwloc_obj_add_info(part_obj, "Size", std::to_string(part.size).c_str());
             // adding a MISC object Mounts under the BlockDeviceInfo, if
             // partition has mounts.
-            if (part.n_mounts() >= 1) {
+            if (part.num_mounts() >= 1) {
                 hwloc_obj_t mnt_obj = hwloc_topology_insert_misc_object_by_parent(this->_topology,
                         part_obj, "Mountpoints");
 
