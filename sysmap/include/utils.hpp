@@ -4,11 +4,17 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <sstream>
+#include <functional>
+
+#include <boost/filesystem.hpp>
 
 namespace adafs {
 
 namespace utils {
+
+namespace fs = boost::filesystem;
 
 /**
  * utility function to split strings by an given delimiter
@@ -43,40 +49,58 @@ std::vector<std::string> split(const char* str, const char* delim)
     return split(tmp, delim);
 }
 
-//TODO
-//here we want a generator like approach!
-//this is currently a WIP dummy!
-//
-// Generators might have the following characteristics
-// * there is a blob of data: the local variables define a state
-// * there is an init method
-// * there is a "next" method
-// * there is a way to signal termination
-// see also https://stackoverflow.com/questions/9059187/equivalent-c-to-python-generator-pattern
-struct splitter {
-    std::istringstream m_sline;
-
-    splitter(const std::string& s) : m_sline(s) {}
-
-    std::string next()
-    {
-        std::string buf;
-        m_sline >> buf;
-        return buf;
-    }
-};
-
-
-//FIXME
-//this is some shitty code it does what it shoud but just once
-//because of static istringstream!!!
 static
-std::string split_first(const std::string& str)
+bool for_each_line(const std::string& path, std::function<bool(const std::string&)> cb)
 {
-    static std::istringstream stream(str);
-    std::string buf;
-    stream >> buf;
-    return buf;
+    std::ifstream in{path};
+    if (!in) {
+        return false;
+    }
+
+    for (std::string line; getline(in, line);) {
+        if (! cb(line)) {
+            break;
+        }
+    }
+    return true;
+}
+
+static
+bool for_each_subdirectory(const std::string& path, std::function<bool(const std::string&)> cb)
+{
+    fs::path p{path};
+    auto d_iter = fs::directory_iterator(p);
+    for (const auto& it : d_iter) {
+        if (it.status().type() != fs::directory_file) {
+            continue;
+        }
+        if (! cb(it.path().string())) {
+            break;
+        }
+    }
+    return true;
+}
+
+std::string read(const std::string& path)
+{
+    std::string contents;
+    if (! read(path, contents)) {
+        return "";
+    }
+    return contents;
+}
+
+
+bool read(const std::string& path, std::string& contents)
+{
+    std::ifstream in {path};
+    std::ostringstream buffer;
+    if (!in) {
+        return false;
+    }
+    buffer << in.rdbuf();
+    contents = buffer.str();
+    return true;
 }
 
 
