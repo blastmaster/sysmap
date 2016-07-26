@@ -8,17 +8,15 @@ namespace adafs {  namespace linux {
         static std::string info_from_dev_disk(const std::string& partname, const std::string& what);
 
         protected:
-
             virtual data collect() override;
 
         private:
-
             void collect_mountpoints(data& result);
             void collect_partitions(data& result);
             void collect_partition_attributes(Partition& part, const std::map<std::string, std::string>& mntpnts,
                     const std::string& partition_path, const std::string& partition_name);
     };
 
-}} /* closing namespace adafs::extractor::linux */
+}} /* closing namespace adafs::linux */
 
 #endif /* __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__ */

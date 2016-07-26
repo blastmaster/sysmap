@@ -1,6 +1,8 @@
 #ifndef __ADAFS_EXTRACTOR_HPP__
 #define __ADAFS_EXTRACTOR_HPP__
 
+#include "extractor_set.hpp"
+
 namespace adafs {
 
 struct Extractor {
@@ -9,8 +11,7 @@ struct Extractor {
 
     virtual ~Extractor() {}
 
-    virtual void load() = 0;
-    virtual void store() = 0;
+    virtual void load(Extractor_Set& findings) = 0;
 
     std::string name() const { return m_name; }
 

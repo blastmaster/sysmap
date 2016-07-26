@@ -1,7 +1,8 @@
 #ifndef __ADAFS_FILESYSTEM_EXTRACTOR_HPP__
 #define __ADAFS_FILESYSTEM_EXTRACTOR_HPP__
 
-#include "extractor.hpp"
+#include "../extractor_set.hpp"
+#include "../extractor.hpp"
 
 #include <vector>
 #include <boost/filesystem.hpp>
@@ -19,8 +20,7 @@ struct Filesystem_Extractor  : Extractor {
 
     Filesystem_Extractor() {}
 
-    //TODO need something to store the data in!!!
-    virtual void load() override;
+    virtual void load(Extractor_Set& findings) override;
 
 protected:
 
