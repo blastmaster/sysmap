@@ -38,6 +38,29 @@ namespace adafs { namespace extractor {
             findings.add("mountpoint", std::move(mounts));
         }
 
+        if (!data.filesystem.empty()) {
+            auto parts = make_value<Map_value>();
+            for (const auto& partition : data.partitions) {
+
+                auto value = make_value<Map_value>();
+
+                value->add("name", make_value<String_value>(partition.name));
+                value->add("uuid", make_value<String_value>(std::move(partition.uuid)));
+                value->add("partuuid", make_value<String_value>(std::move(partition_uuid)));
+
+                if (!partition.label.empty()) {
+                    value->add("label", make_value<String_value>(std::move(partition.label)));
+                }
+
+                if (!partition.mountpoint.empty()) {
+                    value->add("mountpoint", make_value<String_value>(std::move(partition.mountpoint)));
+                }
+
+                value->add("size", make_value<Int_value>(partition.size));
+                parts->add(std::move(partition.name), std::move(value));
+            }
+            findings.add("partitions", std::move(parts));
+        }
     }
 
 }} /* closing namespace adafs::extractor */
