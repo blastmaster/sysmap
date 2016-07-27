@@ -35,7 +35,7 @@ namespace adafs { namespace extractor {
                 }
                 mounts->add(std::move(mountpoint.device), std::move(value));
             }
-            findings.add("mountpoint", std::move(mounts));
+            findings.add_info("mountpoint", std::move(mounts));
         }
 
         if (!data.filesystem.empty()) {
@@ -59,7 +59,7 @@ namespace adafs { namespace extractor {
                 value->add("size", make_value<Int_value>(partition.size));
                 parts->add(std::move(partition.name), std::move(value));
             }
-            findings.add("partitions", std::move(parts));
+            findings.add_info("partitions", std::move(parts));
         }
     }
 
