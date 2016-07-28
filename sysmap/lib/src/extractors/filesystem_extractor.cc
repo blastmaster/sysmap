@@ -8,6 +8,8 @@
 
 namespace adafs { namespace extractor {
 
+    Filesystem_Extractor::Filesystem_Extractor() : Extractor("Filesystem") {}
+
     void Filesystem_Extractor::load(Extractor_Set& findings)
     {
         auto data = collect();

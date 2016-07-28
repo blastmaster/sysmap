@@ -9,6 +9,8 @@ namespace adafs { namespace extractor {
 
     struct Disk_Extractor : Extractor {
 
+        Disk_Extractor();
+
         virtual void load(Extractor_Set& findings) override;
 
         protected:
