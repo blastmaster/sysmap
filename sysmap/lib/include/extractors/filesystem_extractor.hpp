@@ -18,7 +18,7 @@ using Byte = unsigned long long;
 
 struct Filesystem_Extractor  : Extractor {
 
-    //Filesystem_Extractor() {}
+    Filesystem_Extractor();
 
     virtual void load(Extractor_Set& findings) override;
 

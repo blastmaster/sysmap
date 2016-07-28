@@ -6,6 +6,8 @@
 
 namespace adafs { namespace extractor {
 
+    Disk_Extractor::Disk_Extractor() : Extractor("Disk") {}
+
     void Disk_Extractor::load(Extractor_Set& findings)
     {
         auto data = collect();
