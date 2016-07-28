@@ -10,44 +10,9 @@
 
 #include <boost/filesystem.hpp>
 
-namespace adafs {
-
-namespace utils {
+namespace adafs { namespace utils {
 
 namespace fs = boost::filesystem;
-
-/**
- * utility function to split strings by an given delimiter
- * return the fields in a vector.
- */
-static
-std::vector<std::string>& split(const std::string& str, const char* delim, std::vector<std::string> &elems)
-{
-    std::istringstream stream(str);
-    std::string item;
-
-    while (getline(stream, item, *delim)) {
-        elems.push_back(item);
-    }
-
-    return elems;
-}
-
-// OVERLOAD
-static
-std::vector<std::string> split(const std::string& str, const char* delim)
-{
-    std::vector<std::string> vec;
-    return split(str, delim, vec);
-}
-
-// OVERLOAD
-static
-std::vector<std::string> split(const char* str, const char* delim)
-{
-    std::string tmp(str);
-    return split(tmp, delim);
-}
 
 static
 bool for_each_line(const std::string& path, std::function<bool(const std::string&)> cb)
@@ -81,6 +46,11 @@ bool for_each_subdirectory(const std::string& path, std::function<bool(const std
     return true;
 }
 
+std::string read(const std::string& path);
+
+bool read(const std::string& path, std::string& contents);
+
+
 std::string read(const std::string& path)
 {
     std::string contents;
@@ -104,8 +74,6 @@ bool read(const std::string& path, std::string& contents)
 }
 
 
-} /* closing namespace utils */
-
-} /* closing namespace adafs */
+}} /* closing namespace adafs::utils */
 
 #endif /* __ADAFS_UTILS_HPP__ */

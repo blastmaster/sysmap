@@ -8,17 +8,17 @@
 
 namespace adafs {
 
-    struct Map_value : value {
+    struct Map_value : Value {
 
         Map_value() {}
 
-        ~Map_Value() {}
+        ~Map_value() {}
 
         Map_value(const Map_value&) = delete;
 
         Map_value operator=(const Map_value&) = delete;
 
-        void add(const std::string& name, const std::unique_ptr<Value>& value);
+        void add(const std::string& name, std::unique_ptr<Value> value);
 
         private:
         std::map<std::string, std::unique_ptr<Value>> m_elements;
