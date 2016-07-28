@@ -1,9 +1,11 @@
 #ifndef __ADAFS_EXTRACTOR_HPP__
 #define __ADAFS_EXTRACTOR_HPP__
 
-#include "extractor_set.hpp"
+#include <string>
 
 namespace adafs {
+
+struct Extractor_Set;
 
 struct Extractor {
 

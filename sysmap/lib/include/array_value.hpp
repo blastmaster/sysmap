@@ -8,7 +8,7 @@
 
 namespace adafs {
 
-struct Array_value : value {
+struct Array_value : Value {
 
     Array_value() {}
 
@@ -18,7 +18,7 @@ struct Array_value : value {
 
     Array_value operator=(const Array_value&) = delete;
 
-    void add(const std::unique_ptr<Value>& value);
+    void add(std::unique_ptr<Value> value);
 
     private:
     std::vector<std::unique_ptr<Value>> m_elements;

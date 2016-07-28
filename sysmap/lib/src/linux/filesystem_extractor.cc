@@ -1,8 +1,9 @@
 
-#include "linux/Filesystem_Extractor.hpp"
+#include "linux/filesystem_extractor.hpp"
 #include "utils.hpp"
 
 #include <sys/vfs.h>
+#include <mntent.h>
 
 #include <map>
 #include <algorithm>
@@ -10,6 +11,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
+namespace fs = boost::filesystem;
 
 namespace adafs { namespace linux {
 
@@ -27,7 +29,7 @@ namespace adafs { namespace linux {
         return (*found).path().filename().string();
     }
 
-    data Filesystem_Extractor::collect()
+    Filesystem_Extractor::data Filesystem_Extractor::collect()
     {
         data result;
         collect_mountpoints(result);
@@ -63,7 +65,7 @@ namespace adafs { namespace linux {
                 mntpnt.available = stat_info.f_frsize * stat_info.f_bfree;
             }
 
-            data.mountpoints.emplace_back(std::move(mntpnt));
+            result.mountpoints.emplace_back(std::move(mntpnt));
         }
 
         endmntent(file);
@@ -73,7 +75,7 @@ namespace adafs { namespace linux {
     void Filesystem_Extractor::collect_partitions(data& result)
     {
         std::map<std::string, std::string> mntpnts;
-        for (const auto& point : data.mountpoints) {
+        for (const auto& point : result.mountpoints) {
             mntpnts.insert(std::make_pair(point.device, point.mount));
         }
 
@@ -120,7 +122,7 @@ namespace adafs { namespace linux {
     void Filesystem_Extractor::collect_partition_attributes(Partition& part, const std::map<std::string, std::string>& mntpnts,
             const std::string& partition_path, const std::string& partition_name)
     {
-        part.size = std::stoull(utils::read((partition_path / "size").string()));
+        part.size = std::stoull(utils::read(partition_path + "/size"));
         // include here major minor id parsing
 
         part.uuid = info_from_dev_disk(partition_name, "by-uuid");

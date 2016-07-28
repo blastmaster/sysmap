@@ -6,11 +6,11 @@
 namespace adafs {
 
     template<typename T>
-    struct Scalar_value : value {
+    struct Scalar_value : Value {
 
-        using value_type = typename T;
+        using value_type = T;
 
-        Scalar_value() {}
+        Scalar_value(value_type value) : m_value(std::move(value)) {}
 
         ~Scalar_value() {}
 

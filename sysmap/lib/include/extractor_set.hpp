@@ -20,9 +20,9 @@ struct Extractor_Set {
     // forbid copy assignment
     Extractor_Set& operator=(const Extractor_Set&) = delete;
 
-    void add_info(const std::string& name, std::unique_ptr<Value> v);
+    void add_info(const std::string& name, std::unique_ptr<Value> value);
 
-    void add_extractor(const std::string& name, std::shared_ptr<Extractor> const& extr);
+    void add_extractor(const std::string& name, std::shared_ptr<Extractor> extractor);
 
     private:
         // map of extractors to use name -> extractor

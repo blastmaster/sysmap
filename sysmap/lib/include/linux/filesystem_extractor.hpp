@@ -1,6 +1,8 @@
 #ifndef __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__
 #define __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__
 
+#include "../extractors/filesystem_extractor.hpp"
+
 namespace adafs {  namespace linux {
 
     struct Filesystem_Extractor : extractor::Filesystem_Extractor {
