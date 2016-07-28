@@ -9,7 +9,9 @@ set(CMAKE_CXX_FLAGS ${SYSMAP_CXX_FLAGS})
 #TODO add just platfrom independent sources here
 set(LIBSYSMAP_SOURCES
     "src/extractors/filesystem_extractor.cc"
+    "src/extractors/disk_extractor.cc"
     "src/linux/filesystem_extractor.cc"
+    "src/linux/disk_extractor.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/extractor_set.cc"
