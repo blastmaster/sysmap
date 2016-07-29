@@ -11,7 +11,7 @@ namespace adafs {
 
 struct Extractor_Set {
 
-    Extractor_Set() {}
+    Extractor_Set() = default;
 
     ~Extractor_Set() {}
 
@@ -23,6 +23,10 @@ struct Extractor_Set {
     void add_info(const std::string& name, std::unique_ptr<Value> value);
 
     void add_extractor(const std::string& name, std::shared_ptr<Extractor> extractor);
+
+    void extract();
+
+    void write(std::ostream& os);
 
     private:
         // map of extractors to use name -> extractor
