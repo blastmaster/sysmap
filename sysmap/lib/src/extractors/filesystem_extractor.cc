@@ -37,7 +37,7 @@ namespace adafs { namespace extractor {
                 }
                 mounts->add(std::move(mountpoint.device), std::move(value));
             }
-            findings.add_info("mountpoint", std::move(mounts));
+            findings.add_info("mountpoints", std::move(mounts));
         }
 
         if (!data.partitions.empty()) {
@@ -48,7 +48,9 @@ namespace adafs { namespace extractor {
 
                 value->add("name", make_value<String_value>(partition.name));
                 value->add("uuid", make_value<String_value>(std::move(partition.uuid)));
-                value->add("partuuid", make_value<String_value>(std::move(partition.partition_uuid)));
+                if (!partition.partition_uuid.empty()) {
+                    value->add("partuuid", make_value<String_value>(std::move(partition.partition_uuid)));
+                }
 
                 if (!partition.label.empty()) {
                     value->add("label", make_value<String_value>(std::move(partition.label)));

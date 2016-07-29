@@ -1,6 +1,8 @@
 #ifndef __ADAFS_VALUE_HPP__
 #define __ADAFS_VALUE_HPP__
 
+#include "output.hpp"
+
 #include <memory>
 
 namespace adafs {
@@ -10,6 +12,8 @@ struct Value {
     Value() {}
 
     virtual ~Value() = default;
+
+    virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const = 0;
 
 };
 

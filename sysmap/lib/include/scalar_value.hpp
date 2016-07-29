@@ -2,6 +2,9 @@
 #define __ADAFS_SCALAR_VALUE_HPP__
 
 #include "value.hpp"
+#include "output.hpp"
+
+#include <iostream>
 
 namespace adafs {
 
@@ -19,6 +22,13 @@ namespace adafs {
         Scalar_value operator=(const Scalar_value&) = delete;
 
         const value_type& value() const { return m_value; }
+
+        virtual std::ostream& write(std::ostream& os, const Output_format format, bool quoted) const override
+        {
+            if (quoted)
+                return os << '"' << m_value << '"';
+            return os << m_value;
+        }
 
         private:
         value_type m_value;
