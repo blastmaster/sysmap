@@ -11,21 +11,15 @@ namespace adafs {
         ASCII,
     };
 
-    using namespace std::string_literals;
 
-    struct XMLOutputFromatter {
+    struct XMLOutput {
 
-        XMLOutputFromatter() : m_preamble { "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"s } {}
+        static constexpr const char *xml_preamble = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" ;
 
-        template<typename T>
-        std::ostream& add_tag(std::ostream& os, const T& value) const
-        {
-            os << "<" << value << ">\n";
-            return os;
-        }
+        static constexpr const char *xml_root_element_open = "<system-topology>";
 
-        private:
-        std::string m_preamble;
+        static constexpr const char *xml_root_element_close = "</system-topology>";
+
     };
 
 } /* closing namespace adafs */
