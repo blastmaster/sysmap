@@ -3,6 +3,7 @@
 
 #include "extractor.hpp"
 #include "value.hpp"
+#include "output.hpp"
 
 #include <memory>
 #include <map>
@@ -26,7 +27,7 @@ struct Extractor_Set {
 
     void extract();
 
-    void write(std::ostream& os);
+    void write(std::ostream& os, const Output_format format);
 
     private:
         // map of extractors to use name -> extractor
