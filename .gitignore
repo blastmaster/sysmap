@@ -22,3 +22,7 @@ Thumbs.db
 .idea/
 
 *.pyc
+
+# Build Directories #
+#####################
+build/
