@@ -47,7 +47,9 @@ namespace adafs { namespace extractor {
                 auto value = make_value<Map_value>();
 
                 value->add("name", make_value<String_value>(partition.name));
+                value->add("device_number", make_value<String_value>(std::move(partition.device_number)));
                 value->add("uuid", make_value<String_value>(std::move(partition.uuid)));
+
                 if (!partition.partition_uuid.empty()) {
                     value->add("partuuid", make_value<String_value>(std::move(partition.partition_uuid)));
                 }

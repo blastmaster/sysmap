@@ -28,6 +28,7 @@ namespace adafs { namespace linux {
                         return true;
                     }
 
+                    auto devnum_file = (block_device_directory / "dev").string();
                     auto size_file = (block_device_directory / "size").string();
                     auto model_file = (block_device_subdirectory / "model").string();
                     auto vendor_file = (block_device_subdirectory / "vendor").string();
@@ -42,6 +43,9 @@ namespace adafs { namespace linux {
                     auto size = utils::read(size_file);
                     boost::trim(size);
                     d.size = std::stoull(size);
+                    // device number
+                    d.device_number = utils::read(devnum_file);
+                    boost::trim(d.device_number);
 
                     result.disks.emplace_back(std::move(d));
                     return true;
