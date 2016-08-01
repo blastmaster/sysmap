@@ -3,6 +3,7 @@
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
+
 #include <vector>
 
 namespace adafs { namespace extractor {
@@ -24,6 +25,8 @@ namespace adafs { namespace extractor {
             std::string model;
 
             std::string product;
+
+            std::string device_number;
 
             uint64_t size;
 

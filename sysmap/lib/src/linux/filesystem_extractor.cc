@@ -123,7 +123,8 @@ namespace adafs { namespace linux {
             const std::string& partition_path, const std::string& partition_name)
     {
         part.size = std::stoull(utils::read(partition_path + "/size"));
-        // include here major minor id parsing
+        part.device_number = utils::read(partition_path + "/dev");
+        boost::trim(part.device_number);
 
         part.uuid = info_from_dev_disk(partition_name, "by-uuid");
         part.partition_uuid = info_from_dev_disk(partition_name, "by-partuuid");

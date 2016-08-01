@@ -45,7 +45,7 @@ protected:
 
     struct Partition {
 
-            Partition() : major_device_number{0}, minor_device_number{0}, size{0}
+            Partition() :  size{0}
             {}
 
             //TODO: is this constant? /sys/dev/block/sda/queue/hw_sector_size
@@ -55,13 +55,8 @@ protected:
 
             // name of the partition
             std::string name;
-            // TODO: major and minor device parsing
-            // major number of device
-            unsigned int major_device_number;
-            // minor number of device
-            unsigned int minor_device_number;
-            // flag indicating if whole device is used by this partition;
-            //bool whole_device;
+            // represents major and minor number of device
+            std::string device_number;
             // uuid of ?
             std::string uuid;
             // uuid of partition
