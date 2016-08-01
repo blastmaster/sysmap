@@ -12,6 +12,7 @@ set(LIBSYSMAP_SOURCES
     "src/extractors/disk_extractor.cc"
     "src/linux/filesystem_extractor.cc"
     "src/linux/disk_extractor.cc"
+    "src/utils.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/extractor_set.cc"
