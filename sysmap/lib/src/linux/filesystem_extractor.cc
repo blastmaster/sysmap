@@ -1,4 +1,3 @@
-
 #include "linux/filesystem_extractor.hpp"
 #include "utils.hpp"
 
