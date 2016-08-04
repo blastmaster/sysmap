@@ -14,12 +14,12 @@ namespace adafs { namespace extractor {
         auto data = collect();
 
         if (!data.mountpoints.empty()) {
-            auto mounts = make_value<Map_value>();
+            auto mounts = make_value<Array_value>();
             for (const auto& mountpoint : data.mountpoints) {
 
                 auto value = make_value<Map_value>();
 
-                value->add("device", make_value<String_value>(mountpoint.device)); // redundant???
+                value->add("device", make_value<String_value>(std::move(mountpoint.device))); // redundant???
                 value->add("mount", make_value<String_value>(std::move(mountpoint.mount)));
                 value->add("filesystem", make_value<String_value>(std::move(mountpoint.filesystem)));
 
@@ -28,18 +28,18 @@ namespace adafs { namespace extractor {
                 value->add("available", make_value<Uint_value>(mountpoint.available));
                 value->add("options", make_value<String_value>(std::move(mountpoint.options)));
 
-                mounts->add(std::move(mountpoint.device), std::move(value));
+                mounts->add(std::move(value));
             }
             findings.add_info("mountpoints", std::move(mounts));
         }
 
         if (!data.partitions.empty()) {
-            auto parts = make_value<Map_value>();
+            auto parts = make_value<Array_value>();
             for (const auto& partition : data.partitions) {
 
                 auto value = make_value<Map_value>();
 
-                value->add("name", make_value<String_value>(partition.name));
+                value->add("name", make_value<String_value>(std::move(partition.name)));
                 value->add("device_number", make_value<String_value>(std::move(partition.device_number)));
                 value->add("uuid", make_value<String_value>(std::move(partition.uuid)));
 
@@ -56,7 +56,7 @@ namespace adafs { namespace extractor {
                 }
 
                 value->add("size", make_value<Int_value>(partition.size));
-                parts->add(std::move(partition.name), std::move(value));
+                parts->add(std::move(value));
             }
             findings.add_info("partitions", std::move(parts));
         }

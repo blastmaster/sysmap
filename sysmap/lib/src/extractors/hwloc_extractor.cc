@@ -64,7 +64,7 @@ namespace adafs { namespace extractor {
             value->add("PageSize", make_value<Uint_value>(page.size));
             value->add("Count", make_value<Uint_value>(page.count));
 
-            pages->add(std::move(value)); //map_value in array_value does this crash xml output???
+            pages->add(std::move(value));
         }
         memory->add("PageTypes", std::move(pages));
         findings.add_info("MemoryInfo", std::move(memory));
