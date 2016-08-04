@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include "array_value.hpp"
+#include "output.hpp"
 
 namespace adafs {
 
@@ -16,18 +18,9 @@ namespace adafs {
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         switch (format) {
-            case Output_format::XML :
-                if (quoted) {
-                    os << '"';
-                }
+            case Output_format::XML:
                 for (const auto& v : m_elements) {
-                    if (quoted)
-                        v->write(os, format, false);
-                    else
-                        v->write(os, format, quoted);
-                }
-                if (quoted) {
-                    os << '"';
+                    v->write(os, format, quoted);
                 }
         }
 
