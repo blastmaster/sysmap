@@ -18,6 +18,7 @@ set(LIBSYSMAP_SOURCES
     "src/array_value.cc"
     "src/map_value.cc"
     "src/extractor_set.cc"
+    "src/output.cc"
 )
 
 
