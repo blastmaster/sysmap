@@ -55,7 +55,7 @@ namespace adafs { namespace linux {
             mntpnt.device = std::move(device);
             mntpnt.mount = mnt_ptr->mnt_dir;
             mntpnt.filesystem = mnt_ptr->mnt_type;
-            boost::split(mntpnt.options, mnt_ptr->mnt_opts, boost::is_any_of(","), boost::token_compress_on);
+            mntpnt.options = mnt_ptr->mnt_opts;
 
             struct statfs stat_info;
             if (statfs(mnt_ptr->mnt_dir, &stat_info) != -1) {

@@ -26,14 +26,8 @@ namespace adafs { namespace extractor {
                 // make necessary conversions here, e.g. byte -> mb usw ...
                 value->add("size", make_value<Uint_value>(mountpoint.size));
                 value->add("available", make_value<Uint_value>(mountpoint.available));
+                value->add("options", make_value<String_value>(std::move(mountpoint.options)));
 
-                if (!mountpoint.options.empty()) {
-                    auto mount_opts = make_value<Array_value>();
-                    for (const auto& option : mountpoint.options) {
-                        mount_opts->add(make_value<String_value>(std::move(option)));
-                    }
-                    value->add("options", std::move(mount_opts));
-                }
                 mounts->add(std::move(mountpoint.device), std::move(value));
             }
             findings.add_info("mountpoints", std::move(mounts));
