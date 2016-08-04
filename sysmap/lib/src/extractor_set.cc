@@ -36,21 +36,19 @@ namespace adafs {
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {
-            std::cerr << "Infomap is empty, extract data before trying to write!\n";
+            std::cerr << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
             return;
         }
 
         switch (format) {
 
             case Output_format::XML:
-                os << XMLOutput::xml_preamble << "\n"
-                    << XMLOutput::xml_root_element_open << "\n";
+                os << XML_Writer::xml_preamble << "\n"
+                    << XML_Writer::xml_root_element_open << "\n";
                 for (const auto& kv_info : m_infomap) {
-                    os << "<" << kv_info.first << ">\n";
-                    kv_info.second->write(os, format, true);
-                    os << "</" << kv_info.first << ">\n";
+                    XML_Writer::make_tag(os, kv_info.first, kv_info.second.get());
                 }
-                os << XMLOutput::xml_root_element_close << "\n";
+                os << XML_Writer::xml_root_element_close << "\n";
                 break;
         }
 
