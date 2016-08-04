@@ -35,7 +35,7 @@ protected:
         // filesystem of the mountpoint
         std::string filesystem;
         // options of the mountpoint
-        std::vector<std::string> options;
+        std::string options;
         // size of the mountpoint
         uint64_t size;
         // available size of the mountpoint
