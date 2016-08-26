@@ -1,5 +1,5 @@
-#ifndef __ADAFS_FILESYSTEM_EXTRACTOR_HPP__
-#define __ADAFS_FILESYSTEM_EXTRACTOR_HPP__
+#ifndef __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
+#define __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -91,4 +91,4 @@ protected:
 
 }} /* closing namespace adafs::extractor */
 
-#endif /* __ADAFS_FILESYSTEM_EXTRACTOR_HPP__ */
+#endif /* __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__ */
