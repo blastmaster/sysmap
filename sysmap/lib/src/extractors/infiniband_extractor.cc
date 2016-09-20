@@ -12,6 +12,8 @@ namespace adafs { namespace extractor {
     void Infiniband_Extractor::load(Extractor_Set& findings)
     {
         // TODO
+        auto data = collect();
+        return;
     }
 
 }} /* closing namespace adafs::extractor */
