@@ -14,8 +14,37 @@ struct Infiniband_Extractor : Extractor {
 
 protected:
 
-    struct data {
+    struct Connection {
+        std::string type; // type of peer {switch,host}
+        uint64_t local_port; // local port number
+        std::string peer_guid; // guid of peer
+        uint64_t peer_port; // port of peer
+        std::string port_guid; // port guid of peer if peer is host
+        std::string peer_description; // node description of peer
+        uint64_t peer_lid; // lid of peer
+        uint64_t local_lid; // local lid
+        uint64_t local_lmc; // local lmc
+        std::string speed; // speed
+    };
 
+    struct Switch {
+        uint64_t num_ports; // number of ports
+        std::string guid;   // guid
+        std::string description; // node description
+        std::string port_type;     // type of port 0 {base,enhanced}
+        std::vector<Connection> connections;
+    };
+
+    struct Host {
+        uint64_t num_ports; // number of ports
+        std::string guid;   // guid
+        std::string description; // node description
+        std::vector<Connection> connections;
+    };
+
+    struct data {
+        std::map<std::string, Host> hosts; // map of hosts with guid as key and host as value
+        std::map<std::string, Switch> switches; // map of switches with guid as key and switch as value
     };
 
     virtual data collect() = 0;
