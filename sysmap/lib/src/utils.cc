@@ -59,4 +59,12 @@ bool read(const std::string& path, std::string& contents)
 }
 
 
+std::string trim_regex_match(const std::ssub_match& match)
+{
+    std::string str = match.str();
+    boost::trim(str);
+    return str;
+}
+
+
 }} /* closing namespace adafs::utils */

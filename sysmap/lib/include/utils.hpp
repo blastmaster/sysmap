@@ -7,8 +7,10 @@
 #include <fstream>
 #include <sstream>
 #include <functional>
+#include <regex>
 
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace adafs { namespace utils {
 
@@ -20,6 +22,8 @@ void for_each_subdirectory(const std::string& path, std::function<bool(const std
 std::string read(const std::string& path);
 
 bool read(const std::string& path, std::string& contents);
+
+std::string trim_regex_match(const std::ssub_match& match);
 
 
 }} /* closing namespace adafs::utils */
