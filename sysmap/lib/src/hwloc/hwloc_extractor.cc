@@ -1,4 +1,5 @@
 #include "hwloc/hwloc_extractor.hpp"
+#include "utils/log.hpp"
 
 
 namespace adafs { namespace hwloc {
@@ -17,7 +18,7 @@ namespace adafs { namespace hwloc {
     {
         hwloc_obj_t root_obj = hwloc_get_root_obj(topology);
         if (!root_obj) {
-            std::cerr << "Error: no hwloc root obj!\n";
+            adafs::utils::log::logging::error() << "Error: no hwloc root obj!\n";
             return;
         }
 
@@ -55,7 +56,7 @@ namespace adafs { namespace hwloc {
         // and just start with the root obj.
         hwloc_obj_t root_obj = hwloc_get_root_obj(topology);
         if (!root_obj) {
-            std::cerr << "Error: no hwloc root obj!\n";
+            adafs::utils::log::logging::error() << "Error: no hwloc root obj!\n";
             return;
         }
 

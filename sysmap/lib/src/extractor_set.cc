@@ -1,12 +1,12 @@
-#include <iostream>
 #include "extractor_set.hpp"
+#include "utils/log.hpp"
 
 namespace adafs {
 
     void Extractor_Set::add_info(const std::string& name, std::unique_ptr<Value> value)
     {
         if (!value) {
-            std::cerr << "[Extractor_Set::add_info] Error, no value!\n";
+            adafs::utils::log::logging::error() << "[Extractor_Set::add_info] Error, no value!\n";
             return;
         }
 
@@ -17,7 +17,7 @@ namespace adafs {
     void Extractor_Set::add_extractor(const std::string& name, std::shared_ptr<Extractor> extractor)
     {
         if (!extractor) {
-            std::cerr << "[Extractor_Set::add_extractor] Error, no extractor!\n";
+            adafs::utils::log::logging::error() << "[Extractor_Set::add_extractor] Error, no extractor!\n";
             return;
         }
 
@@ -36,7 +36,7 @@ namespace adafs {
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {
-            std::cerr << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
+            adafs::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
             return;
         }
 

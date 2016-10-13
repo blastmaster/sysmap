@@ -5,13 +5,14 @@
 #include "array_value.hpp"
 #include "map_value.hpp"
 #include "output.hpp"
+#include "utils/log.hpp"
 
 namespace adafs {
 
     void Map_value::add(const std::string& name, std::unique_ptr<Value> value)
     {
         if (!value) {
-            std::cerr << "[Map_value::add] Error, no value!\n";
+            adafs::utils::log::logging::error() << "[Map_value::add] Error, no value!\n";
             return;
         }
 
