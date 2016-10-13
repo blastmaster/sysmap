@@ -17,6 +17,7 @@ set(LIBSYSMAP_SOURCES
     "src/linux/infiniband_extractor.cc"
     "src/hwloc/hwloc_extractor.cc"
     "src/utils/file.cc"
+    "src/utils/execution.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/extractor_set.cc"
