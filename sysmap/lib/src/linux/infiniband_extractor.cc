@@ -1,5 +1,6 @@
 #include "linux/infiniband_extractor.hpp"
 #include "utils/file.hpp"
+#include "utils/log.hpp"
 
 
 namespace adafs { namespace linux {
@@ -147,7 +148,7 @@ namespace adafs { namespace linux {
             result_graph.hosts[from_guid].connections.push_back(con);
         }
         else {
-            std::cerr << "[Error] Infiniband_Extractor::assemble_connection invalid type.\n";
+            adafs::utils::log::logging::error() << "[Error] Infiniband_Extractor::assemble_connection invalid type.\n";
             return;
         }
     }
