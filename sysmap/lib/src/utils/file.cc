@@ -1,6 +1,14 @@
-#include "utils.hpp"
+#include "utils/file.hpp"
 
-namespace adafs { namespace utils {
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
+namespace adafs { namespace utils { namespace file {
 
 namespace fs = boost::filesystem;
 
@@ -9,6 +17,7 @@ bool for_each_line(const std::string& path, std::function<bool(const std::string
 {
     std::ifstream in{path};
     if (!in) {
+        std::cerr << "[sysmap::utils] No file: " << path << "\n";
         return false;
     }
 
@@ -66,5 +75,4 @@ std::string trim_regex_match(const std::ssub_match& match)
     return str;
 }
 
-
-}} /* closing namespace adafs::utils */
+}}} /* closing namespace adafs::utils::file */

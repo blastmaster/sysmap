@@ -1,5 +1,5 @@
 #include "linux/filesystem_extractor.hpp"
-#include "utils.hpp"
+#include "utils/file.hpp"
 
 #include <sys/vfs.h>
 #include <mntent.h>
@@ -78,13 +78,13 @@ namespace adafs { namespace linux {
             mntpnts.insert(std::make_pair(point.device, point.mount));
         }
 
-        utils::for_each_subdirectory("/sys/block/", [&](const std::string& subdir) {
+        utils::file::for_each_subdirectory("/sys/block/", [&](const std::string& subdir) {
                 fs::path block_device_path {subdir};
                 auto block_device_filename = block_device_path.filename().string();
 
                 if (fs::is_directory(block_device_path / "device")) { // is whole disk device!
 
-                    utils::for_each_subdirectory(subdir, [&](const std::string& subdir) {
+                    utils::file::for_each_subdirectory(subdir, [&](const std::string& subdir) {
                             fs::path partition_path {subdir};
                             auto partition_name = partition_path.filename().string();
 
@@ -100,7 +100,7 @@ namespace adafs { namespace linux {
                 }
                 else if (fs::is_directory(block_device_path / "dm")) { // is dev-mapper device
 
-                    auto mapping_name = utils::read((block_device_path / "dm" / "name").string());
+                    auto mapping_name = utils::file::read((block_device_path / "dm" / "name").string());
                     boost::trim(mapping_name);
                     if (mapping_name.empty()) {
                         mapping_name = "/dev/" + block_device_filename;
@@ -121,8 +121,8 @@ namespace adafs { namespace linux {
     void Filesystem_Extractor::collect_partition_attributes(Partition& part, const std::map<std::string, std::string>& mntpnts,
             const std::string& partition_path, const std::string& partition_name)
     {
-        part.size = std::stoull(utils::read(partition_path + "/size"));
-        part.device_number = utils::read(partition_path + "/dev");
+        part.size = std::stoull(utils::file::read(partition_path + "/size"));
+        part.device_number = utils::file::read(partition_path + "/dev");
         boost::trim(part.device_number);
 
         part.uuid = info_from_dev_disk(partition_name, "by-uuid");

@@ -1,5 +1,5 @@
 #include "linux/infiniband_extractor.hpp"
-#include "utils.hpp"
+#include "utils/file.hpp"
 
 
 namespace adafs { namespace linux {
@@ -14,7 +14,7 @@ namespace adafs { namespace linux {
     void Infiniband_Extractor::collect_ibnetdiscover(data& result)
     {
         std::string connection_guid;
-        utils::for_each_line("../test_data/ib_data/ibnetdiscover_plain_taurusi6593", [&](const std::string& line) {
+        utils::file::for_each_line("../test_data/ib_data/ibnetdiscover_plain_taurusi6593", [&](const std::string& line) {
                 // define pattern for switch line
                 std::regex switch_pattern(R"(^Switch\s+(\d+)\s+\"([\w-]+)\"\s+#\s+\"([^\"]+)\"\s+(\w+)(.*)$)");
                 // define pattern for switch connectivity line
@@ -54,15 +54,15 @@ namespace adafs { namespace linux {
 
         // fill temporary except connections
         //num_ports
-        auto numports_s = utils::trim_regex_match(matches[1]);
+        auto numports_s = utils::file::trim_regex_match(matches[1]);
         sw.num_ports = std::stoi(numports_s);
         // guid
-        auto guid_s = utils::trim_regex_match(matches[2]);
+        auto guid_s = utils::file::trim_regex_match(matches[2]);
         sw.guid = guid_s;
         // description
-        sw.description = utils::trim_regex_match(matches[3]);
+        sw.description = utils::file::trim_regex_match(matches[3]);
         // port type
-        auto port_type_s = utils::trim_regex_match(matches[4]);
+        auto port_type_s = utils::file::trim_regex_match(matches[4]);
         sw.port_type = port_type_s;
 
         // copy temporary switch in result graph
@@ -77,13 +77,13 @@ namespace adafs { namespace linux {
 
         // fill temporary except connections
         //num_ports
-        auto numports_s = utils::trim_regex_match(matches[1]);
+        auto numports_s = utils::file::trim_regex_match(matches[1]);
         host.num_ports = std::stoi(numports_s);
         // guids
-        auto guid_s = utils::trim_regex_match(matches[2]);
+        auto guid_s = utils::file::trim_regex_match(matches[2]);
         host.guid = guid_s;
         // description
-        host.description = utils::trim_regex_match(matches[3]);
+        host.description = utils::file::trim_regex_match(matches[3]);
 
         // copy temporary host in result graph
         result_graph.hosts.emplace(std::make_pair(guid_s, host));
@@ -98,50 +98,50 @@ namespace adafs { namespace linux {
 
         if (con.type == Peer_Type::Switch) {
             // local port
-            auto local_port_s = utils::trim_regex_match(matches[1]);
+            auto local_port_s = utils::file::trim_regex_match(matches[1]);
             con.local_port = std::stoi(local_port_s);
             // peer guid
-            con.peer_guid = utils::trim_regex_match(matches[2]);
+            con.peer_guid = utils::file::trim_regex_match(matches[2]);
             // peer port
-            auto peer_port_s = utils::trim_regex_match(matches[3]);
+            auto peer_port_s = utils::file::trim_regex_match(matches[3]);
             con.peer_port = std::stoi(peer_port_s);
             // port_guid
-            con.peer_port_guid = utils::trim_regex_match(matches[4]);
+            con.peer_port_guid = utils::file::trim_regex_match(matches[4]);
             // peer description
-            con.peer_description = utils::trim_regex_match(matches[5]);
+            con.peer_description = utils::file::trim_regex_match(matches[5]);
             // peer lid
-            auto peer_lid_s = utils::trim_regex_match(matches[6]);
+            auto peer_lid_s = utils::file::trim_regex_match(matches[6]);
             con.peer_lid = std::stoi(peer_lid_s);
             // speed
-            con.speed = utils::trim_regex_match(matches[7]);
+            con.speed = utils::file::trim_regex_match(matches[7]);
 
             // push back connection to from_guid switch connections vector
             result_graph.switches[from_guid].connections.push_back(con);
         }
         else if (con.type == Peer_Type::Host) {
             // local port
-            auto local_port_s = utils::trim_regex_match(matches[1]);
+            auto local_port_s = utils::file::trim_regex_match(matches[1]);
             con.local_port = std::stoi(local_port_s);
             // port guid
-            con.peer_port_guid = utils::trim_regex_match(matches[2]);
+            con.peer_port_guid = utils::file::trim_regex_match(matches[2]);
             // peer guid
-            con.peer_guid = utils::trim_regex_match(matches[3]);
+            con.peer_guid = utils::file::trim_regex_match(matches[3]);
             // peer port
-            auto peer_port_s = utils::trim_regex_match(matches[4]);
+            auto peer_port_s = utils::file::trim_regex_match(matches[4]);
             con.peer_port = std::stoi(peer_port_s);
             // local lid
-            auto local_lid_s = utils::trim_regex_match(matches[5]);
+            auto local_lid_s = utils::file::trim_regex_match(matches[5]);
             con.local_lid = std::stoi(local_lid_s);
             // local lmc
-            auto local_lmc_s = utils::trim_regex_match(matches[6]);
+            auto local_lmc_s = utils::file::trim_regex_match(matches[6]);
             con.local_lmc = std::stoi(local_lmc_s);
             // peer description
-            con.peer_description = utils::trim_regex_match(matches[7]);
+            con.peer_description = utils::file::trim_regex_match(matches[7]);
             // peer lid
-            auto peer_lid_s = utils::trim_regex_match(matches[8]);
+            auto peer_lid_s = utils::file::trim_regex_match(matches[8]);
             con.peer_lid = std::stoi(peer_lid_s);
             // speed
-            con.speed = utils::trim_regex_match(matches[9]);
+            con.speed = utils::file::trim_regex_match(matches[9]);
 
             // push bach connection to from_guid host connections vector.
             result_graph.hosts[from_guid].connections.push_back(con);

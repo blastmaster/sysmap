@@ -1,5 +1,5 @@
 #include "linux/disk_extractor.hpp"
-#include "utils.hpp"
+#include "utils/file.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
@@ -17,7 +17,7 @@ namespace adafs { namespace linux {
 
     void Disk_Extractor::collect_disk_data(data& result)
     {
-        utils::for_each_subdirectory("/sys/block/", [&](const std::string& subdir) {
+        utils::file::for_each_subdirectory("/sys/block/", [&](const std::string& subdir) {
 
                     fs::path block_device_directory {subdir};
                     Disk d;
@@ -34,17 +34,17 @@ namespace adafs { namespace linux {
                     auto vendor_file = (block_device_subdirectory / "vendor").string();
 
                     // vendor
-                    d.vendor = utils::read(vendor_file);
+                    d.vendor = utils::file::read(vendor_file);
                     boost::trim(d.vendor);
                     // model
-                    d.model = utils::read(model_file);
+                    d.model = utils::file::read(model_file);
                     boost::trim(d.model);
                     // size
-                    auto size = utils::read(size_file);
+                    auto size = utils::file::read(size_file);
                     boost::trim(size);
                     d.size = std::stoull(size);
                     // device number
-                    d.device_number = utils::read(devnum_file);
+                    d.device_number = utils::file::read(devnum_file);
                     boost::trim(d.device_number);
 
                     result.disks.emplace_back(std::move(d));

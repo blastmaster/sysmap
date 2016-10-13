@@ -16,7 +16,7 @@ set(LIBSYSMAP_SOURCES
     "src/linux/disk_extractor.cc"
     "src/linux/infiniband_extractor.cc"
     "src/hwloc/hwloc_extractor.cc"
-    "src/utils.cc"
+    "src/utils/file.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/extractor_set.cc"
