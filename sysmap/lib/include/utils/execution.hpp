@@ -13,8 +13,8 @@ namespace adafs { namespace utils { namespace exec {
 
 struct result {
 
-    result(bool s, int ec, std::string out, std::string err, size_t p) :
-        success(s), exit_code(ec), output(out), error(err), pid(p) {}
+    result(bool s, int ec, pid_t p) :
+        success(s), exit_code(ec), pid(p) {}
 
     result() {}
 
@@ -22,11 +22,7 @@ struct result {
 
     int exit_code = 0;
 
-    std::string output;
-
-    std::string error;
-
-    size_t pid = 0;
+    pid_t pid = 0;
 };
 
 

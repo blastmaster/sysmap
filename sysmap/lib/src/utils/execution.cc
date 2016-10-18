@@ -243,9 +243,10 @@ result execute(const std::string& program,
                unsigned int timeout)
 {
     result res;
+    bool success = false;
     auto prog = which(program);
     if (prog.empty()) {
-        // TODO ERROR!!!!
+        // TODO ERROR!!!! throw exception
         return res;
     }
 
@@ -295,9 +296,20 @@ result execute(const std::string& program,
     if (waitpid(child, &status, 0) == -1) {
         adafs::utils::log::logging::error() << "waitpid failed\n";
     }
+    if (WIFEXITED(status)) {
+        status = WEXITSTATUS(status);
+        success = status == 0;
+        adafs::utils::log::logging::debug() << "child exited normally: " << status << "\n";
+    }
+    if (WIFSIGNALED(status)) {
+        status = WTERMSIG(status);
+        adafs::utils::log::logging::debug() << "child terminated by signal: " << status << "\n";
+    }
 
+    adafs::utils::log::logging::debug() << "Result: " << (success ? "success " : "failed ")
+        << " Exit code: " << status  << " child pid " << child << "\n";
 
-    return res;
+    return {success, status, child};
 }
 
 }}} /* closing namespace adafs::utils::exec */
