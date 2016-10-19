@@ -19,6 +19,10 @@ namespace adafs { namespace utils { namespace exec {
 
 namespace fs = boost::filesystem;
 
+execution_exception::execution_exception(const std::string& message) :
+    std::runtime_error(message) {}
+
+
 static bool is_executable(const char* filename)
 {
     struct stat fs;
@@ -73,26 +77,25 @@ static auto get_max_fd_limit()
 
 static void exec_child(int in, int out, int err, char const* program, char const** argv, char const** envp)
 {
-    // COPY filedescriptors and execute program
-
+    // set process group
     if (setpgid(0, 0) == -1) {
         adafs::utils::log::logging::error() << "setpgid failed\n";
         return;
     }
 
-    // redirect stdin
+    // copy stdin
     if (dup2(in, STDIN_FILENO) == -1) {
         adafs::utils::log::logging::error() << "dub2 STDIN failed\n";
         return;
     }
 
-    // redirect stdout
+    // copy stdout
     if (dup2(out, STDOUT_FILENO) == -1) {
         adafs::utils::log::logging::error() << "dub2 STDOUT failed\n";
         return;
     }
 
-    // redirect stderr
+    // copy stderr
     if (dup2(err, STDERR_FILENO) == -1) {
         adafs::utils::log::logging::error() << "dub2 STDERR failed\n";
         return;
@@ -113,9 +116,7 @@ static pid_t create_child(int in, int out, int err, char const* program, char co
     pid_t child = vfork();
     if (child < 0) {
         adafs::utils::log::logging::error() << "vfork failed\n";
-        // TODO define execution exeception
-        // throw execution_exception("failed to fork child process");
-        return -1;
+        throw execution_exception("failed to fork child process.");
     }
 
     // if we the parent, return childs pid
@@ -242,18 +243,18 @@ result execute(const std::string& program,
                const char* input,
                unsigned int timeout)
 {
-    result res;
     bool success = false;
     auto prog = which(program);
     if (prog.empty()) {
-        // TODO ERROR!!!! throw exception
-        return res;
+        const std::string msg = "Error " + program + " not in PATH.";
+        throw execution_exception(msg);
     }
 
     int pipes[2];
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stdout pipe creation\n";
+        throw execution_exception("failed to allocate stdout pipe.");
     }
 
     int stdout_read = pipes[0];
@@ -261,6 +262,7 @@ result execute(const std::string& program,
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stdin pipe creation\n";
+        throw execution_exception("failed to allocate stdin pipe.");
     }
 
     int stdin_read = pipes[0];
@@ -268,6 +270,7 @@ result execute(const std::string& program,
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stderr pipe creation\n";
+        throw execution_exception("failed to allocate stderr pipe.");
     }
 
     int stderr_read = pipes[0];

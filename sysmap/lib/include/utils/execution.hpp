@@ -10,6 +10,11 @@
 
 namespace adafs { namespace utils { namespace exec {
 
+struct execution_exception : std::runtime_error {
+
+    explicit execution_exception(const std::string& message);
+
+};
 
 struct result {
 
