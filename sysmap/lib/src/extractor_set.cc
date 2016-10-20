@@ -1,5 +1,5 @@
 #include "extractor_set.hpp"
-#include "utils/log.hpp"
+#include "utils.hpp"
 
 namespace adafs {
 

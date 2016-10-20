@@ -5,7 +5,7 @@
 #include "array_value.hpp"
 #include "map_value.hpp"
 #include "output.hpp"
-#include "utils/log.hpp"
+#include "utils.hpp"
 
 namespace adafs {
 

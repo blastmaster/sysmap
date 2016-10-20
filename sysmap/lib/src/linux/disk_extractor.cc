@@ -1,5 +1,5 @@
 #include "linux/disk_extractor.hpp"
-#include "utils/file.hpp"
+#include "utils.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>

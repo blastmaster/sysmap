@@ -1,5 +1,5 @@
 #include "hwloc/hwloc_extractor.hpp"
-#include "utils/log.hpp"
+#include "utils.hpp"
 
 
 namespace adafs { namespace hwloc {
