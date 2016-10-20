@@ -1,6 +1,5 @@
 #include "linux/infiniband_extractor.hpp"
-#include "utils/file.hpp"
-#include "utils/log.hpp"
+#include "utils.hpp"
 
 
 namespace adafs { namespace linux {

@@ -1,5 +1,5 @@
 #include "linux/filesystem_extractor.hpp"
-#include "utils/file.hpp"
+#include "utils.hpp"
 
 #include <sys/vfs.h>
 #include <mntent.h>

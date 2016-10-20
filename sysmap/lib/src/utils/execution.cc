@@ -11,8 +11,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "utils/execution.hpp"
-#include "utils/log.hpp"
+#include "utils.hpp"
 
 
 namespace adafs { namespace utils { namespace exec {
@@ -47,6 +46,7 @@ static bool is_executable(const char* filename)
     return fs.st_mode & S_IXOTH;
 }
 
+
 std::string which(const std::string& prog_name)
 {
     fs::path p = prog_name;
@@ -65,6 +65,7 @@ std::string which(const std::string& prog_name)
     return {};
 }
 
+
 static auto get_max_fd_limit()
 {
     rlimit lim;
@@ -74,6 +75,7 @@ static auto get_max_fd_limit()
 
     return STDERR_FILENO + 1UL;
 }
+
 
 static void exec_child(int in, int out, int err, char const* program, char const** argv, char const** envp)
 {
@@ -160,6 +162,7 @@ static std::vector<char const*> prepare_env(const std::map<std::string, std::str
 
     return result;
 }
+
 
 static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeout = 0)
 {
