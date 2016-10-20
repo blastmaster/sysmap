@@ -57,6 +57,14 @@ private:
 
 std::string which(const std::string& prog_name);
 
+bool for_each_line(const std::string& program,
+                   const std::vector<std::string>& arguments,
+                   std::function<bool(std::string&)> const &stdout_callback,
+                   std::function<bool(std::string&)> const &stderr_callback,
+                   const std::map<std::string, std::string>& environment,
+                   const char* input = nullptr,
+                   unsigned int timeout = 0);
+
 result execute(const std::string& program,
                const std::vector<std::string>& arguments,
                std::function<bool(std::string&)> const &stdout_callback,

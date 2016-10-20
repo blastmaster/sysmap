@@ -235,6 +235,78 @@ static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeou
 }
 
 
+static bool process_line(const std::string& data, std::string& buffer,
+                        std::function<bool(std::string&)> const &cb)
+{
+    // no data, nothing to do
+    if (data.empty()) {
+        return true;
+    }
+
+    auto last_newline = data.find_last_of("\n");
+    if (last_newline == std::string::npos) {
+        // buffer data until we found a new line
+        buffer.append(data);
+        return true;
+    }
+
+    auto range = std::make_pair(data.begin(), data.begin() + last_newline);
+    auto line_iter = boost::make_iterator_range(
+            boost::make_split_iterator(range, boost::token_finder(boost::is_any_of("\n"), boost::token_compress_on)),
+            boost::split_iterator<std::string::const_iterator>());
+
+    for (auto& line : line_iter) {
+        // append line to buffer
+        buffer.append(line.begin(), line.end());
+        boost::trim(buffer);
+        if (buffer.empty()) {
+            continue;
+        }
+
+        // call the actual callback on that line
+        bool finished = !cb(buffer);
+
+        // clear line for next iteration
+        buffer.clear();
+
+        if (finished) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+bool for_each_line(const std::string& program,
+                   const std::vector<std::string>& arguments,
+                   std::function<bool(std::string&)> const &stdout_callback,
+                   std::function<bool(std::string&)> const &stderr_callback,
+                   const std::map<std::string, std::string>& environment,
+                   const char* input,
+                   unsigned int timeout)
+{
+    std::string stdout_buffer;
+    std::string stderr_buffer;
+
+    auto new_stdout_cb = [&](std::string& s) {
+        if (!process_line(s, stdout_buffer, stdout_callback)) {
+            return false;
+        }
+        return true;
+    };
+
+    auto new_stderr_cb = [&](std::string& s) {
+        if(!process_line(s, stderr_buffer, stderr_callback)) {
+            return false;
+        }
+        return true;
+    };
+
+    return execute(program, arguments, new_stdout_cb, new_stderr_cb, environment, input, timeout).success;
+}
+
+
 result execute(const std::string& program,
                const std::vector<std::string>& arguments,
                std::function<bool(std::string&)> const &stdout_callback,
