@@ -4,6 +4,9 @@
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
 
+#include "array_value.hpp"
+
+
 namespace adafs { namespace extractor {
 
 struct Infiniband_Extractor : Extractor {
@@ -53,6 +56,10 @@ protected:
     };
 
     virtual data collect() = 0;
+
+private:
+
+    void load_connections(const std::vector<Connection>& connections, Array_value* value);
 
 };
 
