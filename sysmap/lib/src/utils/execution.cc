@@ -164,7 +164,7 @@ static std::vector<char const*> prepare_env(const std::map<std::string, std::str
 }
 
 
-static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeout = 0)
+static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeout = 1)
 {
     fd_set read_set, write_set;
     while (1) {
@@ -278,6 +278,34 @@ static bool process_line(const std::string& data, std::string& buffer,
     }
 
     return true;
+}
+
+
+bool for_each_line(const std::string& program,
+                   const std::vector<std::string>& arguments,
+                   std::function<bool(std::string&)> const &stdout_callback)
+{
+    // define stderr dummy
+    auto stderr_cb = [](std::string& s) { return true; };
+    // define dummy for environment
+    std::map<std::string, std::string> envp;
+
+    return for_each_line(program, arguments, stdout_callback, stderr_cb, envp, nullptr, 5);
+}
+
+
+bool for_each_line(const std::string& program,
+                   const std::vector<std::string>& arguments,
+                   std::function<bool(std::string&)> const &stdout_callback,
+                   const char* input,
+                   unsigned int timeout)
+{
+    // define stderr dummy
+    auto stderr_cb = [](std::string& s) { return false; };
+    // define dummy for environment
+    std::map<std::string, std::string> envp;
+
+    return for_each_line(program, arguments, stdout_callback, stderr_cb, envp, input, timeout);
 }
 
 

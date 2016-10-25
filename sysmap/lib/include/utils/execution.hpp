@@ -65,6 +65,11 @@ bool for_each_line(const std::string& program,
                    const char* input = nullptr,
                    unsigned int timeout = 0);
 
+bool for_each_line(const std::string& program,
+                   const std::vector<std::string>& arguments,
+                   std::function<bool(std::string&)> const &stdout_callback);
+
+
 result execute(const std::string& program,
                const std::vector<std::string>& arguments,
                std::function<bool(std::string&)> const &stdout_callback,
