@@ -14,6 +14,8 @@ find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem)
 # find hwloc
 find_package(Hwloc REQUIRED)
 
+# find sqlite3
+find_package(sqlite3 REQUIRED)
 # add lib and bin directory
 add_subdirectory(lib)
 add_subdirectory(bin)

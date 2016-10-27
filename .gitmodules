@@ -1,3 +1,6 @@
 [submodule "sysmap/nitro"]
 	path = sysmap/nitro
 	url = https://github.com/tud-zih-energy/nitro.git
+[submodule "sysmap/sqlite_modern_cpp"]
+	path = sysmap/sqlite_modern_cpp
+	url = https://github.com/aminroosta/sqlite_modern_cpp.git
