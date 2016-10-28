@@ -14,16 +14,18 @@ namespace adafs { namespace linux {
     void Infiniband_Extractor::collect_ibnetdiscover(data& result)
     {
         std::string connection_guid;
-        utils::file::for_each_line("../test_data/ib_data/ibnetdiscover_plain_taurusi6593", [&](const std::string& line) {
-                // define pattern for switch line
-                std::regex switch_pattern(R"(^Switch\s+(\d+)\s+\"([\w-]+)\"\s+#\s+\"([^\"]+)\"\s+(\w+)(.*)$)");
-                // define pattern for switch connectivity line
-                std::regex switch_connectivity_pattern(R"(^\[(\d+)\]\s+\"([\w-]+)\"\[(\d+)\](?:\(([^\)]+)\))?\s+#\s+\"([^\"]+)\"\s+lid\s+(\d+)\s+(.*)$)");
-                // define pattern for host line
-                std::regex host_pattern(R"(^Ca\s+(\d+)\s+\"([\w-]+)\"\s+#\s+\"([^\"]+)\"$)");
-                // define pattern for host connectivity line
-                std::regex host_connectivity_pattern(R"(^\[(\d+)\]\(([^\)]+)\)\s+\"([^\"]+)\"\[(\d+)\]\s+#\s+lid\s+(\d+)\s+lmc\s+(\d+)\s+\"([^\"]+)\"\s+lid\s+(\d+)\s+(.*)$)");
+        // NOTE: define reqular expressions here is a great performance benefit.
+        // compared with definition in the lambda.
+        // define pattern for switch line
+        std::regex switch_pattern(R"(^Switch\s+(\d+)\s+\"([\w-]+)\"\s+#\s+\"([^\"]+)\"\s+(\w+)(.*)$)");
+        // define pattern for switch connectivity line
+        std::regex switch_connectivity_pattern(R"(^\[(\d+)\]\s+\"([\w-]+)\"\[(\d+)\](?:\(([^\)]+)\))?\s+#\s+\"([^\"]+)\"\s+lid\s+(\d+)\s+(.*)$)");
+        // define pattern for host line
+        std::regex host_pattern(R"(^Ca\s+(\d+)\s+\"([\w-]+)\"\s+#\s+\"([^\"]+)\"$)");
+        // define pattern for host connectivity line
+        std::regex host_connectivity_pattern(R"(^\[(\d+)\]\(([^\)]+)\)\s+\"([^\"]+)\"\[(\d+)\]\s+#\s+lid\s+(\d+)\s+lmc\s+(\d+)\s+\"([^\"]+)\"\s+lid\s+(\d+)\s+(.*)$)");
 
+        utils::file::for_each_line("../../test_data/ib_data/ibnetdiscover_plain_taurusi6593", [&](const std::string& line) {
                 std::smatch matches;
                 if (std::regex_search(line, matches, switch_pattern)) {
                     connection_guid = assemble_switch(matches, result);
