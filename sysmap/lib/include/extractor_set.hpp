@@ -27,6 +27,8 @@ struct Extractor_Set {
 
     void extract();
 
+    void save();
+
     void write(std::ostream& os, const Output_format format);
 
     private:

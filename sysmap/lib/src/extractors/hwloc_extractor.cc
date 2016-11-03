@@ -73,4 +73,9 @@ namespace adafs { namespace extractor {
 
     }
 
+    void Hwloc_Extractor::store(Extractor_Set& findings)
+    {
+        // TODO:
+    }
+
 }} /* closing namesapce adafs::extractor */

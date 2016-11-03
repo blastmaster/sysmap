@@ -30,4 +30,10 @@ namespace adafs { namespace extractor {
         }
     }
 
+    void Disk_Extractor::store(Extractor_Set& findings)
+    {
+        // TODO:
+
+    }
+
 }} /* closing namespace adafs::extractor */
