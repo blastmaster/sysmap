@@ -14,6 +14,7 @@ struct Infiniband_Extractor : Extractor {
     Infiniband_Extractor();
 
     virtual void load(Extractor_Set& findings) override;
+    virtual void store(Extractor_Set& findings) override;
 
 protected:
 

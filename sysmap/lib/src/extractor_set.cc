@@ -33,6 +33,16 @@ namespace adafs {
         }
     }
 
+
+    void Extractor_Set::save()
+    {
+        for (const auto& kv_extr : m_extractormap) {
+            auto extractor = kv_extr.second.get();
+            extractor->store(*this);
+        }
+    }
+
+
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {

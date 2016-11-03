@@ -62,4 +62,9 @@ namespace adafs { namespace extractor {
         }
     }
 
+    void Filesystem_Extractor::store(Extractor_Set& findings)
+    {
+        // TODO:
+    }
+
 }} /* closing namespace adafs::extractor */
