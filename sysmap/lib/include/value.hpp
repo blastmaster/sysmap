@@ -7,11 +7,25 @@
 
 namespace adafs {
 
+
+/**
+ * Note:
+ * function with deduced return type cannot be virtual!
+ *
+ */
+
 struct Value {
 
     Value() {}
 
     virtual ~Value() = default;
+
+    template<typename T>
+    const T* as() const
+    {
+        return dynamic_cast<const T*>(this);
+    }
+
 
     virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const = 0;
 
