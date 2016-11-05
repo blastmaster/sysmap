@@ -11,6 +11,10 @@ namespace adafs {
 
     struct Map_value : Value {
 
+        using mapvalue_t = std::map<std::string, std::unique_ptr<Value>>;
+        using iterator = mapvalue_t::iterator;
+        using const_iterator = mapvalue_t::const_iterator;
+
         Map_value() {}
 
         ~Map_value() {}
@@ -21,10 +25,31 @@ namespace adafs {
 
         void add(const std::string& name, std::unique_ptr<Value> value);
 
+        bool empty() const;
+
+        size_t size() const;
+
+        const Value* operator[](const std::string& name) const;
+
+        template<typename T>
+        const T* get(const std::string& name) const
+        {
+            return dynamic_cast<const T*>(this->operator[](name));
+        }
+
         virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const override;
 
+        iterator begin();
+
+        const_iterator begin() const;
+
+        iterator end();
+
+        const_iterator end() const;
+
         private:
-        std::map<std::string, std::unique_ptr<Value>> m_elements;
+        //std::map<std::string, std::unique_ptr<Value>> m_elements;
+        mapvalue_t m_elements;
 
     };
 }

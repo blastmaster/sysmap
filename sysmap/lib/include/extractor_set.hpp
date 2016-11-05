@@ -12,6 +12,9 @@ namespace adafs {
 
 struct Extractor_Set {
 
+    using infomap_t = std::map<std::string, std::unique_ptr<Value>>;
+    using extractormap_t = std::map<std::string, std::shared_ptr<Extractor>>;
+
     Extractor_Set() = default;
 
     ~Extractor_Set() {}
@@ -31,11 +34,20 @@ struct Extractor_Set {
 
     void write(std::ostream& os, const Output_format format);
 
+    template<typename T>
+    const T* get(const std::string& name)
+    {
+        return dynamic_cast<const T*>(get_value(name));
+    }
+
     private:
-        // map of extractors to use name -> extractor
-        std::map<std::string, std::shared_ptr<Extractor>> m_extractormap;
-        // map of informations gathered from extractors name -> value
-        std::map<std::string, std::unique_ptr<Value>> m_infomap;
+
+    const Value* get_value(const std::string& name);
+
+    // map of extractors to use name -> extractor
+    extractormap_t m_extractormap;
+    // map of informations gathered from extractors name -> value
+    infomap_t m_infomap;
 
 };
 

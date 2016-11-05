@@ -64,5 +64,14 @@ namespace adafs {
 
     }
 
+    const Value* Extractor_Set::get_value(const std::string& name)
+    {
+        auto it = m_infomap.find(name);
+        if (it == m_infomap.end()) {
+            return nullptr;
+        }
+        return it->second.get();
+    }
+
 
 } /* closing namespace adafs */

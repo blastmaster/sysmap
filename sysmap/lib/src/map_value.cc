@@ -25,6 +25,25 @@ namespace adafs {
         return ti == typeid(Array_value);
     }
 
+    bool Map_value::empty() const
+    {
+        return m_elements.empty();
+    }
+
+    size_t Map_value::size() const
+    {
+        return m_elements.size();
+    }
+
+    const Value* Map_value::operator[](const std::string& name) const
+    {
+        auto it = m_elements.find(name);
+        if (it == m_elements.end()) {
+            return nullptr;
+        }
+        return it->second.get();
+    }
+
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         static bool first = true;
@@ -48,6 +67,27 @@ namespace adafs {
         }
 
         return os;
+    }
+
+
+    Map_value::iterator Map_value::begin()
+    {
+        return m_elements.begin();
+    }
+
+    Map_value::iterator Map_value::end()
+    {
+        return m_elements.end();
+    }
+
+    Map_value::const_iterator Map_value::begin() const
+    {
+        return m_elements.begin();
+    }
+
+    Map_value::const_iterator Map_value::end() const
+    {
+        return m_elements.end();
     }
 
 } /* closing namespace adafs */

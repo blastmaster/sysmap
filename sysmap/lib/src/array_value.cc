@@ -15,6 +15,21 @@ namespace adafs {
         m_elements.emplace_back(std::move(value));
     }
 
+    bool Array_value::empty() const
+    {
+        return m_elements.empty();
+    }
+
+    size_t Array_value::size() const
+    {
+        return m_elements.size();
+    }
+
+    const Value* Array_value::operator[](size_t idx) const
+    {
+        return m_elements[idx].get();
+    }
+
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         switch (format) {
@@ -25,6 +40,26 @@ namespace adafs {
         }
 
         return os;
+    }
+
+    Array_value::iterator Array_value::begin()
+    {
+        return m_elements.begin();
+    }
+
+    Array_value::iterator Array_value::end()
+    {
+        return m_elements.end();
+    }
+
+    Array_value::const_iterator Array_value::begin() const
+    {
+        return m_elements.begin();
+    }
+
+    Array_value::const_iterator Array_value::end() const
+    {
+        return m_elements.end();
     }
 
 } /* closing namespace adafs */
