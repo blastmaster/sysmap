@@ -17,8 +17,8 @@ namespace adafs { namespace extractor {
 
         protected:
 
-        struct Disk {
-
+        struct Disk
+        {
             std::string name;
 
             std::string vendor;
@@ -30,13 +30,11 @@ namespace adafs { namespace extractor {
             std::string device_number;
 
             uint64_t size;
-
         };
 
-        struct data {
-
+        struct data
+        {
             std::vector<Disk> disks;
-
         };
 
         virtual data collect() = 0;
