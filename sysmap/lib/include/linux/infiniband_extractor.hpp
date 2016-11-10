@@ -1,14 +1,13 @@
 #ifndef __ADAFS_LINUX_INFINIBAND_EXTRACTOR_HPP__
 #define __ADAFS_LINUX_INFINIBAND_EXTRACTOR_HPP__
 
-#include <regex>
-
 #include "../extractors/infiniband_extractor.hpp"
+#include <regex>
 
 namespace adafs { namespace linux {
 
-    struct Infiniband_Extractor : extractor::Infiniband_Extractor {
-
+    struct Infiniband_Extractor : extractor::Infiniband_Extractor
+    {
         protected:
             virtual data collect() override;
 
