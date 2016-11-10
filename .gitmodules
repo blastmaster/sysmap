@@ -4,3 +4,6 @@
 [submodule "sysmap/sqlite_modern_cpp"]
 	path = sysmap/sqlite_modern_cpp
 	url = https://github.com/aminroosta/sqlite_modern_cpp.git
+[submodule "sysmap/fmt"]
+	path = sysmap/fmt
+	url = https://github.com/fmtlib/fmt.git
