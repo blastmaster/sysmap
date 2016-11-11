@@ -10,8 +10,8 @@
 
 namespace adafs { namespace extractor {
 
-    struct Hwloc_Extractor : Extractor {
-
+    struct Hwloc_Extractor : Extractor
+    {
         Hwloc_Extractor();
 
         virtual ~Hwloc_Extractor();
@@ -21,8 +21,8 @@ namespace adafs { namespace extractor {
 
         protected:
 
-        struct PCI_Device {
-
+        struct PCI_Device
+        {
             std::string name;
 
             unsigned short domain;
@@ -48,10 +48,10 @@ namespace adafs { namespace extractor {
             float linkspeed;
         };
 
-        struct Machine_Info {
-
+        struct Machine_Info
+        {
             // DMIProductName
-            std::string product_name; 
+            std::string product_name;
             // DMIProductVersion
             std::string product_version;
             // DMIBoardVendor
@@ -98,15 +98,15 @@ namespace adafs { namespace extractor {
             std::string process_name;
         };
 
-        struct Memory_Info {
-
+        struct Memory_Info
+        {
             // total memory in bytes
             uint64_t total_memory;
             // local memory in bytes
             uint64_t local_memory;
 
-            struct Memory_Page_Type {
-
+            struct Memory_Page_Type
+            {
                 Memory_Page_Type() : size{0}, count{0} {}
 
                 Memory_Page_Type(uint64_t sz, uint64_t cnt) :
@@ -119,23 +119,20 @@ namespace adafs { namespace extractor {
             };
 
             std::vector<Memory_Page_Type> page_types;
-
         };
 
-        struct data {
-
+        struct data
+        {
             Machine_Info machine_info;
 
             Memory_Info memory_info;
 
             std::vector<PCI_Device> pci_devices;
-
         };
 
         virtual data collect() = 0;
 
         hwloc_topology_t topology;
-
     };
 
 }} /* closing namespace adafs::extractor */

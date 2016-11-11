@@ -69,8 +69,26 @@ namespace adafs { namespace extractor {
         memory->add("PageTypes", std::move(pages));
         findings.add_info("MemoryInfo", std::move(memory));
 
-        //TODO pci devices
+        //TODO pci devices beware of formatting issues, here we have some hex values!!!!
+        auto pci_devices = make_value<Array_value>();
+        for (const auto& pdev : data.pci_devices) {
+            auto value = make_value<Map_value>();
+            value->add("name", make_value<String_value>(pdev.name));
+            value->add("domain", make_value<Ushort_value>(pdev.domain));
+            value->add("bus", make_value<Uchar_value>(pdev.bus));
+            value->add("dev", make_value<Uchar_value>(pdev.dev));
+            value->add("func", make_value<Uchar_value>(pdev.func));
+            value->add("class_id", make_value<Ushort_value>(pdev.class_id));
+            value->add("vendor_id", make_value<Ushort_value>(pdev.vendor_id));
+            value->add("device_id", make_value<Ushort_value>(pdev.device_id));
+            value->add("subvendor_id", make_value<Ushort_value>(pdev.subvendor_id));
+            value->add("subdevice_id", make_value<Ushort_value>(pdev.subdevice_id));
+            value->add("revision", make_value<Uchar_value>(pdev.revision));
+            value->add("linkspeed", make_value<Float_value>(pdev.linkspeed));
 
+            pci_devices->add(std::move(value));
+        }
+        findings.add_info("PCIDevices", std::move(pci_devices));
     }
 
     void Hwloc_Extractor::store(Extractor_Set& findings)

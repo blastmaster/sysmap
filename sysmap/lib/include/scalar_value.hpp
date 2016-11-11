@@ -42,6 +42,9 @@ namespace adafs {
     using Uint_value = Scalar_value<uint64_t>;
     using Int_value = Scalar_value<int>;
     using Double_value = Scalar_value<double>;
+    using Ushort_value = Scalar_value<unsigned short>;
+    using Uchar_value = Scalar_value<unsigned char>;
+    using Float_value = Scalar_value<float>;
 
 } /* closing namespace adafs */
 
