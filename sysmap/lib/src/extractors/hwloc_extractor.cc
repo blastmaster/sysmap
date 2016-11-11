@@ -2,11 +2,183 @@
 #include "scalar_value.hpp"
 #include "array_value.hpp"
 #include "map_value.hpp"
+#include "utils.hpp"
 
 #include "extractors/hwloc_extractor.hpp"
 
+#include <sqlite_modern_cpp.h>
+
+using namespace sqlite;
 
 namespace adafs { namespace extractor {
+
+    static void create_machine_info_table(database& db)
+    {
+        db << "CREATE TABLE IF NOT EXISTS machine_info (\
+                product_name string,\
+                product_version string,\
+                board_vendor string,\
+                board_name string,\
+                board_version string,\
+                board_asset_tag string,\
+                chassi_vendor string,\
+                chassi_type string,\
+                chassi_version string,\
+                chassi_asset_tag string,\
+                bios_vendor string,\
+                bios_version string,\
+                bios_date string,\
+                sys_vendor string,\
+                linux_cgroup string,\
+                os_name string,\
+                os_release string,\
+                os_version string,\
+                hostname string not null primary key,\
+                architecture string,\
+                process_name string\
+            );";
+    }
+
+    static void create_memory_info_table(database& db)
+    {
+        db << "CREATE TABLE IF NOT EXISTS memory_info (\
+                total_memory integer,\
+                local_memory integer\
+            );";
+    }
+
+    static void create_pci_device_table(database db)
+    {
+        db << "CREATE TABLE IF NOT EXISTS pci_devices (\
+                name string,\
+                domain integer,\
+                bus character(4),\
+                dev character(4),\
+                func character(4),\
+                class_id integer,\
+                vendor_id integer,\
+                device_id integer,\
+                subvendor_id integer,\
+                subdevice_id integer,\
+                revision character(2),\
+                linkspeed float\
+            );";
+    }
+
+    static void insert_pci_device(const std::string& name,
+            const unsigned short domain,
+            const int& bus,
+            const int& dev,
+            const int& func,
+            const unsigned short class_id,
+            const unsigned short vendor_id,
+            const unsigned short device_id,
+            const unsigned short subvendor_id,
+            const unsigned short subdevice_id,
+            const int& revision,
+            const float linkspeed, database& db)
+    {
+        db << "INSERT INTO pci_devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+            << name
+            << (int) domain
+            << bus
+            << dev
+            << func
+            << (int) class_id
+            << (int) vendor_id
+            << (int) device_id
+            << (int) subvendor_id
+            << (int) subdevice_id
+            << revision
+            << linkspeed;
+    }
+
+    static int insert_pci_devices(const Array_value* pci_devs, database& db)
+    {
+        int inserted = 0;
+        for (const auto& pci_dev : *pci_devs) {
+            auto dev_map = pci_dev->as<Map_value>();
+            std::string name = dev_map->get<String_value>("name")->value();
+            unsigned short domain = dev_map->get<Ushort_value>("domain")->value();
+            //TODO: casting values of unsingend char to int, maybe use a string
+            //format and convert at load-time
+            int bus = static_cast<int>(dev_map->get<Uchar_value>("bus")->value());
+            //TODO: casting values of unsingend char to int, maybe use a string
+            //format and convert at load-time
+            int dev = static_cast<int>(dev_map->get<Uchar_value>("dev")->value());
+            //TODO: casting values of unsingend char to int maybe use a string
+            //format and convert at load-time
+            int func = static_cast<int>(dev_map->get<Uchar_value>("func")->value());
+            unsigned short class_id = dev_map->get<Ushort_value>("class_id")->value();
+            unsigned short vendor_id = dev_map->get<Ushort_value>("vendor_id")->value();
+            unsigned short device_id = dev_map->get<Ushort_value>("device_id")->value();
+            unsigned short subvendor_id = dev_map->get<Ushort_value>("subvendor_id")->value();
+            unsigned short subdevice_id = dev_map->get<Ushort_value>("subdevice_id")->value();
+            //TODO: casting values of unsingend char to int maybe use a string
+            //format and convert at load-time
+            int revision = static_cast<int>(dev_map->get<Uchar_value>("revision")->value());
+            float linkspeed = dev_map->get<Float_value>("linkspeed")->value();
+
+            insert_pci_device(name, domain, bus, dev, func, class_id, vendor_id, device_id,
+                    subvendor_id, subdevice_id, revision, linkspeed, db);
+            ++inserted;
+        }
+        return inserted;
+    }
+
+    static void insert_memory_info(const uint64_t tmem, const uint64_t lmem, database& db)
+    {
+        db << "INSERT INTO memory_info VALUES (?, ?);"
+            << (int) tmem
+            << (int) lmem;
+    }
+
+    static void insert_machine_info(const std::string& name,
+            const std::string& product_version,
+            const std::string& board_vendor,
+            const std::string& board_name,
+            const std::string& board_version,
+            const std::string& board_asset_tag,
+            const std::string& chassi_vendor,
+            const std::string& chassi_type,
+            const std::string& chassi_version,
+            const std::string& chassi_asset_tag,
+            const std::string& bios_vendor,
+            const std::string& bios_version,
+            const std::string& bios_date,
+            const std::string& sys_vendor,
+            const std::string& linux_cgroup,
+            const std::string& os_name,
+            const std::string& os_release,
+            const std::string& os_version,
+            const std::string& hostname,
+            const std::string& architecture,
+            const std::string& process_name, database& db)
+    {
+        db << "INSERT INTO machine_info VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+            << name
+            << product_version
+            << board_vendor
+            << board_name
+            << board_version
+            << board_asset_tag
+            << chassi_vendor
+            << chassi_type
+            << chassi_version
+            << chassi_asset_tag
+            << bios_vendor
+            << bios_version
+            << bios_date
+            << sys_vendor
+            << linux_cgroup
+            << os_name
+            << os_release
+            << os_version
+            << hostname
+            << architecture
+            << process_name;
+    }
+
 
     Hwloc_Extractor::Hwloc_Extractor() : Extractor("Hwloc")
     {
@@ -26,25 +198,25 @@ namespace adafs { namespace extractor {
 
         auto machine = make_value<Map_value>();
 
-        machine->add("DMIProductName", make_value<String_value>(std::move(data.machine_info.product_name)));
-        machine->add("DMIProductVersion", make_value<String_value>(std::move(data.machine_info.product_version)));
-        machine->add("DMIBoardVendor", make_value<String_value>(std::move(data.machine_info.board_vendor)));
-        machine->add("DMIBoardName", make_value<String_value>(std::move(data.machine_info.board_name)));
-        machine->add("DMIBoardVersion", make_value<String_value>(std::move(data.machine_info.board_version)));
-        machine->add("DMIBoardAssetTag", make_value<String_value>(std::move(data.machine_info.board_asset_tag)));
-        machine->add("DMIChassisVendor", make_value<String_value>(std::move(data.machine_info.chassi_vendor)));
-        machine->add("DMIChassisType", make_value<String_value>(std::move(data.machine_info.chassi_type)));
-        machine->add("DMIChassisVersion", make_value<String_value>(std::move(data.machine_info.chassi_version)));
-        machine->add("DMIChassisAssetTag", make_value<String_value>(std::move(data.machine_info.chassi_asset_tag)));
-        machine->add("DMIBIOSVendor", make_value<String_value>(std::move(data.machine_info.bios_vendor)));
-        machine->add("DMIBIOSVersion", make_value<String_value>(std::move(data.machine_info.bios_version)));
-        machine->add("DMIBIOSDate", make_value<String_value>(std::move(data.machine_info.bios_date)));
-        machine->add("DMISysVendor", make_value<String_value>(std::move(data.machine_info.sys_vendor)));
+        machine->add("ProductName", make_value<String_value>(std::move(data.machine_info.product_name)));
+        machine->add("ProductVersion", make_value<String_value>(std::move(data.machine_info.product_version)));
+        machine->add("BoardVendor", make_value<String_value>(std::move(data.machine_info.board_vendor)));
+        machine->add("BoardName", make_value<String_value>(std::move(data.machine_info.board_name)));
+        machine->add("BoardVersion", make_value<String_value>(std::move(data.machine_info.board_version)));
+        machine->add("BoardAssetTag", make_value<String_value>(std::move(data.machine_info.board_asset_tag)));
+        machine->add("ChassisVendor", make_value<String_value>(std::move(data.machine_info.chassi_vendor)));
+        machine->add("ChassisType", make_value<String_value>(std::move(data.machine_info.chassi_type)));
+        machine->add("ChassisVersion", make_value<String_value>(std::move(data.machine_info.chassi_version)));
+        machine->add("ChassisAssetTag", make_value<String_value>(std::move(data.machine_info.chassi_asset_tag)));
+        machine->add("BiosVendor", make_value<String_value>(std::move(data.machine_info.bios_vendor)));
+        machine->add("BiosVersion", make_value<String_value>(std::move(data.machine_info.bios_version)));
+        machine->add("BiosDate", make_value<String_value>(std::move(data.machine_info.bios_date)));
+        machine->add("SysVendor", make_value<String_value>(std::move(data.machine_info.sys_vendor)));
         // NOTE: hwloc_backend will not be added.
         machine->add("LinuxCgroup", make_value<String_value>(std::move(data.machine_info.linux_cgroup)));
-        machine->add("OSName", make_value<String_value>(std::move(data.machine_info.os_name)));
-        machine->add("OSRelease", make_value<String_value>(std::move(data.machine_info.os_release)));
-        machine->add("OSVersion", make_value<String_value>(std::move(data.machine_info.os_version)));
+        machine->add("OsName", make_value<String_value>(std::move(data.machine_info.os_name)));
+        machine->add("OsRelease", make_value<String_value>(std::move(data.machine_info.os_release)));
+        machine->add("OsVersion", make_value<String_value>(std::move(data.machine_info.os_version)));
         machine->add("Hostname", make_value<String_value>(std::move(data.machine_info.hostname)));
         machine->add("Architecture", make_value<String_value>(std::move(data.machine_info.architecture)));
         // NOTE: hwloc_version will not be added.
@@ -70,6 +242,8 @@ namespace adafs { namespace extractor {
         findings.add_info("MemoryInfo", std::move(memory));
 
         //TODO pci devices beware of formatting issues, here we have some hex values!!!!
+        //     Should these handled as strings with respective ios_hex foo?
+        //     How should they stored in the database???
         auto pci_devices = make_value<Array_value>();
         for (const auto& pdev : data.pci_devices) {
             auto value = make_value<Map_value>();
@@ -94,6 +268,60 @@ namespace adafs { namespace extractor {
     void Hwloc_Extractor::store(Extractor_Set& findings)
     {
         // TODO:
+        std::string dbname = "host.db";
+        database db(dbname);
+        adafs::utils::log::logging::debug() << "hwloc extractor created database object: " << dbname;
+        create_machine_info_table(db);
+        adafs::utils::log::logging::debug() << "hwloc extractor created machine_info table";
+        create_memory_info_table(db);
+        adafs::utils::log::logging::debug() << "hwloc extractor created memory_info table";
+        create_pci_device_table(db);
+        adafs::utils::log::logging::debug() << "hwloc extractor created pci_devices table";
+
+
+        // FIXME some of the ugliest code i've ever written
+        // insert machine_info
+        auto m_info = findings.get<Map_value>("MachineInfo");
+        std::string name = m_info->get<String_value>("ProductName")->value();
+        std::string product_version = m_info->get<String_value>("ProductVersion")->value();
+        std::string board_vendor = m_info->get<String_value>("BoardVendor")->value();
+        std::string board_name = m_info->get<String_value>("BoardName")->value();
+        std::string board_version = m_info->get<String_value>("BoardVersion")->value();
+        std::string board_asset_tag = m_info->get<String_value>("BoardAssetTag")->value();
+        std::string chassi_vendor = m_info->get<String_value>("ChassisVendor")->value();
+        std::string chassi_type = m_info->get<String_value>("ChassisType")->value();
+        std::string chassi_version = m_info->get<String_value>("ChassisVersion")->value();
+        std::string chassi_asset_tag = m_info->get<String_value>("ChassisAssetTag")->value();
+        std::string bios_vendor = m_info->get<String_value>("BiosVendor")->value();
+        std::string bios_version = m_info->get<String_value>("BiosVersion")->value();
+        std::string bios_date = m_info->get<String_value>("BiosDate")->value();
+        std::string sys_vendor = m_info->get<String_value>("SysVendor")->value();
+        std::string linux_cgroup = m_info->get<String_value>("LinuxCgroup")->value();
+        std::string os_name = m_info->get<String_value>("OsName")->value();
+        std::string os_release = m_info->get<String_value>("OsRelease")->value();
+        std::string os_version = m_info->get<String_value>("OsVersion")->value();
+        std::string hostname = m_info->get<String_value>("Hostname")->value();
+        std::string architecture = m_info->get<String_value>("Architecture")->value();
+        std::string process_name = m_info->get<String_value>("ProcessName")->value();
+
+        insert_machine_info(name, product_version, board_vendor, board_name, board_version, board_asset_tag,
+                chassi_vendor, chassi_type, chassi_version, chassi_asset_tag,
+                bios_vendor, bios_version, bios_date, sys_vendor, linux_cgroup,
+                os_name, os_release, os_version, hostname, architecture, process_name, db);
+        adafs::utils::log::logging::debug() << "hwloc extractor insterted machine info";
+
+        // insert memory info
+        auto mem_info = findings.get<Map_value>("MemoryInfo");
+        uint64_t totalmem = mem_info->get<Uint_value>("TotalMemory")->value();
+        uint64_t localmem = mem_info->get<Uint_value>("LocalMemory")->value();
+
+        insert_memory_info(totalmem, localmem, db);
+        adafs::utils::log::logging::debug() << "hwloc extractor inserted memory info";
+
+        // insert pci devices
+        auto pci_info = findings.get<Array_value>("PCIDevices");
+        int inserted_pci_devices = insert_pci_devices(pci_info, db);
+        adafs::utils::log::logging::debug() << "hwloc extractor inserted pci devices: " << inserted_pci_devices;
     }
 
 }} /* closing namesapce adafs::extractor */
