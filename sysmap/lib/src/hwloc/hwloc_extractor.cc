@@ -9,6 +9,7 @@ namespace adafs { namespace hwloc {
         data result;
         collect_machine_info(result);
         collect_memory_info(result);
+        collect_pci_devices(result);
 
         return result;
     }
@@ -66,15 +67,40 @@ namespace adafs { namespace hwloc {
         for (int i = 0; i < root_obj->memory.page_types_len; ++i) {
             result.memory_info.page_types.emplace_back(root_obj->memory.page_types[i].size,
                         root_obj->memory.page_types[i].count);
-
         }
     }
 
+    Hwloc_Extractor::PCI_Device Hwloc_Extractor::assemble_pci_device(const std::string& name,
+            const hwloc_obj_t& obj) const
+    {
+        auto pcidev = obj->attr->pcidev;
+        return PCI_Device {name, pcidev.domain, pcidev.bus,
+            pcidev.dev, pcidev.func, pcidev.class_id,
+            pcidev.vendor_id, pcidev.device_id,
+            pcidev.subvendor_id, pcidev.subdevice_id, pcidev.revision,
+            pcidev.linkspeed
+        };
+    }
 
     void Hwloc_Extractor::collect_pci_devices(data& result)
     {
-        //TODO
-    }
+        hwloc_obj_t obj;
+        auto num_pci_devs = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PCI_DEVICE);
+        adafs::utils::log::logging::debug() << "hwloc extractor number of detected pci devices: " << num_pci_devs;
+        for (unsigned i = 0; i < num_pci_devs; ++i) {
+            obj = hwloc_get_obj_by_type(topology, HWLOC_OBJ_PCI_DEVICE, i);
+            if (obj == nullptr) {
+                adafs::utils::log::logging::error() << "ERROR! hwloc extractor PCI device object is NULL!";
+                continue;
+            }
+            std::string name {obj->name};
+            if (&(obj->attr->pcidev) == nullptr) {
+                adafs::utils::log::logging::error() << "ERROR! hwloc extractor PCI device attributes are NULL!";
+                continue;
+            }
 
+            result.pci_devices.push_back(assemble_pci_device(name, obj));
+        }
+    }
 
 }} /* closing namespace adafs::hwloc */

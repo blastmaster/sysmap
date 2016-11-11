@@ -17,6 +17,8 @@ namespace adafs { namespace hwloc {
             void collect_pci_devices(data& result);
             void collect_machine_info(data& result);
             void collect_memory_info(data& result);
+            PCI_Device assemble_pci_device(const std::string& name,
+                    const hwloc_obj_t& obj) const;
 
     };
 
