@@ -80,9 +80,18 @@ namespace adafs { namespace extractor {
             std::string name = part_map->get<String_value>("name")->value();
             std::string device_number = part_map->get<String_value>("device_number")->value();
             std::string uuid = part_map->get<String_value>("uuid")->value();
-            std::string partuuid = part_map->get<String_value>("partuuid")->value();
-            std::string label = part_map->get<String_value>("label")->value();
-            std::string mntpnt = part_map->get<String_value>("mountpoint")->value();
+            std::string partuuid {"NONE"};
+            if (part_map->get<String_value>("partuuid") != nullptr) {
+                partuuid = part_map->get<String_value>("partuuid")->value();
+            }
+            std::string label {"NONE"};
+            if (part_map->get<String_value>("label") != nullptr) {
+                label = part_map->get<String_value>("label")->value();
+            }
+            std::string mntpnt {"NONE"};
+            if (part_map->get<String_value>("mountpoint") != nullptr) {
+                mntpnt = part_map->get<String_value>("mountpoint")->value();
+            }
             int size = part_map->get<Int_value>("size")->value();
             insert_partition(name, device_number, uuid, partuuid, label, mntpnt, size, db);
             ++inserted;
