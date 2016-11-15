@@ -173,16 +173,16 @@ namespace adafs { namespace extractor {
         return inserted;
     }
 
-    static int insert_host_connections(const Map_value* hosts, database& db)
+    static int insert_connections(const Map_value* entities, database& db)
     {
         int inserted = 0;
 
-        for (const auto& host : *hosts) {
-            auto hst = host.second.get()->as<Map_value>();
-            std::string host_guid = hst->get<String_value>("guid")->value();
-            auto hcons = hst->get<Array_value>("connections");
+        for (const auto& entity: *entities) {
+            auto ent = entity.second.get()->as<Map_value>();
+            std::string guid = ent->get<String_value>("guid")->value();
+            auto cons = ent->get<Array_value>("connections");
 
-            for (const auto& c : *hcons) {
+            for (const auto& c : *cons) {
                 auto con_map = c->as<Map_value>();
                 uint64_t local_port = con_map->get<Uint_value>("local port")->value();
                 std::string peer_guid = con_map->get<String_value>("peer_guid")->value();
@@ -194,7 +194,7 @@ namespace adafs { namespace extractor {
                 uint64_t local_lmc = con_map->get<Uint_value>("local lmc")->value();
                 std::string speed = con_map->get<String_value>("speed")->value();
 
-                insert_connection(host_guid, peer_guid, local_port, peer_port, db);
+                insert_connection(guid, peer_guid, local_port, peer_port, db);
                 insert_connection_details(local_port, peer_guid, peer_port, peer_port_guid,
                                             peer_desc, peer_lid, local_lid, local_lmc, speed, db);
                 ++inserted;
@@ -203,50 +203,6 @@ namespace adafs { namespace extractor {
 
         return inserted;
     }
-
-    static int insert_switch_connections(const Map_value* switches, database& db)
-    {
-        int inserted = 0;
-
-        for (const auto& swtch : *switches) {
-            auto sw = swtch.second.get()->as<Map_value>();
-            std::string sw_guid = sw->get<String_value>("guid")->value();
-            auto scons = sw->get<Array_value>("connections");
-
-            for (const auto& c : *scons) {
-                auto con_map = c->as<Map_value>();
-                uint64_t local_port = con_map->get<Uint_value>("local port")->value();
-                std::string peer_guid = con_map->get<String_value>("peer_guid")->value();
-                uint64_t peer_port = con_map->get<Uint_value>("peer port")->value();
-                std::string peer_port_guid = con_map->get<String_value>("peer port guid")->value();
-                std::string peer_desc = con_map->get<String_value>("peer description")->value();
-                uint64_t peer_lid = con_map->get<Uint_value>("peer lid")->value();
-                uint64_t local_lid = con_map->get<Uint_value>("local lid")->value();
-                uint64_t local_lmc = con_map->get<Uint_value>("local lmc")->value();
-                std::string speed = con_map->get<String_value>("speed")->value();
-
-
-                try {
-                    insert_connection(sw_guid, peer_guid, local_port, peer_port, db);
-                } catch (std::exception& e) {
-                    adafs::utils::log::logging::error() << "exception while insert_connection\n" <<
-                        "from : " << sw_guid << " to: " << peer_guid << "\n" << e.what();
-                }
-
-                try{
-                    insert_connection_details(local_port, peer_guid, peer_port, peer_port_guid,
-                                                peer_desc, peer_lid, local_lid, local_lmc, speed, db);
-                } catch (std::exception& e) {
-                    adafs::utils::log::logging::error() << "exception while insert_connection_details\n" << e.what();
-                }
-
-                ++inserted;
-            }
-        }
-
-        return inserted;
-    }
-
 
     Infiniband_Extractor::Infiniband_Extractor() : Extractor("Infiniband") {}
 
@@ -316,11 +272,11 @@ namespace adafs { namespace extractor {
         adafs::utils::log::logging::debug() << "database inserted: " << inserted_switches << " switches!";
 
         // insert host connections
-        int inserted_host_connections = insert_host_connections(hosts, db);
+        int inserted_host_connections = insert_connections(hosts, db);
         adafs::utils::log::logging::debug() << "database inserted: " << inserted_host_connections << " host connections!";
 
         // insert switch connections
-        int inserted_switch_connections = insert_switch_connections(switches, db);
+        int inserted_switch_connections = insert_connections(switches, db);
         adafs::utils::log::logging::debug() << "database inserted: " << inserted_switch_connections << "switch connections!";
 
     }
