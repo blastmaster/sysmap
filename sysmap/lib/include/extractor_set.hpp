@@ -10,8 +10,8 @@
 
 namespace adafs {
 
-struct Extractor_Set {
-
+struct Extractor_Set
+{
     using infomap_t = std::map<std::string, std::unique_ptr<Value>>;
     using extractormap_t = std::map<std::string, std::shared_ptr<Extractor>>;
 
@@ -48,7 +48,6 @@ struct Extractor_Set {
     extractormap_t m_extractormap;
     // map of informations gathered from extractors name -> value
     infomap_t m_infomap;
-
 };
 
 

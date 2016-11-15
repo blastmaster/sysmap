@@ -61,7 +61,7 @@ namespace adafs { namespace extractor {
                                  const std::string& mntpnt,
                                  const int& size, database& db)
     {
-        // TODO: device_number as primary key or (part)uuid?
+        // TODO: device_number as primary key or uuid?
         db << "INSERT INTO partitions VALUES (?, ?, ?, ?, ?, ?, ?);"
             << name
             << device_number
