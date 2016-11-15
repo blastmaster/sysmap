@@ -300,7 +300,7 @@ namespace adafs { namespace extractor {
     void Infiniband_Extractor::store(Extractor_Set& findings)
     {
         // TODO:
-        std::string dbname = this->name() + ".db";
+        std::string dbname = "host.db";
         adafs::utils::log::logging::debug() << "database name: " << dbname;
         database db = database(dbname);
         create_tables(db);
