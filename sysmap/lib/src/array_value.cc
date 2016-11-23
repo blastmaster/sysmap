@@ -30,6 +30,16 @@ namespace adafs {
         return m_elements[idx].get();
     }
 
+    void Array_value::to_json(Writer<OStreamWrapper>& writer) const
+    {
+        writer.StartArray();
+        for (const auto& v : m_elements) {
+            v->to_json(writer);
+        }
+        writer.EndArray();
+    }
+
+
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         switch (format) {
