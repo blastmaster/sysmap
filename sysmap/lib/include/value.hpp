@@ -3,7 +3,12 @@
 
 #include "output.hpp"
 
+#include "rapidjson/writer.h"
+#include "rapidjson/ostreamwrapper.h"
+
 #include <memory>
+
+using namespace rapidjson;
 
 namespace adafs {
 
@@ -26,6 +31,7 @@ struct Value {
         return dynamic_cast<const T*>(this);
     }
 
+    virtual void to_json(Writer<OStreamWrapper>& writer) const = 0;
 
     virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const = 0;
 

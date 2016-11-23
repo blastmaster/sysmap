@@ -37,6 +37,8 @@ namespace adafs {
             return dynamic_cast<const T*>(this->operator[](name));
         }
 
+        virtual void to_json(Writer<OStreamWrapper>& writer) const override;
+
         virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const override;
 
         iterator begin();

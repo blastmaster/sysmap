@@ -45,6 +45,8 @@ struct Array_value : Value {
         return dynamic_cast<const T*>(m_elements.at(idx).get());
     }
 
+    virtual void to_json(Writer<OStreamWrapper>& writer) const override;
+
     virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const override;
 
     private:

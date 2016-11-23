@@ -23,6 +23,8 @@ namespace adafs {
 
         const value_type& value() const { return m_value; }
 
+        virtual void to_json(Writer<OStreamWrapper>& writer) const override;
+
         virtual std::ostream& write(std::ostream& os, const Output_format format, bool quoted) const override
         {
             if (quoted)
@@ -35,6 +37,7 @@ namespace adafs {
 
     };
 
+
     /**
      * Define type aliases for most common scalar value types.
      */
@@ -45,6 +48,19 @@ namespace adafs {
     using Ushort_value = Scalar_value<unsigned short>;
     using Uchar_value = Scalar_value<unsigned char>;
     using Float_value = Scalar_value<float>;
+
+    /**
+     * Declare specializations for json
+     */
+
+    template<>
+    void String_value::to_json(Writer<OStreamWrapper>&) const;
+    template<>
+    void Uint_value::to_json(Writer<OStreamWrapper>&) const;
+    template<>
+    void Int_value::to_json(Writer<OStreamWrapper>&) const;
+    template<>
+    void Double_value::to_json(Writer<OStreamWrapper>&) const;
 
 } /* closing namespace adafs */
 

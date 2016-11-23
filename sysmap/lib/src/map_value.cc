@@ -44,6 +44,17 @@ namespace adafs {
         return it->second.get();
     }
 
+
+    void Map_value::to_json(Writer<OStreamWrapper>& writer) const
+    {
+        writer.StartObject();
+        for (const auto& kvp : m_elements) {
+            writer.Key(kvp.first.c_str());
+            kvp.second->to_json(writer);
+        }
+        writer.EndObject();
+    }
+
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         static bool first = true;
