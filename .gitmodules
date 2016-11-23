@@ -7,3 +7,6 @@
 [submodule "sysmap/fmt"]
 	path = sysmap/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "sysmap/rapidjson"]
+	path = sysmap/rapidjson
+	url = https://github.com/miloyip/rapidjson.git
