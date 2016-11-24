@@ -1,0 +1,9 @@
+[submodule "sysmap/lib/external/nitro"]
+	path = sysmap/lib/external/nitro
+	url = https://github.com/tud-zih-energy/nitro.git
+[submodule "sysmap/lib/external/rapidjson"]
+	path = sysmap/lib/external/rapidjson
+	url = https://github.com/miloyip/rapidjson.git
+[submodule "sysmap/lib/external/sqlite_modern_cpp"]
+	path = sysmap/lib/external/sqlite_modern_cpp
+	url = https://github.com/aminroosta/sqlite_modern_cpp.git
