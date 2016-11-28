@@ -25,27 +25,43 @@ namespace adafs { namespace extractor {
         {
             std::string name;
 
-            unsigned short domain;
+            unsigned short domain; // 0000 to ffff
 
-            unsigned char bus;
+            unsigned char bus; // 0 to ff
 
-            unsigned char dev;
+            unsigned char dev; // 0 to 1f
 
-            unsigned char func;
+            unsigned char func; // 0 to f
 
-            unsigned short class_id;
+            unsigned short class_id; // %04x
 
-            unsigned short vendor_id;
+            unsigned short vendor_id; // %04x
 
-            unsigned short device_id;
+            unsigned short device_id; // %04x
 
             unsigned short subvendor_id;
 
             unsigned short subdevice_id;
 
-            unsigned char revision;
+            unsigned char revision; // %02x
 
             float linkspeed;
+
+            std::string busid_str() const
+            {
+                char buf[8] = "";
+                snprintf(buf, sizeof(buf), "%02x:%02x.%01x", bus, dev, func);
+                return {buf};
+            }
+
+            std::string domain_str() const
+            {
+                char domain[6] = "";
+                snprintf(domain, sizeof(domain), "%04x:", domain);
+                return {domain};
+            }
+
+
         };
 
         struct Machine_Info

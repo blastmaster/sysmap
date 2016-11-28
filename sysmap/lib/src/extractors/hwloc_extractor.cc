@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "value.hpp"
 #include "scalar_value.hpp"
 #include "array_value.hpp"
@@ -51,45 +53,39 @@ namespace adafs { namespace extractor {
     {
         db << "CREATE TABLE IF NOT EXISTS pci_devices (\
                 name string,\
-                domain integer,\
-                bus character(4),\
-                dev character(4),\
-                func character(4),\
+                domain string,\
+                busid string,\
                 class_id integer,\
                 vendor_id integer,\
                 device_id integer,\
                 subvendor_id integer,\
                 subdevice_id integer,\
-                revision character(2),\
+                revision integer,\
                 linkspeed float\
             );";
     }
 
     static void insert_pci_device(const std::string& name,
-            const unsigned short domain,
-            const int& bus,
-            const int& dev,
-            const int& func,
-            const unsigned short class_id,
-            const unsigned short vendor_id,
-            const unsigned short device_id,
-            const unsigned short subvendor_id,
-            const unsigned short subdevice_id,
-            const int& revision,
+            const std::string& domain,
+            const std::string& busid,
+            const unsigned int class_id,
+            const unsigned int vendor_id,
+            const unsigned int device_id,
+            const unsigned int subvendor_id,
+            const unsigned int subdevice_id,
+            const unsigned int revision,
             const float linkspeed, database& db)
     {
-        db << "INSERT INTO pci_devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        db << "INSERT INTO pci_devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
             << name
-            << (int) domain
-            << bus
-            << dev
-            << func
+            << domain
+            << busid
             << (int) class_id
             << (int) vendor_id
             << (int) device_id
             << (int) subvendor_id
             << (int) subdevice_id
-            << revision
+            << (int) revision
             << linkspeed;
     }
 
@@ -99,30 +95,21 @@ namespace adafs { namespace extractor {
         for (const auto& pci_dev : *pci_devs) {
             auto dev_map = pci_dev->as<Map_value>();
             std::string name = dev_map->get<String_value>("name")->value();
-            unsigned short domain = dev_map->get<Ushort_value>("domain")->value();
-            //TODO: casting values of unsingend char to int, maybe use a string
-            //format and convert at load-time
-            int bus = static_cast<int>(dev_map->get<Uchar_value>("bus")->value());
-            //TODO: casting values of unsingend char to int, maybe use a string
-            //format and convert at load-time
-            int dev = static_cast<int>(dev_map->get<Uchar_value>("dev")->value());
-            //TODO: casting values of unsingend char to int maybe use a string
-            //format and convert at load-time
-            int func = static_cast<int>(dev_map->get<Uchar_value>("func")->value());
-            unsigned short class_id = dev_map->get<Ushort_value>("class_id")->value();
-            unsigned short vendor_id = dev_map->get<Ushort_value>("vendor_id")->value();
-            unsigned short device_id = dev_map->get<Ushort_value>("device_id")->value();
-            unsigned short subvendor_id = dev_map->get<Ushort_value>("subvendor_id")->value();
-            unsigned short subdevice_id = dev_map->get<Ushort_value>("subdevice_id")->value();
-            //TODO: casting values of unsingend char to int maybe use a string
-            //format and convert at load-time
-            int revision = static_cast<int>(dev_map->get<Uchar_value>("revision")->value());
-            float linkspeed = dev_map->get<Float_value>("linkspeed")->value();
+            std::string domain = dev_map->get<String_value>("domain")->value();
+            std::string busid = dev_map->get<String_value>("busid")->value();
+            unsigned int class_id = dev_map->get<Uint_value>("class_id")->value();
+            unsigned int vendor_id = dev_map->get<Uint_value>("vendor_id")->value();
+            unsigned int device_id = dev_map->get<Uint_value>("device_id")->value();
+            unsigned int subvendor_id = dev_map->get<Uint_value>("subvendor_id")->value();
+            unsigned int subdevice_id = dev_map->get<Uint_value>("subdevice_id")->value();
+            unsigned int revision = dev_map->get<Uint_value>("revision")->value();
+            double linkspeed = dev_map->get<Double_value>("linkspeed")->value();
 
-            insert_pci_device(name, domain, bus, dev, func, class_id, vendor_id, device_id,
+            insert_pci_device(name, domain, busid, class_id, vendor_id, device_id,
                     subvendor_id, subdevice_id, revision, linkspeed, db);
             ++inserted;
         }
+
         return inserted;
     }
 
@@ -248,17 +235,22 @@ namespace adafs { namespace extractor {
         for (const auto& pdev : data.pci_devices) {
             auto value = make_value<Map_value>();
             value->add("name", make_value<String_value>(pdev.name));
-            value->add("domain", make_value<Ushort_value>(pdev.domain));
-            value->add("bus", make_value<Uchar_value>(pdev.bus));
-            value->add("dev", make_value<Uchar_value>(pdev.dev));
-            value->add("func", make_value<Uchar_value>(pdev.func));
-            value->add("class_id", make_value<Ushort_value>(pdev.class_id));
-            value->add("vendor_id", make_value<Ushort_value>(pdev.vendor_id));
-            value->add("device_id", make_value<Ushort_value>(pdev.device_id));
-            value->add("subvendor_id", make_value<Ushort_value>(pdev.subvendor_id));
-            value->add("subdevice_id", make_value<Ushort_value>(pdev.subdevice_id));
-            value->add("revision", make_value<Uchar_value>(pdev.revision));
-            value->add("linkspeed", make_value<Float_value>(pdev.linkspeed));
+            // Handle busid and domain as string.
+            value->add("domain", make_value<String_value>(pdev.domain_str()));
+            //value->add("domain", make_value<Ushort_value>(pdev.domain));
+            value->add("busid", make_value<String_value>(pdev.busid_str()));
+            //value->add("bus", make_value<Uchar_value>(pdev.bus));
+            //value->add("dev", make_value<Uchar_value>(pdev.dev));
+            //value->add("func", make_value<Uchar_value>(pdev.func));
+
+            //FIXME: handle the others as unsigend int values
+            value->add("class_id", make_value<Uint_value>(pdev.class_id));
+            value->add("vendor_id", make_value<Uint_value>(pdev.vendor_id));
+            value->add("device_id", make_value<Uint_value>(pdev.device_id));
+            value->add("subvendor_id", make_value<Uint_value>(pdev.subvendor_id));
+            value->add("subdevice_id", make_value<Uint_value>(pdev.subdevice_id));
+            value->add("revision", make_value<Uint_value>(pdev.revision));
+            value->add("linkspeed", make_value<Double_value>(pdev.linkspeed));
 
             pci_devices->add(std::move(value));
         }
