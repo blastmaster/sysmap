@@ -265,10 +265,8 @@ namespace adafs { namespace extractor {
         findings.add_info("PCIDevices", std::move(pci_devices));
     }
 
-    void Hwloc_Extractor::store(Extractor_Set& findings)
+    void Hwloc_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        // TODO:
-        std::string dbname = "host.db";
         database db(dbname);
         adafs::utils::log::logging::debug() << "hwloc extractor created database object: " << dbname;
         create_machine_info_table(db);

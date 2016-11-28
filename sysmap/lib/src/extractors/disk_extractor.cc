@@ -80,10 +80,8 @@ namespace adafs { namespace extractor {
         }
     }
 
-    void Disk_Extractor::store(Extractor_Set& findings)
+    void Disk_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        // TODO: should database name come from parameter
-        std::string dbname = "host.db";
         database db(dbname);
         adafs::utils::log::logging::debug() << "disk extractor created database object: " << dbname;
         create_disk_table(db);

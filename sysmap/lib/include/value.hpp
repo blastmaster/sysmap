@@ -21,7 +21,7 @@ namespace adafs {
 
 struct Value {
 
-    Value() {}
+    Value() = default;
 
     virtual ~Value() = default;
 

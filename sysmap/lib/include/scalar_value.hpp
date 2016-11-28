@@ -15,7 +15,7 @@ namespace adafs {
 
         Scalar_value(value_type value) : m_value(std::move(value)) {}
 
-        ~Scalar_value() {}
+        ~Scalar_value() = default;
 
         Scalar_value(const Scalar_value&) = delete;
 

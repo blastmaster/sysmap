@@ -34,11 +34,11 @@ namespace adafs {
     }
 
 
-    void Extractor_Set::save()
+    void Extractor_Set::save(const std::string& dbname)
     {
         for (const auto& kv_extr : m_extractormap) {
             auto extractor = kv_extr.second.get();
-            extractor->store(*this);
+            extractor->store(*this, dbname);
         }
     }
 

@@ -173,10 +173,8 @@ namespace adafs { namespace extractor {
         }
     }
 
-    void Filesystem_Extractor::store(Extractor_Set& findings)
+    void Filesystem_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        // TODO: dbname!!!
-        std::string dbname = "host.db";
         database db(dbname);
         adafs::utils::log::logging::debug() << "filesystem extractor created database object: " << dbname;
         create_mount_table(db);
