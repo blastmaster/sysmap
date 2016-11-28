@@ -17,7 +17,7 @@ namespace adafs { namespace extractor {
         virtual ~Hwloc_Extractor();
 
         virtual void load(Extractor_Set& findings) override;
-        virtual void store(Extractor_Set& findings) override;
+        virtual void store(Extractor_Set& findings, const std::string& dbname) override;
 
         protected:
 

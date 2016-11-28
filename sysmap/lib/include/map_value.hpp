@@ -15,9 +15,9 @@ namespace adafs {
         using iterator = mapvalue_t::iterator;
         using const_iterator = mapvalue_t::const_iterator;
 
-        Map_value() {}
+        Map_value() = default;
 
-        ~Map_value() {}
+        ~Map_value() = default;
 
         Map_value(const Map_value&) = delete;
 

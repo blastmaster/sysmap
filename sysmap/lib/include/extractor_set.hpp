@@ -17,7 +17,7 @@ struct Extractor_Set
 
     Extractor_Set() = default;
 
-    ~Extractor_Set() {}
+    ~Extractor_Set() = default;
 
     // forbid copy construction
     Extractor_Set(const Extractor_Set&) = delete;
@@ -30,7 +30,7 @@ struct Extractor_Set
 
     void extract();
 
-    void save();
+    void save(const std::string& dbname);
 
     void write(std::ostream& os, const Output_format format);
 

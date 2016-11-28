@@ -14,7 +14,7 @@ struct Extractor {
     virtual ~Extractor() {}
 
     virtual void load(Extractor_Set& findings) = 0;
-    virtual void store(Extractor_Set& findings) = 0;
+    virtual void store(Extractor_Set& findings, const std::string& dbname) = 0;
 
     std::string name() const { return m_name; }
 

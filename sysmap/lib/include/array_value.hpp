@@ -15,9 +15,9 @@ struct Array_value : Value {
     using iterator = arrayvalue_t::iterator;
     using const_iterator = arrayvalue_t::const_iterator;
 
-    Array_value() {}
+    Array_value() = default;
 
-    ~Array_value() {}
+    ~Array_value() = default;
 
     Array_value(const Array_value&) = delete;
 
