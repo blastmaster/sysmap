@@ -9,6 +9,7 @@ namespace adafs {
     enum class Output_format {
         XML,
         ASCII,
+        JSON,
     };
 
 
