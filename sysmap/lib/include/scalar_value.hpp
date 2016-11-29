@@ -34,9 +34,7 @@ namespace adafs {
 
         private:
         value_type m_value;
-
     };
-
 
     /**
      * Define type aliases for most common scalar value types.
@@ -49,7 +47,6 @@ namespace adafs {
     /**
      * Declare specializations for json
      */
-
     template<>
     void String_value::to_json(Writer<OStreamWrapper>&) const;
     template<>

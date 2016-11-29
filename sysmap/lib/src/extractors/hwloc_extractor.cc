@@ -228,9 +228,6 @@ namespace adafs { namespace extractor {
         memory->add("PageTypes", std::move(pages));
         findings.add_info("MemoryInfo", std::move(memory));
 
-        //TODO pci devices beware of formatting issues, here we have some hex values!!!!
-        //     Should these handled as strings with respective ios_hex foo?
-        //     How should they stored in the database???
         auto pci_devices = make_value<Array_value>();
         for (const auto& pdev : data.pci_devices) {
             auto value = make_value<Map_value>();

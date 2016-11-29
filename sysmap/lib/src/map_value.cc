@@ -44,7 +44,6 @@ namespace adafs {
         return it->second.get();
     }
 
-
     void Map_value::to_json(Writer<OStreamWrapper>& writer) const
     {
         writer.StartObject();
