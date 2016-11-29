@@ -5,17 +5,15 @@ message("cmake source dir: ${CMAKE_SOURCE_DIR}")
 message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # nitro
-#message(STATUS "looking for nitro")
-#file(GLOB NITRO_FILES "nitro/*")
-#list(LENGTH NITRO_FILES COUNT_NITRO_FILES)
-#if (${COUNT_NITRO_FILES} EQUAL 0)
-#if (HAVE_NITRO)
-    #message(STATUS "Unable to find nitro, cloning...")
-    #execute_process(COMMAND git submodule update --init -- nitro
-        #WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-#endif()
+message(STATUS "looking for nitro")
+file(GLOB NITRO_FILES "nitro/*")
+list(LENGTH NITRO_FILES COUNT_NITRO_FILES)
+if (${COUNT_NITRO_FILES} EQUAL 0)
+    message(STATUS "Unable to find nitro, cloning...")
+    execute_process(COMMAND git submodule update --init -- nitro
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
 #include(nitro/Nitro.cmake HAVE_NITRO)
-#message("nitro: ${HAVE_NITRO}")
 
 # rapidjson
 message(STATUS "looking for rapidjson")
