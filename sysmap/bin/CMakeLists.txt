@@ -15,7 +15,8 @@ include_directories(
 
 add_executable(sysmap ${SYSMAP_SOURCES})
 
-target_link_libraries(sysmap libsysmap
+target_link_libraries(sysmap
+    libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
 )

@@ -13,6 +13,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 include(lib/external/nitro/Nitro.cmake)
 
-# add lib and bin directory
+# add lib, test and bin directory
 add_subdirectory(lib)
+add_subdirectory(test)
 add_subdirectory(bin)
