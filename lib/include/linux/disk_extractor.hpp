@@ -3,6 +3,8 @@
 
 #include "../extractors/disk_extractor.hpp"
 
+#undef linux
+
 namespace adafs { namespace linux {
 
     struct Disk_Extractor : extractor::Disk_Extractor {
