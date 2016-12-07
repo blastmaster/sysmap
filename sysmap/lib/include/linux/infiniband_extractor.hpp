@@ -4,6 +4,8 @@
 #include "../extractors/infiniband_extractor.hpp"
 #include <regex>
 
+#undef linux
+
 namespace adafs { namespace linux {
 
     struct Infiniband_Extractor : extractor::Infiniband_Extractor

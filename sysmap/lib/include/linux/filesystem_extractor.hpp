@@ -3,6 +3,8 @@
 
 #include "../extractors/filesystem_extractor.hpp"
 
+#undef linux
+
 namespace adafs {  namespace linux {
 
     struct Filesystem_Extractor : extractor::Filesystem_Extractor {
