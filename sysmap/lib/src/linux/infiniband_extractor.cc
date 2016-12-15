@@ -104,6 +104,8 @@ namespace adafs { namespace linux {
             con.local_port = std::stoi(local_port_s);
             // peer guid
             con.peer_guid = utils::file::trim_regex_match(matches[2]);
+            // from guid
+            con.from_guid = from_guid;
             // peer port
             auto peer_port_s = utils::file::trim_regex_match(matches[3]);
             con.peer_port = std::stoi(peer_port_s);
@@ -117,8 +119,6 @@ namespace adafs { namespace linux {
             // speed
             con.speed = utils::file::trim_regex_match(matches[7]);
 
-            // push back connection to from_guid switch connections vector
-            result_graph.switches[from_guid].connections.push_back(con);
         }
         else if (con.type == Peer_Type::Host) {
             // local port
@@ -128,6 +128,8 @@ namespace adafs { namespace linux {
             con.peer_port_guid = utils::file::trim_regex_match(matches[2]);
             // peer guid
             con.peer_guid = utils::file::trim_regex_match(matches[3]);
+            // from guid
+            con.from_guid = from_guid;
             // peer port
             auto peer_port_s = utils::file::trim_regex_match(matches[4]);
             con.peer_port = std::stoi(peer_port_s);
@@ -145,13 +147,14 @@ namespace adafs { namespace linux {
             // speed
             con.speed = utils::file::trim_regex_match(matches[9]);
 
-            // push bach connection to from_guid host connections vector.
-            result_graph.hosts[from_guid].connections.push_back(con);
         }
         else {
             adafs::utils::log::logging::error() << "[Error] Infiniband_Extractor::assemble_connection invalid type.\n";
             return;
         }
+
+        // push back connection in connections vector
+        result_graph.connections.push_back(con);
     }
 
 }} /* closing namespace adafs::linux */

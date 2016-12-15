@@ -173,33 +173,28 @@ namespace adafs { namespace extractor {
         return inserted;
     }
 
-    static int insert_connections(const Map_value* entities, database& db)
+    static int insert_connections(const Array_value* connections, database& db)
     {
         int inserted = 0;
 
-        for (const auto& entity : *entities) {
-            auto ent = entity.second.get()->as<Map_value>();
-            std::string guid = ent->get<String_value>("guid")->value();
-            auto cons = ent->get<Array_value>("connections");
+        for (const auto& c : *connections) {
+            auto con_map = c->as<Map_value>();
+            uint64_t local_port = con_map->get<Uint_value>("local port")->value();
+            //std::string peer_guid = con_map->get<String_value>("peer_guid")->value();
+            std::string peer_guid = con_map->get<String_value>("to_guid")->value();
+            std::string from_guid = con_map->get<String_value>("from_guid")->value();
+            uint64_t peer_port = con_map->get<Uint_value>("peer port")->value();
+            std::string peer_port_guid = con_map->get<String_value>("peer port guid")->value();
+            std::string peer_desc = con_map->get<String_value>("peer description")->value();
+            uint64_t peer_lid = con_map->get<Uint_value>("peer lid")->value();
+            uint64_t local_lid = con_map->get<Uint_value>("local lid")->value();
+            uint64_t local_lmc = con_map->get<Uint_value>("local lmc")->value();
+            std::string speed = con_map->get<String_value>("speed")->value();
 
-            for (const auto& c : *cons) {
-                auto con_map = c->as<Map_value>();
-                uint64_t local_port = con_map->get<Uint_value>("local port")->value();
-                //std::string peer_guid = con_map->get<String_value>("peer_guid")->value();
-                std::string peer_guid = con_map->get<String_value>("to_guid")->value();
-                uint64_t peer_port = con_map->get<Uint_value>("peer port")->value();
-                std::string peer_port_guid = con_map->get<String_value>("peer port guid")->value();
-                std::string peer_desc = con_map->get<String_value>("peer description")->value();
-                uint64_t peer_lid = con_map->get<Uint_value>("peer lid")->value();
-                uint64_t local_lid = con_map->get<Uint_value>("local lid")->value();
-                uint64_t local_lmc = con_map->get<Uint_value>("local lmc")->value();
-                std::string speed = con_map->get<String_value>("speed")->value();
-
-                insert_connection(guid, peer_guid, local_port, peer_port, db);
-                insert_connection_details(local_port, peer_guid, peer_port, peer_port_guid,
-                                            peer_desc, peer_lid, local_lid, local_lmc, speed, db);
-                ++inserted;
-            }
+            insert_connection(from_guid, peer_guid, local_port, peer_port, db);
+            insert_connection_details(local_port, peer_guid, peer_port, peer_port_guid,
+                                        peer_desc, peer_lid, local_lid, local_lmc, speed, db);
+            ++inserted;
         }
 
         return inserted;
@@ -223,9 +218,6 @@ namespace adafs { namespace extractor {
                 h_value->add("guid", make_value<String_value>(host.guid));
                 h_value->add("description", make_value<String_value>(host.description));
 
-                auto h_cons = make_value<Array_value>();
-                load_connections(host.connections, h_cons.get(), host.guid);
-                h_value->add("connections", std::move(h_cons));
                 hosts->add(host_kvp.first, std::move(h_value));
             }
 
@@ -244,13 +236,17 @@ namespace adafs { namespace extractor {
                 sw_value->add("description", make_value<String_value>(sw.description));
                 sw_value->add("port type", make_value<String_value>(sw.port_type));
 
-                auto sw_cons = make_value<Array_value>();
-                load_connections(sw.connections, sw_cons.get(), sw.guid);
-                sw_value->add("connections", std::move(sw_cons));
                 switches->add(switch_kvp.first, std::move(sw_value));
             }
 
             findings.add_info("switches", std::move(switches));
+        }
+
+        if (!data.connections.empty()) {
+            auto connections = make_value<Array_value>();
+            load_connections(data.connections, connections.get());
+
+            findings.add_info("connections", std::move(connections));
         }
     }
 
@@ -270,16 +266,12 @@ namespace adafs { namespace extractor {
         adafs::utils::log::logging::debug() << "database inserted: " << inserted_switches << " switches!";
 
         // insert host connections
-        int inserted_host_connections = insert_connections(hosts, db);
-        adafs::utils::log::logging::debug() << "database inserted: " << inserted_host_connections << " host connections!";
-
-        // insert switch connections
-        int inserted_switch_connections = insert_connections(switches, db);
-        adafs::utils::log::logging::debug() << "database inserted: " << inserted_switch_connections << "switch connections!";
-
+        auto conns = findings.get<Array_value>("connections");
+        int inserted_connections = insert_connections(conns, db);
+        adafs::utils::log::logging::debug() << "database inserted: " << inserted_connections  << " connections!";
     }
 
-    void Infiniband_Extractor::load_connections(const std::vector<Connection>& connections, Array_value* value, const std::string& from_guid)
+    void Infiniband_Extractor::load_connections(const std::vector<Connection>& connections, Array_value* value)
     {
         for (const auto& con : connections) {
             auto c_value = make_value<Map_value>();
@@ -287,7 +279,7 @@ namespace adafs { namespace extractor {
             c_value->add("local port", make_value<Uint_value>(con.local_port));
             //c_value->add("peer_guid", make_value<String_value>(con.peer_guid));
             c_value->add("to_guid", make_value<String_value>(con.peer_guid));
-            c_value->add("from_guid", make_value<String_value>(from_guid));
+            c_value->add("from_guid", make_value<String_value>(con.from_guid));
 
             c_value->add("peer port", make_value<Uint_value>(con.peer_port));
             c_value->add("peer port guid", make_value<String_value>(con.peer_port_guid));
