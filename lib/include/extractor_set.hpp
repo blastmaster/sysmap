@@ -26,7 +26,11 @@ struct Extractor_Set
 
     void add_info(const std::string& name, std::unique_ptr<Value> value);
 
-    void add_extractor(const std::string& name, std::shared_ptr<Extractor> extractor);
+    void add(const std::shared_ptr<Extractor>& extractor);
+
+    void add_extractor(const std::string& name, const std::shared_ptr<Extractor>& extractor);
+
+    bool empty() const noexcept { return m_extractormap.empty(); }
 
     void extract();
 
