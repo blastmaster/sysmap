@@ -9,6 +9,8 @@ namespace adafs {  namespace linux {
 
     struct Filesystem_Extractor : extractor::Filesystem_Extractor {
 
+        static std::unique_ptr<Extractor> create() { return std::make_unique<linux::Filesystem_Extractor>(); }
+
         static std::string info_from_dev_disk(const std::string& partname, const std::string& what);
 
         protected:

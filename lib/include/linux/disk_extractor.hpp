@@ -9,6 +9,7 @@ namespace adafs { namespace linux {
 
     struct Disk_Extractor : extractor::Disk_Extractor
     {
+        static std::unique_ptr<Extractor> create() { return std::make_unique<Disk_Extractor>(); }
 
         protected:
             virtual data collect() override;

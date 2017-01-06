@@ -10,6 +10,8 @@ namespace adafs { namespace linux {
 
     struct Infiniband_Extractor : extractor::Infiniband_Extractor
     {
+        static std::unique_ptr<Extractor> create() { return std::make_unique<Infiniband_Extractor>(); }
+
         protected:
             virtual data collect() override;
 
