@@ -8,6 +8,8 @@ namespace adafs { namespace hwloc {
 
     struct Hwloc_Extractor : extractor::Hwloc_Extractor {
 
+        static std::unique_ptr<Extractor> create() { return std::make_unique<Hwloc_Extractor>(); }
+
         protected:
 
             virtual data collect() override;

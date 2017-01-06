@@ -13,6 +13,18 @@ namespace adafs {
         m_infomap.emplace(std::move(name), std::move(value));
     }
 
+    void Extractor_Set::by_tag(const std::string& name)
+    {
+        std::shared_ptr<Extractor> extractor = Extractor::instantiate(name);
+        if (!extractor) {
+            utils::log::logging::error() << "[Extracotr_set::by_tag] Error, no extractor found with tag: [" << name << "]\n";
+            return;
+        }
+
+        m_extractormap.emplace(std::move(name), extractor);
+    }
+
+
     void Extractor_Set::add(const std::shared_ptr<Extractor>& extractor)
     {
         if (!extractor) {

@@ -16,6 +16,10 @@ set(JSON_TEST_SOURCES
     "json_test.cc"
 )
 
+set(REGISTRY_TEST_SOURCES
+    "register_test.cc"
+)
+
 set(CMAKE_CXX_FLAGS ${TEST_CXX_FLAGS})
 
 include_directories(
@@ -29,6 +33,7 @@ add_executable(exec_stdin_test ${EXEC_TEST_STDIN_SOURCES})
 add_executable(exec_each_line_test ${EXEC_EACH_LINE_TEST_SOURCES})
 add_executable(db_test ${DB_TEST_SOURCES})
 add_executable(json_test ${JSON_TEST_SOURCES})
+add_executable(register_test ${REGISTRY_TEST_SOURCES})
 
 target_link_libraries(exec_stdin_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -44,6 +49,11 @@ target_link_libraries(db_test libsysmap
 )
 
 target_link_libraries(json_test libsysmap
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${SQLITE3_LIBRARY}
+)
+
+target_link_libraries(register_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
 )

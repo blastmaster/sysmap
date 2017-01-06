@@ -24,6 +24,8 @@ struct Extractor_Set
     // forbid copy assignment
     Extractor_Set& operator=(const Extractor_Set&) = delete;
 
+    void by_tag(const std::string& name);
+
     void add_info(const std::string& name, std::unique_ptr<Value> value);
 
     void add(const std::shared_ptr<Extractor>& extractor);
