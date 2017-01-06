@@ -13,8 +13,19 @@ namespace adafs {
         m_infomap.emplace(std::move(name), std::move(value));
     }
 
+    void Extractor_Set::add(const std::shared_ptr<Extractor>& extractor)
+    {
+        if (!extractor) {
+            adafs::utils::log::logging::error() << "[Extractor_Set::add] Error, no extractor\n";
+            return;
+        }
 
-    void Extractor_Set::add_extractor(const std::string& name, std::shared_ptr<Extractor> extractor)
+        m_extractormap.emplace(extractor->name(), extractor);
+    }
+
+
+    void Extractor_Set::add_extractor(const std::string& name,
+                                      const std::shared_ptr<Extractor>& extractor)
     {
         if (!extractor) {
             adafs::utils::log::logging::error() << "[Extractor_Set::add_extractor] Error, no extractor!\n";
@@ -73,6 +84,7 @@ namespace adafs {
         }
     }
 
+
     const Value* Extractor_Set::get_value(const std::string& name)
     {
         auto it = m_infomap.find(name);
@@ -81,6 +93,5 @@ namespace adafs {
         }
         return it->second.get();
     }
-
 
 } /* closing namespace adafs */
