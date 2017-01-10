@@ -6,16 +6,15 @@
 
 namespace adafs { namespace hwloc {
 
-    struct Hwloc_Extractor : extractor::Hwloc_Extractor {
-
+    struct Hwloc_Extractor : extractor::Hwloc_Extractor
+    {
         static std::unique_ptr<Extractor> create() { return std::make_unique<Hwloc_Extractor>(); }
 
         protected:
-
             virtual data collect() override;
 
         private:
-
+            static Registrar registrar;
             void collect_pci_devices(data& result);
             void collect_machine_info(data& result);
             void collect_memory_info(data& result);

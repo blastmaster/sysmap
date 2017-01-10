@@ -4,6 +4,8 @@
 
 namespace adafs { namespace linux {
 
+    Registrar Infiniband_Extractor::registrar("infiniband", &Infiniband_Extractor::create);
+
     Infiniband_Extractor::data Infiniband_Extractor::collect()
     {
         data result;

@@ -16,6 +16,7 @@ namespace adafs { namespace linux {
             virtual data collect() override;
 
         private:
+            static Registrar registrar;
             void collect_ibnetdiscover(data& result);
             std::string assemble_switch(const std::smatch& matches, data& result_graph);
             std::string assemble_host(const std::smatch& matches, data& result_graph);

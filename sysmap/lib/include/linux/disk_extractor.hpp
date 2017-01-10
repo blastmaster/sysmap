@@ -15,6 +15,7 @@ namespace adafs { namespace linux {
             virtual data collect() override;
 
         private:
+            static Registrar registrar;
             void collect_disk_data(data& result);
     };
 

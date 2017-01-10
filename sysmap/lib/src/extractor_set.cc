@@ -13,7 +13,7 @@ namespace adafs {
         m_infomap.emplace(std::move(name), std::move(value));
     }
 
-    void Extractor_Set::by_tag(const std::string& name)
+    void Extractor_Set::add_by_tag(const std::string& name)
     {
         std::shared_ptr<Extractor> extractor = Extractor::instantiate(name);
         if (!extractor) {

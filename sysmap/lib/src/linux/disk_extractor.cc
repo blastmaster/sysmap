@@ -8,6 +8,8 @@ namespace fs = boost::filesystem;
 
 namespace adafs { namespace linux {
 
+    Registrar Disk_Extractor::registrar("disk", &linux::Disk_Extractor::create);
+
     Disk_Extractor::data Disk_Extractor::collect()
     {
         data result;
