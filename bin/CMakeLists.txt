@@ -18,6 +18,8 @@ add_executable(sysmap ${SYSMAP_SOURCES})
 target_link_libraries(sysmap
     libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
 
