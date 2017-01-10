@@ -2,21 +2,33 @@
 #include "catch.hpp"
 
 #include <iostream>
+#include "extractor.hpp"
 #include "extractor_set.hpp"
-#include "linux/infiniband_extractor.hpp"
 #include "linux/filesystem_extractor.hpp"
 #include "linux/disk_extractor.hpp"
-#include "hwloc/hwloc_extractor.hpp"
-#include "utils.hpp"
 
-
+using namespace std;
 using namespace adafs;
 
-
-TEST_CASE("try extractor registry", "[Extractor]") {
+TEST_CASE("try extractor registry - add filesystem by tag", "[Extractor]") {
     Extractor_Set extr_set;
 
-    extr_set.by_tag("filesystem");
+    extr_set.add_by_tag("filesystem");
     REQUIRE(extr_set.empty() == false);
+}
 
+TEST_CASE("try extractor registry - instantiate through static method", "[Extractor]") {
+
+    auto le = Extractor::instantiate("filesystem");
+    REQUIRE(le != nullptr);
+}
+
+TEST_CASE("instantiate extractors by tag - and extrac", "[Extractor_Set]") {
+    Extractor_Set extr_set;
+
+    extr_set.add_by_tag("filesystem");
+    extr_set.add_by_tag("disk");
+    REQUIRE(extr_set.empty() == false);
+    extr_set.extract();
+    extr_set.write(cout, Output_format::JSON);
 }

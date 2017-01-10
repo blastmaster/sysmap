@@ -4,6 +4,8 @@
 
 namespace adafs { namespace hwloc {
 
+    Registrar Hwloc_Extractor::registrar("hwloc", &Hwloc_Extractor::create);
+
     Hwloc_Extractor::data Hwloc_Extractor::collect()
     {
         data result;

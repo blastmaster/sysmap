@@ -14,6 +14,8 @@ namespace fs = boost::filesystem;
 
 namespace adafs { namespace linux {
 
+    Registrar Filesystem_Extractor::registrar("filesystem", &Filesystem_Extractor::create);
+
     std::string Filesystem_Extractor::info_from_dev_disk(const std::string& partname, const std::string& what)
     {
         fs::path path {"/dev/disk/"};

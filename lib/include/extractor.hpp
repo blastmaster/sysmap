@@ -7,59 +7,35 @@
 
 #include "utils.hpp"
 
-namespace adafs {
+namespace adafs
+{
 
 struct Extractor_Set;
 
-struct Extractor {
+struct Extractor
+{
+    using extractor_ptr = std::unique_ptr<Extractor>(*)();
+    using registry_map = std::unordered_map<std::string, extractor_ptr>;
 
-    using extractor_ptr = std::unique_ptr<Extractor>();
+    static std::unique_ptr<Extractor> instantiate(const std::string& name);
+    static registry_map & registry();
 
     Extractor(const std::string& name) : m_name{name} {}
 
-    virtual ~Extractor() {}
-
+    virtual ~Extractor() = default;
     virtual void load(Extractor_Set& findings) = 0;
     virtual void store(Extractor_Set& findings, const std::string& dbname) = 0;
 
     std::string name() const noexcept { return m_name; }
 
-    static void registrate(const std::string& name, extractor_ptr* extr)
-    {
-        registry()[name] = extr;
-        for (const auto& kvp : registry()) {
-            utils::log::logging::debug() << kvp.first << "\n";
-        }
-    }
-
-    static std::unique_ptr<Extractor> instantiate(const std::string& name)
-    {
-        if (registry().empty()) {
-            utils::log::logging::debug() << "[EXTRACTOR] registry empty!!!\n";
-        }
-        auto it = registry().find(name);
-        return it == registry().end() ? nullptr : (it->second)();
-    }
-
-    template<typename Extr>
-    struct Registrar
-    {
-        explicit Registrar(const std::string& name)
-        {
-            utils::log::logging::debug() << "CALLING REGISTRATE: " << name << "\n";
-            Extractor::registrate(name, &Extr::create);
-        }
-
-        // forbid copy construction
-        Registrar(const Registrar&) = delete;
-        // forbid copy assignment
-        Registrar& operator=(const Registrar&) = delete;
-    };
-
     private:
     const std::string m_name;
-    static std::unordered_map<std::string, extractor_ptr*> & registry();
+};
 
+
+struct Registrar
+{
+    Registrar(const std::string& name, Extractor::extractor_ptr extr);
 };
 
 } /* closing namespace adafs */
