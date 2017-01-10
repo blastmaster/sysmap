@@ -37,23 +37,35 @@ add_executable(register_test ${REGISTRY_TEST_SOURCES})
 
 target_link_libraries(exec_stdin_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${SQLITE3_LIBRARY}
 )
 
 target_link_libraries(exec_each_line_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${SQLITE3_LIBRARY}
 )
 
 target_link_libraries(db_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
 
 target_link_libraries(json_test libsysmap
+    ${Boost_SYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
 
 target_link_libraries(register_test libsysmap
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
