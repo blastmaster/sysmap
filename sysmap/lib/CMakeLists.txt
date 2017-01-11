@@ -26,10 +26,6 @@ set(LIBSYSMAP_SOURCES
     "src/output.cc"
 )
 
-# find boost we use program_options, system and filesystem
-find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem)
-# find hwloc
-find_package(Hwloc REQUIRED)
 
 add_subdirectory(external)
 
