@@ -1,11 +1,11 @@
 #ifndef __ADAFS_EXTRACTOR_HPP__
 #define __ADAFS_EXTRACTOR_HPP__
 
+#include "utils.hpp"
+
 #include <string>
 #include <unordered_map>
 #include <memory>
-
-#include "utils.hpp"
 
 namespace adafs
 {

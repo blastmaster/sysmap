@@ -1,7 +1,8 @@
-#include <iostream>
-
 #include "array_value.hpp"
 #include "output.hpp"
+
+#include <iostream>
+
 
 namespace adafs {
 

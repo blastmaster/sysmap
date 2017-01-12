@@ -4,8 +4,12 @@
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
 
-#include <hwloc.h>
 #include <vector>
+
+extern "C" {
+#include <hwloc.h>
+}
+
 
 
 namespace adafs { namespace extractor {

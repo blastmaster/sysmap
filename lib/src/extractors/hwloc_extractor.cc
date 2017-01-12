@@ -1,5 +1,3 @@
-#include <cstdio>
-
 #include "value.hpp"
 #include "scalar_value.hpp"
 #include "array_value.hpp"
@@ -9,6 +7,8 @@
 #include "extractors/hwloc_extractor.hpp"
 
 #include <sqlite_modern_cpp.h>
+
+#include <cstdio>
 
 using namespace sqlite;
 
