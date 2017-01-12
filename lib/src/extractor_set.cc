@@ -21,7 +21,7 @@ namespace adafs {
             return;
         }
 
-        m_extractormap.emplace(std::move(name), extractor);
+        m_extractormap.emplace(std::move(name), std::move(extractor));
     }
 
 
