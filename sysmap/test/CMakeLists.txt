@@ -57,8 +57,8 @@ target_link_libraries(db_test libsysmap
 )
 
 target_link_libraries(json_test libsysmap
-    ${Boost_SYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
