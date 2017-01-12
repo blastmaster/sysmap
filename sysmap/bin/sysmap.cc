@@ -39,16 +39,21 @@ int main(int argc, char** argv)
 
     po::variables_map vm;
 
+    Extractor_Set extr_set {};
+    auto fmt = Output_format::JSON;         // set default to JSON
+    outwrapper out;
+
+    // TODO better exception handling this coarse grained handling sucks!
     try
     {
         po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
         po::notify(vm);
 
-        auto fmt = Output_format::JSON;
         if (vm.count("help")) {
             std::cout << description;
             return 0;
         }
+
         if (vm.count("format")) {
             auto fmt_arg = vm["format"].as<std::string>();
             if (boost::iequals(fmt_arg, "XML")) {
@@ -68,11 +73,9 @@ int main(int argc, char** argv)
             }
         }
 
-        std::ostream out(std::cout.rdbuf()); // set default to std::cout
         if (vm.count("output")) {
             auto output_arg = vm["output"].as<std::string>();
-            std::ofstream of(output_arg);
-            std::ostream out(of.rdbuf());
+            out.set_file(output_arg);
             utils::log::logging::debug() << "[sysmap] Setting output to: [" << output_arg << "]\n";
         }
         else {
