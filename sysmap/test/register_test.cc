@@ -32,3 +32,12 @@ TEST_CASE("instantiate extractors by tag - and extrac", "[Extractor_Set]") {
     extr_set.extract();
     extr_set.write(cout, Output_format::JSON);
 }
+
+TEST_CASE("list all available extractors by name", "[Extractor]") {
+    Extractor_Set extr_set;
+
+    for (const auto& kvp : Extractor::registry()) {
+        std::cout << "name: " << kvp.first << "\n";
+    }
+    REQUIRE(4 == Extractor::registry().size());
+}

@@ -80,15 +80,18 @@ int main(int argc, char** argv)
         }
 
         if (vm.count("list")) {
-            // TODO: list all available extractors
-
+            // list all available extractors
+            std::cout << "Available Extractors:\n";
+            for (const auto& kvp : Extractor::registry()) {
+                std::cout << "Extractor: " << kvp.first << "\n";
+            }
         }
 
         if (vm.count("extractor")) {
-            // TODO: recieve list of extractors to use!
             auto extrs = vm["extractor"].as<std::vector<std::string>>();
             for (const auto& ext : extrs) {
                 utils::log::logging::debug() << "[sysmap] extractor: " << ext << " defined\n";
+                extr_set.add_by_tag(ext);
             }
         }
     }
@@ -97,15 +100,8 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    Extractor_Set extr_set {};
-
-    extr_set.add_extractor("Filesystem", std::make_shared<linux::Filesystem_Extractor>());
-    extr_set.add_extractor("Disks", std::make_shared<linux::Disk_Extractor>());
-    extr_set.add_extractor("Hwloc", std::make_shared<hwloc::Hwloc_Extractor>());
-    extr_set.add_extractor("Infiniband", std::make_shared<linux::Infiniband_Extractor>());
-    //extr_set.extract();
-    //extr_set.write(out, Output_format::XML);
-
+    extr_set.extract();
+    extr_set.write(out, fmt);
 
     return 0;
 }
