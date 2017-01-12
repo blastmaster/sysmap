@@ -6,7 +6,9 @@
 #include <string>
 #include <functional>
 
+extern "C" {
 #include <unistd.h>
+}
 
 namespace adafs { namespace utils { namespace exec {
 

@@ -1,18 +1,18 @@
-#include <algorithm>
+#include "utils.hpp"
 
+#include <algorithm>
 #include <cstdlib>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
+extern "C" {
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-
-#include "utils.hpp"
-
+}
 
 namespace adafs { namespace utils { namespace exec {
 

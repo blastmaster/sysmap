@@ -1,14 +1,16 @@
 #include "linux/filesystem_extractor.hpp"
 #include "utils.hpp"
 
-#include <sys/vfs.h>
-#include <mntent.h>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <map>
 #include <algorithm>
 
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
+extern "C" {
+#include <sys/vfs.h>
+#include <mntent.h>
+}
 
 namespace fs = boost::filesystem;
 

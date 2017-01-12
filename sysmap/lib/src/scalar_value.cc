@@ -1,4 +1,3 @@
-
 #include "scalar_value.hpp"
 
 using namespace rapidjson;
