@@ -43,7 +43,8 @@ link_directories(
 )
 
 # build static library
-add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
+#add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
+add_library(libsysmap STATIC ${LIBSYSMAP_SOURCES})
 
 target_link_libraries(libsysmap PRIVATE
     ${Boost_LIBRARIES}
