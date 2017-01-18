@@ -12,7 +12,6 @@ using namespace rapidjson;
 
 namespace adafs {
 
-
 /**
  * Note:
  * function with deduced return type cannot be virtual!
@@ -40,7 +39,7 @@ struct Value {
 template<typename T, typename ...Args>
 std::unique_ptr<T> make_value(Args&& ...args)
 {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
 } /* closing namespace adafs */

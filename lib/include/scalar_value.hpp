@@ -9,7 +9,8 @@
 namespace adafs {
 
     template<typename T>
-    struct Scalar_value : Value {
+    struct Scalar_value : Value
+    {
 
         using value_type = T;
 
