@@ -51,6 +51,8 @@ namespace adafs {
     void Extractor_Set::extract()
     {
         for (const auto& kv_extr : m_extractormap) {
+            // why not
+            // kv_extr.second->load(*this);
             auto extractor = kv_extr.second.get();
             extractor->load(*this);
         }

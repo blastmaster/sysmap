@@ -1,7 +1,3 @@
-#include <iostream>
-#include <boost/program_options.hpp>
-#include <boost/algorithm/string.hpp>
-
 #include "extractor_set.hpp"
 #include "linux/filesystem_extractor.hpp"
 #include "linux/disk_extractor.hpp"
@@ -9,6 +5,11 @@
 #include "hwloc/hwloc_extractor.hpp"
 #include "output.hpp"
 #include "utils.hpp"
+
+#include <iostream>
+#include <boost/program_options.hpp>
+#include <boost/algorithm/string.hpp>
+
 
 using namespace adafs;
 
@@ -96,6 +97,10 @@ int main(int argc, char** argv)
                 utils::log::logging::debug() << "[sysmap] extractor: " << ext << " defined\n";
                 extr_set.add_by_tag(ext);
             }
+        }
+        else { // TODO provide useful default!
+            utils::log::logging::debug() << "[sysmap] no extractor specified!\n";
+            return 1;
         }
     }
     catch (const po::error& ex) {
