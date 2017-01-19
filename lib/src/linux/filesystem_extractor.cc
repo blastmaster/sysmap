@@ -21,7 +21,7 @@ namespace adafs { namespace linux {
     std::string Filesystem_Extractor::info_from_dev_disk(const std::string& partname, const std::string& what)
     {
         fs::path path {"/dev/disk/"};
-        auto d_iter = fs::directory_iterator {path / what};
+        auto d_iter = fs::directory_iterator {path / what}; // throws if ENOENT
         auto found = std::find_if(fs::begin(d_iter), fs::end(d_iter),
                 [&partname](const fs::directory_entry& d_ent) {
                     return fs::read_symlink(d_ent).filename().string() == partname;
@@ -129,9 +129,15 @@ namespace adafs { namespace linux {
         part.device_number = utils::file::read(partition_path + "/dev");
         boost::trim(part.device_number);
 
-        part.uuid = info_from_dev_disk(partition_name, "by-uuid");
-        part.partition_uuid = info_from_dev_disk(partition_name, "by-partuuid");
-        part.label = info_from_dev_disk(partition_name, "by-label");
+        try {
+            part.uuid = info_from_dev_disk(partition_name, "by-uuid");
+            part.partition_uuid = info_from_dev_disk(partition_name, "by-partuuid");
+            part.label = info_from_dev_disk(partition_name, "by-label");
+        }
+        catch (fs::filesystem_error& err) {
+            utils::log::logging::error() << "[Filesystem_Extractor]: " << err.what() << "\n";
+            return;
+        }
 
         auto iter = mntpnts.find(part.name);
         if (iter != mntpnts.end()) {
