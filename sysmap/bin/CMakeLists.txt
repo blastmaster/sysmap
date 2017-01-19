@@ -15,12 +15,23 @@ include_directories(
 
 add_executable(sysmap ${SYSMAP_SOURCES})
 
-target_link_libraries(sysmap
-    -Wl,--whole-archive libsysmap -Wl,--no-whole-archive
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${SQLITE3_LIBRARY}
-)
+if(BUILD_STATIC)
+    target_link_libraries(sysmap
+        -Wl,--whole-archive libsysmap -Wl,--no-whole-archive
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${SQLITE3_LIBRARY}
+    )
+else()
+    target_link_libraries(sysmap
+        libsysmap
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${SQLITE3_LIBRARY}
+    )
+endif()
+
 
 install(TARGETS sysmap DESTINATION bin)
