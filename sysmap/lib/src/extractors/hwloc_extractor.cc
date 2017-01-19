@@ -36,8 +36,7 @@ namespace adafs { namespace extractor {
                 os_release string,\
                 os_version string,\
                 hostname string not null primary key,\
-                architecture string,\
-                process_name string\
+                architecture string\
             );";
     }
 
@@ -139,10 +138,9 @@ namespace adafs { namespace extractor {
             const std::string& os_release,
             const std::string& os_version,
             const std::string& hostname,
-            const std::string& architecture,
-            const std::string& process_name, database& db)
+            const std::string& architecture, database& db)
     {
-        db << "INSERT INTO machine_info VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        db << "INSERT INTO machine_info VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
             << name
             << product_version
             << board_vendor
@@ -162,8 +160,7 @@ namespace adafs { namespace extractor {
             << os_release
             << os_version
             << hostname
-            << architecture
-            << process_name;
+            << architecture;
     }
 
 
@@ -199,15 +196,12 @@ namespace adafs { namespace extractor {
         machine->add("BiosVersion", make_value<String_value>(std::move(data.machine_info.bios_version)));
         machine->add("BiosDate", make_value<String_value>(std::move(data.machine_info.bios_date)));
         machine->add("SysVendor", make_value<String_value>(std::move(data.machine_info.sys_vendor)));
-        // NOTE: hwloc_backend will not be added.
         machine->add("LinuxCgroup", make_value<String_value>(std::move(data.machine_info.linux_cgroup)));
         machine->add("OsName", make_value<String_value>(std::move(data.machine_info.os_name)));
         machine->add("OsRelease", make_value<String_value>(std::move(data.machine_info.os_release)));
         machine->add("OsVersion", make_value<String_value>(std::move(data.machine_info.os_version)));
         machine->add("Hostname", make_value<String_value>(std::move(data.machine_info.hostname)));
         machine->add("Architecture", make_value<String_value>(std::move(data.machine_info.architecture)));
-        // NOTE: hwloc_version will not be added.
-        machine->add("ProcessName", make_value<String_value>(std::move(data.machine_info.process_name)));
 
         findings.add_info("MachineInfo", std::move(machine));
 
@@ -289,12 +283,11 @@ namespace adafs { namespace extractor {
         std::string os_version = m_info->get<String_value>("OsVersion")->value();
         std::string hostname = m_info->get<String_value>("Hostname")->value();
         std::string architecture = m_info->get<String_value>("Architecture")->value();
-        std::string process_name = m_info->get<String_value>("ProcessName")->value();
 
         insert_machine_info(name, product_version, board_vendor, board_name, board_version, board_asset_tag,
                 chassi_vendor, chassi_type, chassi_version, chassi_asset_tag,
                 bios_vendor, bios_version, bios_date, sys_vendor, linux_cgroup,
-                os_name, os_release, os_version, hostname, architecture, process_name, db);
+                os_name, os_release, os_version, hostname, architecture, db);
         adafs::utils::log::logging::debug() << "hwloc extractor insterted machine info";
 
         // insert memory info

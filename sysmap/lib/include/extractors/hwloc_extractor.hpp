@@ -98,8 +98,6 @@ namespace adafs { namespace extractor {
             std::string bios_date;
             // DMISysVendor
             std::string sys_vendor;
-            // Backend
-            std::string hwloc_backend;
             // LinuxCgroup
             std::string linux_cgroup;
             // OSName
@@ -112,10 +110,6 @@ namespace adafs { namespace extractor {
             std::string hostname;
             // Architecture
             std::string architecture;
-            // hwlocVersion
-            std::string hwloc_version;
-            // ProcessName
-            std::string process_name;
         };
 
         struct Memory_Info

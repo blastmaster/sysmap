@@ -39,16 +39,12 @@ namespace adafs { namespace hwloc {
         result.machine_info.bios_version = hwloc_obj_get_info_by_name(root_obj, "DMIBIOSVersion");
         result.machine_info.bios_date = hwloc_obj_get_info_by_name(root_obj, "DMIBIOSDate");
         result.machine_info.sys_vendor = hwloc_obj_get_info_by_name(root_obj, "DMISysVendor");
-        result.machine_info.hwloc_backend = hwloc_obj_get_info_by_name(root_obj, "Backend");
         result.machine_info.linux_cgroup = hwloc_obj_get_info_by_name(root_obj, "LinuxCgroup");
         result.machine_info.os_name = hwloc_obj_get_info_by_name(root_obj, "OSName");
         result.machine_info.os_release = hwloc_obj_get_info_by_name(root_obj, "OSRelease");
         result.machine_info.os_version = hwloc_obj_get_info_by_name(root_obj, "OSVersion");
         result.machine_info.hostname = hwloc_obj_get_info_by_name(root_obj, "HostName");
         result.machine_info.architecture = hwloc_obj_get_info_by_name(root_obj, "Architecture");
-        result.machine_info.hwloc_version = hwloc_obj_get_info_by_name(root_obj, "hwlocVersion");
-        result.machine_info.process_name = hwloc_obj_get_info_by_name(root_obj, "ProcessName");
-
     }
 
 
