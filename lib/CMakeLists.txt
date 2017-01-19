@@ -43,9 +43,12 @@ link_directories(
     ${HWLOC_LIBRARIES}
 )
 
-# build static library
-#add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
-add_library(libsysmap STATIC ${LIBSYSMAP_SOURCES})
+# build static or shared library
+if(BUILD_STATIC)
+    add_library(libsysmap STATIC ${LIBSYSMAP_SOURCES})
+else()
+    add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
+endif()
 
 target_link_libraries(libsysmap PRIVATE
     ${Boost_LIBRARIES}
