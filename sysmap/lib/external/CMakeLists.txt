@@ -29,9 +29,6 @@ endif()
 #install(DIRECTORY ${RAPIDJSON_INCLUDE_DIR}/rapidjson DESTINATION include)
 
 
-# find sqlite3
-message(STATUS "looking for sqlite3")
-find_package(sqlite3 REQUIRED)
 
 # sqlite_modern_cpp
 message(STATUS "looking for sqlite_modern_cpp")

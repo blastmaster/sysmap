@@ -14,6 +14,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem)
 # find hwloc
 find_package(Hwloc REQUIRED)
+# find sqlite3
+message(STATUS "looking for sqlite3")
+find_package(sqlite3 REQUIRED)
 
 include(lib/external/nitro/Nitro.cmake)
 
