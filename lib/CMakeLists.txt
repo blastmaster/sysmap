@@ -32,6 +32,7 @@ add_subdirectory(external)
 include_directories(
     include
     ${RAPIDJSON_INCLUDE_DIR}
+    ${SQLITE3_INCLUDE_DIR}
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${HWLOC_INCLUDE_DIRS}
