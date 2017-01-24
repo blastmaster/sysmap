@@ -142,3 +142,8 @@ class SystemMapDatabase:
         collection = self.get_collection(collectionname)
         return collection.insert(data)
 
+    def execute_query(self, query_str, **kwargs):
+
+        self.database.aql.validate(query_str)
+        return self.database.aql.execute(query_str, **kwargs)
+

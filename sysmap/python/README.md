@@ -3,7 +3,7 @@
 ## Requirements
 
 * python3
-* arango-python
+* python-arango
 * graphviz
 
 ## Installation
