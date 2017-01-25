@@ -91,7 +91,7 @@ namespace adafs { namespace hwloc {
                 adafs::utils::log::logging::error() << "ERROR! hwloc extractor PCI device object is NULL!";
                 continue;
             }
-            std::string name {obj->name};
+            std::string name((obj->name == nullptr) ? "None" : obj->name);
             if (&(obj->attr->pcidev) == nullptr) {
                 adafs::utils::log::logging::error() << "ERROR! hwloc extractor PCI device attributes are NULL!";
                 continue;
