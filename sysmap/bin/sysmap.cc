@@ -15,6 +15,40 @@ using namespace adafs;
 
 namespace po = boost::program_options;
 
+
+std::string get_hostname()
+{
+    std::string host;
+    auto prog = utils::exec::which("hostname");
+    auto read_host = [&host](const std::string& s) {
+                        if (!s.empty()) {
+                            host = s;
+                            return true;
+                        }
+                        return false;
+                    };
+    if (!prog.empty()) {
+        auto res = utils::exec::for_each_line(prog, {}, read_host);
+        if (res) {
+            return host;
+        }
+    } // if we cannot use the hostname binary try to read Hostname from /proc
+    else {
+        auto res = utils::file::for_each_line("/proc/sys/kernel/hostname", read_host);
+        if (res) {
+            return host;
+        }
+    }
+
+    return host;
+}
+
+std::string filename_prefix_host(const std::string& name)
+{
+    auto host = get_hostname();
+    return host + "-" + name;
+}
+
 /**
  * Options:
  * help, version {on/off}
@@ -76,7 +110,9 @@ int main(int argc, char** argv)
 
         if (vm.count("output")) {
             auto output_arg = vm["output"].as<std::string>();
-            out.set_file(output_arg);
+            auto fname = filename_prefix_host(output_arg);
+            utils::log::logging::debug() << "[sysmap] set actual filename to: [" << fname << "]\n";
+            out.set_file(fname);
             utils::log::logging::debug() << "[sysmap] Setting output to: [" << output_arg << "]\n";
         }
         else {
