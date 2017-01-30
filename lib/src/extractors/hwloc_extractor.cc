@@ -203,7 +203,7 @@ namespace adafs { namespace extractor {
         machine->add("Hostname", make_value<String_value>(std::move(data.machine_info.hostname)));
         machine->add("Architecture", make_value<String_value>(std::move(data.machine_info.architecture)));
 
-        findings.add_info("MachineInfo", std::move(machine));
+        findings.add_info("machineinfo", std::move(machine));
 
         auto memory = make_value<Map_value>();
 
@@ -220,7 +220,7 @@ namespace adafs { namespace extractor {
             pages->add(std::move(value));
         }
         memory->add("PageTypes", std::move(pages));
-        findings.add_info("MemoryInfo", std::move(memory));
+        findings.add_info("memoryinfo", std::move(memory));
 
         auto pci_devices = make_value<Array_value>();
         for (const auto& pdev : data.pci_devices) {
@@ -245,7 +245,7 @@ namespace adafs { namespace extractor {
 
             pci_devices->add(std::move(value));
         }
-        findings.add_info("PCIDevices", std::move(pci_devices));
+        findings.add_info("pcidevices", std::move(pci_devices));
     }
 
     void Hwloc_Extractor::store(Extractor_Set& findings, const std::string& dbname)
