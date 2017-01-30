@@ -56,6 +56,7 @@ class SystemMapDatabase:
         :param graphname: Name of the Graph.
         :type graphname: str
         :returns: the requested graph object
+        :rtype: arango.graph.Graph
         '''
         if graphname not in [g['name'] for g in self.database.graphs()]:
             return self.database.create_graph(graphname)
@@ -68,6 +69,7 @@ class SystemMapDatabase:
         :param collectionname: Name of the collection
         :type collectionname: str
         :returns: the requested collection
+        :rtype: arango.collections.Collection
         '''
         if collectionname not in [c['name'] for c in self.database.collections()]:
             return self.database.create_collection(collectionname)
@@ -83,6 +85,7 @@ class SystemMapDatabase:
         :param graph: Graph object where the vertex collection should consists to.
         :type graph: graph object
         :returns: vertex collection object
+        :rtype: arango.collections.VertexCollection
         '''
         try:
             v_coll = graph.create_vertex_collection(collectionname)
@@ -124,8 +127,8 @@ class SystemMapDatabase:
         graph = self.get_graph(graphname)
         try:
             e_coll = graph.create_edge_definition(e_collection,
-                                                from_collections=from_coll,
-                                                to_collections=to_coll)
+                                                  from_collections=from_coll,
+                                                  to_collections=to_coll)
         except arango.exceptions.EdgeDefinitionCreateError:
             e_coll = graph.edge_collection(e_collection)
 
@@ -143,7 +146,10 @@ class SystemMapDatabase:
         return collection.insert(data)
 
     def execute_query(self, query_str, **kwargs):
+        ''' Execute an AQL-query.
+        :param query_str: The AQL-query that should be executed.
+        :type query_str: str
+        '''
 
         self.database.aql.validate(query_str)
         return self.database.aql.execute(query_str, **kwargs)
-
