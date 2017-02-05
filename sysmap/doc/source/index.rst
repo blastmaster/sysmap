@@ -10,6 +10,9 @@ Welcome to sysmap's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   smap
+   sysmap
+
 
 
 Indices and tables
