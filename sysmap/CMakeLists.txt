@@ -6,6 +6,10 @@ set(PROJECT_VERSION 0.0.1)
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
 option(BUILD_STATIC "link static if this is off a shared lib will be build" ON)
+
+# TODO add option for running tests
+
+
 # set compiler flags
 #set(SYSMAP_CXX_FLAGS "-Wall -Wextra -Weffc++ -std=c++14 -ggdb")
 set(SYSMAP_CXX_FLAGS "-Wall -Wextra -std=c++14 -ggdb")
