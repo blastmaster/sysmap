@@ -1,5 +1,8 @@
-# ignore pyc files
+
+# python
+
 *.pyc
 
-# ignore virtualenv
+# exclude virtualenv
 env/
+venv/
