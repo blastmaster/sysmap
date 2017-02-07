@@ -1,7 +1,10 @@
 import arango
 import configparser
 
+''' Database Module '''
+
 class SystemMapDatabase:
+    ''' SystemMapDatabase '''
 
     _default_datbase_options = {'protocol': 'http',
                                 'host': 'localhost',
