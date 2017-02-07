@@ -9,6 +9,13 @@ from sysmap.graph import NetworkGraph
 __author__ = "Sebastian Oeste"
 __email__ = "sebastian.oeste@tu-dresden.de"
 
+'''
+    This script inserts the collected data from the `sysmap` tool into arangodb.
+    A HPC-System is a Database instance conaining typically a nodes collection,
+    here all the data from the node-local extractors are stored.
+    If the network topology is even present, an extra hosts, and switches
+    collection will be created and a edge_collection which stores the connections between switches and hosts.
+'''
 
 QUERY_FACTS = [
     'disks',
