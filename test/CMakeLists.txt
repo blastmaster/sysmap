@@ -27,6 +27,7 @@ include_directories(
     ${RAPIDJSON_INCLUDE_DIR}
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
+    ${CATCH_INCLUDE_DIR}
 )
 
 add_executable(exec_stdin_test ${EXEC_TEST_STDIN_SOURCES})

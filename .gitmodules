@@ -7,3 +7,6 @@
 [submodule "sysmap/lib/external/sqlite_modern_cpp"]
 	path = sysmap/lib/external/sqlite_modern_cpp
 	url = https://github.com/aminroosta/sqlite_modern_cpp.git
+[submodule "lib/external/Catch"]
+	path = lib/external/Catch
+	url = https://github.com/philsquared/Catch.git
