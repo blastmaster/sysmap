@@ -35,14 +35,13 @@ find_package(Sphinx REQUIRED)
 find_package(Doxygen REQUIRED)
 
 message("TOP LEVEL CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
-# TOP LEVEL CMAKE_CURRENT_SOURCE_DIR: /home/soeste/code/ada-fs/sysmap
 
 # setting the doxygen input directories to:
 # sysmap/lib/include
 # sysmap/lib/src
 # sysmap/bin
-set(DOXY_INPUT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/lib/src" "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+list(APPEND DOXY_INPUT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/src ${CMAKE_CURRENT_SOURCE_DIR}/bin")
 message("TOP LEVEL DOXY_INPUT_FILES: ${DOXY_INPUT_FILES}")
 
 # add lib, bin, doc and test directory
