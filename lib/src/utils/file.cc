@@ -17,7 +17,7 @@ bool for_each_line(const std::string& path, std::function<bool(const std::string
 {
     std::ifstream in{path};
     if (!in) {
-        std::cerr << "[sysmap::utils] No file: " << path << "\n";
+        utils::log::logging::error() << "[sysmap::utils] Error, no file: " << path << "\n";
         return false;
     }
 
