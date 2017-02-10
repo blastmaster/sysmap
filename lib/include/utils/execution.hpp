@@ -12,18 +12,19 @@ extern "C" {
 
 namespace adafs { namespace utils { namespace exec {
 
-struct execution_exception : std::runtime_error {
 
-    explicit execution_exception(const std::string& message);
-
+struct execution_error : std::runtime_error
+{
+    explicit execution_error(const std::string& message);
 };
 
-struct result {
 
+struct result
+{
     result(bool s, int ec, pid_t p) :
         success(s), exit_code(ec), pid(p) {}
 
-    result() {}
+    result() = default;
 
     bool success = true;
 
@@ -33,8 +34,8 @@ struct result {
 };
 
 
-struct descriptor {
-
+struct descriptor
+{
     descriptor(int fd_nr, std::string fd_name, std::function<bool(std::string&)> const& cb) :
         name(fd_name), callback(cb), read(true), fd_(fd_nr) {}
 
@@ -52,7 +53,7 @@ struct descriptor {
     std::function<bool(std::string&)> callback;
     bool read;
 
-private:
+    private:
     int fd_;
 };
 

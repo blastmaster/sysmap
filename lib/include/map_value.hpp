@@ -41,19 +41,19 @@ namespace adafs {
 
         virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const override;
 
-        iterator begin();
 
-        const_iterator begin() const;
+        iterator begin();
 
         iterator end();
 
+        const_iterator begin() const;
         const_iterator end() const;
 
         private:
-        //std::map<std::string, std::unique_ptr<Value>> m_elements;
         mapvalue_t m_elements;
 
     };
-}
+
+} /* closing namespace adafs */
 
 #endif /* __ADAFS_MAP_VALUE_HPP__ */

@@ -18,7 +18,7 @@ namespace adafs { namespace utils { namespace exec {
 
 namespace fs = boost::filesystem;
 
-execution_exception::execution_exception(const std::string& message) :
+execution_error::execution_error(const std::string& message) :
     std::runtime_error(message) {}
 
 
@@ -118,7 +118,7 @@ static pid_t create_child(int in, int out, int err, char const* program, char co
     pid_t child = vfork();
     if (child < 0) {
         adafs::utils::log::logging::error() << "vfork failed\n";
-        throw execution_exception("failed to fork child process.");
+        throw execution_error("failed to fork child process.");
     }
 
     // if we the parent, return childs pid
@@ -350,14 +350,14 @@ result execute(const std::string& program,
     auto prog = which(program);
     if (prog.empty()) {
         const std::string msg = "Error " + program + " not in PATH.";
-        throw execution_exception(msg);
+        throw execution_error(msg);
     }
 
     int pipes[2];
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stdout pipe creation\n";
-        throw execution_exception("failed to allocate stdout pipe.");
+        throw execution_error("failed to allocate stdout pipe.");
     }
 
     int stdout_read = pipes[0];
@@ -365,7 +365,7 @@ result execute(const std::string& program,
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stdin pipe creation\n";
-        throw execution_exception("failed to allocate stdin pipe.");
+        throw execution_error("failed to allocate stdin pipe.");
     }
 
     int stdin_read = pipes[0];
@@ -373,7 +373,7 @@ result execute(const std::string& program,
 
     if (pipe(pipes) < 0) {
         adafs::utils::log::logging::error() << "Error due stderr pipe creation\n";
-        throw execution_exception("failed to allocate stderr pipe.");
+        throw execution_error("failed to allocate stderr pipe.");
     }
 
     int stderr_read = pipes[0];

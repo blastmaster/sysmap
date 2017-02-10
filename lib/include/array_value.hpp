@@ -47,7 +47,7 @@ struct Array_value : Value {
 
     virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
-    virtual std::ostream& write(std::ostream& os, const Output_format format, bool quouted) const override;
+    virtual std::ostream& write(std::ostream& os, const Output_format format, bool quoted) const override;
 
     private:
     std::vector<std::unique_ptr<Value>> m_elements;
