@@ -1,7 +1,7 @@
 #ifndef __ADAFS_EXTRACTOR_HPP__
 #define __ADAFS_EXTRACTOR_HPP__
 
-/***
+/**
  * @file extractor.hpp
  * Abstract base class defining the extractor interface.
  *
