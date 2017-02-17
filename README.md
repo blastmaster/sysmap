@@ -36,7 +36,7 @@ For development a linux system is suggested. Windows is not supported and suppor
 
 Make sure that you have all necessary dependcies installed. Dependencies with the `via submodule` note above,
 will be automatically cloned and installed via cmake during the build. All other e.g. doxygen or boost-libs must be installed.
-``
+```
 cd sysmap
 virtualenv --python=python3 env # create new virtualenv with pip and python3 highly recommended for development
 . env/bin/activate # activate virtualenv
@@ -44,7 +44,7 @@ pip install -U sphinx breathe # install necessary dependencies
 mkdir build/ ; cd build
 cmake ..
 make -j
-``
+```
 
 The installation process is still work in progress, after build you will find the binaries under your build directory.
 For the Python parts do the following:
