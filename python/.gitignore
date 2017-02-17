@@ -2,7 +2,7 @@
 # python
 
 *.pyc
-
+*.egg-info/
 # exclude virtualenv
 env/
 venv/
