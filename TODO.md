@@ -2,17 +2,16 @@
 
 ## sysmap
 
-* Refactor XML_Writer, the xml output is buggy and must be fixed.
+* Refactor XML_Writer, the xml output is buggy and must be fixed. Take a look at rapidxml lib.
 
 * ASCII Output, the ascii output is not really implemented yet.
-
-* Buildsystem dependency installation does not work
-  reason therefore is that the  git submodule update --init needs to run from the toplevel of the working tree
-  where .gitmodule file is placed. This is a strong argument for splitting repos and use a separate repository for each tool.
 
 * Extractor Refinement
   Especially the hwloc extractor, does something about pci, something about memory and something about cpus.
   We should split this up in more fine grained extractors which can than, also gathered by other concrete extractors if hwloc is not present.
+
+* build system should be able to build python part too.
+
 
 * Support more than one concrete extractor per abstract extractor.
 
