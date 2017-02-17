@@ -26,9 +26,6 @@ set(LIBSYSMAP_SOURCES
     "src/output.cc"
 )
 
-
-add_subdirectory(external)
-
 include_directories(
     include
     ${RAPIDJSON_INCLUDE_DIR}

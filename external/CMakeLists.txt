@@ -6,6 +6,7 @@ message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # nitro
 message(STATUS "looking for nitro")
+
 file(GLOB NITRO_FILES "nitro/*")
 list(LENGTH NITRO_FILES COUNT_NITRO_FILES)
 if (${COUNT_NITRO_FILES} EQUAL 0)
@@ -52,7 +53,7 @@ file(GLOB CATCH_FILES "Catch/*")
 list(LENGTH CATCH_FILES COUNT_CATCH_FILES)
 if (${COUNT_CATCH_FILES} EQUAL 0)
     message(STATUS "Unable to find catch, cloning...")
-    execute_process(COMMAND git submodule update --init -- catch
+    execute_process(COMMAND git submodule update --init -- Catch
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch/include/
