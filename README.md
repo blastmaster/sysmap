@@ -1,4 +1,4 @@
-# sysmap - A tool suite for gathering static resource information.
+# sysmap - A tool suite to gather static resource information.
 
 The sysmap tools suite consists of a set of tools that provide support for gathering static resource information
 from HPC systems.
@@ -21,6 +21,7 @@ For development a linux system is suggested. Windows is not supported and suppor
 * Catch - optional (via submodule, just for testing)
 * Nitro - required for logging (via submodule)
 * sqlite_modern_cpp - required for sqlite3 (via submodule) but deprecated
+* hwloc - required
 * Python 3
 * doxygen - required for sysmap API-documentation
 

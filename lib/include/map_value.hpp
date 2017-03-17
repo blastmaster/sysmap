@@ -8,7 +8,6 @@
 #include <memory>
 
 namespace adafs {
-
     /**
      * @class Map_value
      */
