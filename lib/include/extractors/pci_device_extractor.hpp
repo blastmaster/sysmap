@@ -6,8 +6,9 @@
 #include <vector>
 
 
-namespace adafs {namespace extractor { 
-    struct PCI_Device_Extractor : Extractor 
+namespace adafs {namespace extractor {
+
+    struct PCI_Device_Extractor : Extractor
     {
         PCI_Device_Extractor();
 
