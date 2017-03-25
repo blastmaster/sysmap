@@ -41,6 +41,8 @@ protected:
         uint64_t size;
         // available size of the mountpoint
         uint64_t available;
+        // blocksize for filesystem I/O
+        uint64_t blksize;
 
     };
 

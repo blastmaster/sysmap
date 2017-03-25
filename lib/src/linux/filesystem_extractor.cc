@@ -8,6 +8,9 @@
 #include <algorithm>
 
 extern "C" {
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <sys/vfs.h>
 #include <mntent.h>
 }
@@ -66,6 +69,11 @@ namespace adafs { namespace linux {
                 // size of the filesystem is fragment size * number of blocks
                 mntpnt.size = stat_info.f_frsize * stat_info.f_blocks;
                 mntpnt.available = stat_info.f_frsize * stat_info.f_bfree;
+            }
+            // get blocksize for filesystem I/O
+            struct stat st;
+            if (stat(mnt_ptr->mnt_dir, &st) != -1) {
+                mntpnt.blksize = st.st_blksize;
             }
 
             result.mountpoints.emplace_back(std::move(mntpnt));

@@ -137,6 +137,7 @@ namespace adafs { namespace extractor {
                 // make necessary conversions here, e.g. byte -> mb usw ...
                 value->add("size", make_value<Uint_value>(mountpoint.size));
                 value->add("available", make_value<Uint_value>(mountpoint.available));
+                value->add("blksize", make_value<Uint_value>(mountpoint.blksize));
                 value->add("options", make_value<String_value>(std::move(mountpoint.options)));
 
                 mounts->add(std::move(value));
