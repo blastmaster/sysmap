@@ -54,16 +54,16 @@ namespace adafs { namespace extractor {
     void Memory_Info_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
         database db(dbname);
-        adafs::utils::log::logging::debug() << "hwloc extractor created database object: " << dbname;
+        adafs::utils::log::logging::debug() << "memory info extractor created database object: " << dbname;
         create_memory_info_table(db);
-        adafs::utils::log::logging::debug() << "hwloc extractor created memory_info table";
+        adafs::utils::log::logging::debug() << "memory info extractor created memory_info table";
         
         auto mem_info = findings.get<Map_value>("MemoryInfo");
         uint64_t totalmem = mem_info->get<Uint_value>("TotalMemory")->value();
         uint64_t localmem = mem_info->get<Uint_value>("LocalMemory")->value();
 
         insert_memory_info(totalmem, localmem, db);
-        adafs::utils::log::logging::debug() << "hwloc extractor inserted memory info";
+        adafs::utils::log::logging::debug() << "memory info extractor inserted memory info";
     }
 
     Memory_Info_Extractor::Memory_Info_Extractor() : Extractor("Memory_Extractor")
@@ -75,4 +75,3 @@ namespace adafs { namespace extractor {
     }
 
 }} /* closing namesapce adafs::extractor */
-

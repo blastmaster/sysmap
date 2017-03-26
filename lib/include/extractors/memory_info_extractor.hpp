@@ -3,7 +3,6 @@
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
-
 #include <vector>
 
 

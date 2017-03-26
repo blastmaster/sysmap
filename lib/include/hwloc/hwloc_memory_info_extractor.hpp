@@ -12,7 +12,6 @@ namespace adafs { namespace hwloc {
     
     struct Hwloc_Memory_Info_Extractor : extractor::Memory_Info_Extractor
     {
-
         static std::unique_ptr<Extractor> create() { return std::make_unique<Hwloc_Memory_Info_Extractor>(); }
         
         Hwloc_Memory_Info_Extractor();
@@ -23,12 +22,10 @@ namespace adafs { namespace hwloc {
             virtual data collect() override;
             hwloc_topology_t topology;
 
-       
         private:
             static Registrar registrar;
             void collect_memory_info(data& result);
     };    
-
 
 }} /* closing namespace adafs::hwloc */
 

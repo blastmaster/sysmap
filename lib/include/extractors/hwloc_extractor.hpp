@@ -3,13 +3,11 @@
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
-
 #include <vector>
 
 extern "C" {
 #include <hwloc.h>
 }
-
 
 
 namespace adafs { namespace extractor {
@@ -64,7 +62,6 @@ namespace adafs { namespace extractor {
                 snprintf(domain, sizeof(domain), "%04x:", domain);
                 return {domain};
             }
-
 
         };
 
