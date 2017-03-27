@@ -27,6 +27,7 @@ namespace adafs { namespace extractor {
             // Kernel Version
             std::string kernel_version;
             // Loaded Kernel Modules
+            //TODO: Think about required information, maybe vector<string> filled with module Names is enough?
             std::map<std::string, std::string> modules;
         };
 
