@@ -1,5 +1,5 @@
-#ifndef __ADAFS_GET_MACHINE_INFO_EXTRACTOR_HPP__
-#define __ADAFS_GET_MACHINE_INFO_EXTRACTOR_HPP__
+#ifndef __ADAFS_MACHINE_INFO_EXTRACTOR_HPP__
+#define __ADAFS_MACHINE_INFO_EXTRACTOR_HPP__
 
 #include "../extractors/machine_info_extractor.hpp"
 
@@ -24,9 +24,10 @@ namespace adafs { namespace linux {
             void collect_machine_hostname(data& result);
             void collect_kernel_version(data& result);
             void collect_kernel_modules(data& result);
+            void collect_machine_info(data& result);
     };    
 
 
 }} /* closing namespace adafs::hwloc */
 
-#endif /* __ADAFS_GET_MACHINE_INFO_EXTRACTOR_HPP__*/
+#endif /* __ADAFS_MACHINE_INFO_EXTRACTOR_HPP__*/

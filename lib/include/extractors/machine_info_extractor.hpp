@@ -22,13 +22,18 @@ namespace adafs { namespace extractor {
 
         struct Machine_Info
         {
-            // HostName
-            std::string hostname;
+            //sysname - name of this implemantation of the operating system
+            std::string sysname;
+            // nodename
+            std::string nodename;
+            //release
+            std::string release;
+            //machine - name of hardware type on which system is running.
+            std::string machine;
             // Kernel Version
-            std::string kernel_version;
-            // Loaded Kernel Modules
-            //TODO: Think about required information, maybe vector<string> filled with module Names is enough?
-            std::map<std::string, std::string> modules;
+            std::string version;
+            // Loaded Kernel Modules - <module name, [size, used (0 or 1)]>
+            std::map<std::string, std::array<int, 2>> modules;
         };
 
         struct data

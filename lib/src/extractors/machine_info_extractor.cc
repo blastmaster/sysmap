@@ -18,21 +18,24 @@ namespace adafs { namespace extractor {
     {
         auto data = collect();
         auto machine = make_value<Map_value>();
-        machine->add("Hostname", make_value<String_value>(std::move(data.machine_info.hostname)));
-        machine->add("Kernel_Version", make_value<String_value>(std::move(data.machine_info.kernel_version)));
+        machine->add("NodeName", make_value<String_value>(std::move(data.machine_info.nodename)));
+        machine->add("Version", make_value<String_value>(std::move(data.machine_info.version)));
+        machine->add("Release", make_value<String_value>(std::move(data.machine_info.release)));
+        machine->add("Sysname", make_value<String_value>(std::move(data.machine_info.sysname)));
+        machine->add("Machine", make_value<String_value>(std::move(data.machine_info.machine)));
         for (const auto& module : data.machine_info.modules){
-            machine->add(module.first, make_value<String_value>(module.second));
+            machine->add(module.first, make_value<Array_value>(module.second));
         }
         findings.add_info("machineinfo", std::move(machine));
     }
 
     void Machine_Info_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
+        //TODO: fill out store fct
         auto m_info = findings.get<Map_value>("MachineInfo");
-        std::string hostname = m_info->get<String_value>("Hostname")->value();
-        std::string kernel_version = m_info->get<String_value>("Kernel_Version")->value();
+//        std::string hostname = m_info->get<String_value>("Hostname")->value();
+//        std::string kernel_version = m_info->get<String_value>("Kernel_Version")->value();
 //        std::map<std::string, std::string> kernel_modules = m_info->get<Map_value>("Kernel_Modules")->value();
-        
         adafs::utils::log::logging::debug() << "machine info extractor insterted machine info";
 
     }
