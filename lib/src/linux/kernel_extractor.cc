@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sys/utsname.h>
+#include <boost/algorithm/string/predicate.hpp>
 
 #undef linux
 
@@ -24,11 +25,11 @@ namespace adafs { namespace linux {
         system("zcat /proc/config.gz >> /tmp/kernel_config");
         utils::file::for_each_line("/tmp/kernel_config", [&](const std::string& line)
         {
-            std::string str = line;
+            std::string str(line);
 
-            if(str[0] != '#' && str[0] != NULL)
+            if(!boost::starts_with(str, "#") && !str.empty())
             {
-                unsigned int position = str.find("=");
+                auto position = str.find("=");
                 const std::string name = str.substr(0, position);
                 
                 if (position != std::string::npos)
@@ -47,8 +48,8 @@ namespace adafs { namespace linux {
     {
         utils::file::for_each_line("/proc/modules", [&](const std::string& line)
         {
-           std::string str = line;
-           unsigned int position = str.find(" ");
+           std::string str(line);
+           auto position = str.find(" ");
            const std::string name = str.substr(0, position);
 
            if (position != std::string::npos)
@@ -61,15 +62,18 @@ namespace adafs { namespace linux {
                module.size = size;
                module.loaded = true;
                result.modules.push_back(module);
-               return true;
            }
-           return false;
+           return true;
         });
     }
 
     void Kernel_Extractor::collect_uname(data& result)
     {
-        uname(&result.system_info);
+        if (uname(&result.system_info) != 0){
+            adafs::utils::log::logging::error() << "Calling uname(&result.system_info) failed";
+        } else {
+            adafs::utils::log::logging::debug() << "Called uname(&result.system_info) successfully";
+        }
     }
 
 }}

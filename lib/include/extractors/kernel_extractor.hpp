@@ -4,10 +4,13 @@
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
 #include <string>
-#include <sys/utsname.h>
 #include <vector>
 #include <map>
 #include <boost/variant.hpp>
+
+extern "C" {
+#include <sys/utsname.h>
+};
 
 
 namespace adafs { namespace extractor {
