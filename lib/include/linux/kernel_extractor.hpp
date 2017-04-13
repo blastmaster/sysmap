@@ -21,6 +21,7 @@ namespace adafs { namespace linux {
 
         private:
             static Registrar registrar;
+            int get_kernel_config(data& result);
             void collect_kernel_config(data& result);
             void collect_kernel_modules(data& result);
             void collect_uname(data& result);
