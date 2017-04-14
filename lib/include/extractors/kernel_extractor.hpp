@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <boost/variant.hpp>
+#include <boost/filesystem.hpp>
 
 extern "C" {
 #include <sys/utsname.h>
@@ -25,6 +26,8 @@ namespace adafs { namespace extractor {
         virtual void store(Extractor_Set& findings, const std::string& dbname) override;
 
         protected:
+
+        std::vector<boost::filesystem::path> paths {"/boot/", "/proc/"};
 
         struct Kernel_Config
         {

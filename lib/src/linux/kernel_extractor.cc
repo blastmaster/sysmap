@@ -23,32 +23,31 @@ namespace adafs { namespace linux {
 
     int Kernel_Extractor::get_kernel_config(data& result)
     {
-        boost::filesystem::path p("/boot/");
-        boost::filesystem::directory_iterator it{p};
-        while (it !=  boost::filesystem::directory_iterator{}){
-            if(boost::filesystem::is_regular_file(*it) && boost::starts_with(it->path().string(), "/boot/config")){
-                std::string filename = std::string("/boot/config-") + std::string(result.system_info.release);
-                if(it->path().string().compare(filename) == 0){
-                    system(("cat " + std::string(it->path().string()) + " >> /tmp/kernel_config").c_str());
-                    std::cout << it->path() << std::endl;
-                    return 1;
-                }
-            }
-            it++;
-        }
+        for (auto p : paths) {
+            boost::filesystem::directory_iterator it{p};
+            std::string filename = (p.string() + "config").c_str();
+            while (it !=  boost::filesystem::directory_iterator{}){
+                std::string path_string = it->path().string();
+                if(boost::filesystem::is_regular_file(*it) && boost::starts_with(path_string, filename)){
+                    std::string uname_filename = std::string("config-") + std::string(result.system_info.release);
+                    std::vector<std::string> filenames {uname_filename, "config.gz", (uname_filename + ".gz").c_str()};
 
-        boost::filesystem::path c("/proc/");
-        boost::filesystem::directory_iterator iter{c};
-        while (iter !=  boost::filesystem::directory_iterator{}){
-            if(boost::filesystem::is_regular_file(*iter) && boost::starts_with(iter->path().string(), "/proc/config")){
-                std::string filename = std::string("/proc/config") + std::string(".gz");
-                if(iter->path().string().compare(filename) == 0){
-                    system(("zcat " + std::string(iter->path().string()) + " >> /tmp/kernel_config").c_str());
-                    std::cout << iter->path() << std::endl;
-                    return 1;
+                    for (auto _filename : filenames){
+                        if(path_string.compare((p.string() + _filename)) == 0){
+                            if(boost::ends_with(path_string, ".gz")){
+                            system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
+                            std::cout << it->path() << std::endl;
+                            return 1;
+                            } else {
+                            system(("cat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
+                            std::cout << it->path() << std::endl;
+                            return 1;
+                            }
+                        }
+                    }
                 }
+                it++;
             }
-            iter++;
         }
         return 0;
     }
@@ -73,7 +72,7 @@ namespace adafs { namespace linux {
                     kernel_config.name = name;
                     kernel_config.value = str.substr(position + 1);
                     result.kernel_config.push_back(kernel_config);
-//                    std::cout << kernel_config.name << " - " << kernel_config.value << std::endl;
+                    std::cout << kernel_config.name << " - " << kernel_config.value << std::endl;
                  }
             }
             return true; 
