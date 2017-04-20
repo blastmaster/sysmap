@@ -8,10 +8,22 @@
 
 namespace adafs {namespace extractor {
 
+    /**
+     *@class Memory_Info_Extractor
+     * Memory_Info_Extractor type abstract base class
+     */
+
     struct Memory_Info_Extractor : Extractor
     {
+
+        /*
+         * Constructor
+         */
         Memory_Info_Extractor();
 
+        /*
+         * Virtual destructor
+         */
         virtual ~Memory_Info_Extractor();
 
         virtual void load(Extractor_Set& findings) override;
@@ -46,6 +58,7 @@ namespace adafs {namespace extractor {
         {
             Memory_Info memory_info;
         };
+
 
         virtual data collect() = 0;
     };

@@ -32,8 +32,8 @@ namespace adafs { namespace linux {
                     std::string uname_filename = std::string("config-") + std::string(result.system_info.release);
                     std::vector<std::string> filenames {uname_filename, "config.gz", (uname_filename + ".gz").c_str()};
 
-                    for (auto _filename : filenames){
-                        if(path_string.compare((p.string() + _filename)) == 0){
+                    for (auto filename_ : filenames){
+                        if(path_string.compare((p.string() + filename_)) == 0){
                             if(boost::ends_with(path_string, ".gz")){
                             system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
                             std::cout << it->path() << std::endl;

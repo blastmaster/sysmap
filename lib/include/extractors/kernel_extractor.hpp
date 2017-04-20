@@ -15,18 +15,31 @@ extern "C" {
 
 
 namespace adafs { namespace extractor {
+
+    /*
+     * @class Kernel_Extractor
+     * Kernel_Extractor type abstract base class
+     */
     
     struct Kernel_Extractor : Extractor
     {
+        /*
+         * Constructor
+         */
         Kernel_Extractor() : Extractor("Kernel_Extractor") {}
 
+        /*
+         * Virtual destructor
+         */
         virtual ~Kernel_Extractor() {}
 
         virtual void load(Extractor_Set& findings) override;
         virtual void store(Extractor_Set& findings, const std::string& dbname) override;
 
         protected:
-
+        /*
+         * Vector containing Paths where Kernel Config could be located
+         */
         std::vector<boost::filesystem::path> paths {"/boot/", "/proc/"};
 
         struct Kernel_Config
@@ -55,7 +68,11 @@ namespace adafs { namespace extractor {
 
             utsname system_info;
         };
-
+        
+        /*
+         * Calls methods to collect information about the Kernel
+         * Pure virtual method will be implemented in derived classes
+         */
         virtual data collect() = 0;
     };
 

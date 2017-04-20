@@ -9,10 +9,21 @@
 
 namespace adafs { namespace extractor {
 
+    /**
+     * @class Machine_Info_Extractor
+     * Machine_info_Extractor type abstract base class
+     */
+
     struct Machine_Info_Extractor : Extractor
     {
+        /*
+         * Constructor
+         */
         Machine_Info_Extractor() : Extractor("Machine_Info") {}
 
+        /*
+         * Virtual desructor
+         */
         virtual ~Machine_Info_Extractor() {}
 
         virtual void load(Extractor_Set& findings) override;
@@ -40,7 +51,7 @@ namespace adafs { namespace extractor {
         {
             Machine_Info machine_info;
         };
-
+        
         virtual data collect() = 0;
     };
 
