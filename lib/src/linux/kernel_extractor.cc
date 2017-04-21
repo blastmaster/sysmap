@@ -23,26 +23,30 @@ namespace adafs { namespace linux {
 
     int Kernel_Extractor::get_kernel_config(data& result)
     {
-        for (auto p : paths) {
-            boost::filesystem::directory_iterator it{p};
-            std::string filename = (p.string() + "config").c_str();
-            while (it !=  boost::filesystem::directory_iterator{}){
-                std::string path_string = it->path().string();
-                if(boost::filesystem::is_regular_file(*it) && boost::starts_with(path_string, filename)){
-                    std::string uname_filename = std::string("config-") + std::string(result.system_info.release);
-                    std::vector<std::string> filenames {uname_filename, "config.gz", (uname_filename + ".gz").c_str()};
+        for (auto p : paths) 
+        {
+            boost::filesystem::directory_iterator it{p}; //create directory_iterator
+            std::string filename = (p.string() + "config").c_str(); //create filename including its path
 
-                    for (auto filename_ : filenames){
-                        if(path_string.compare((p.string() + filename_)) == 0){
-                            if(boost::ends_with(path_string, ".gz")){
-                            system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                            std::cout << it->path() << std::endl;
-                            return 1;
-                            } else {
+            while (it !=  boost::filesystem::directory_iterator{}) //iterate through every file in directory
+            {
+                std::string path_string(it->path().string()); 
+                if(boost::filesystem::is_regular_file(*it) && boost::starts_with(path_string, filename)) 
+                {
+                    std::string uname_filename = std::string("config-") + std::string(result.system_info.release); //uname_filname is same as config-$(uname -r)
+                    std::vector<std::string> filenames {uname_filename, "config.gz", (uname_filename + ".gz").c_str()}; 
+
+                    for (auto filename_ : filenames)
+                    {
+                        if(path_string.compare((p.string() + filename_)) == 0) //if p.string() is same as filename_ 
+                        {
+                            if(boost::ends_with(path_string, ".gz"))
+                            {
+                                system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
+                                return 1;
+                            } 
                             system(("cat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                            std::cout << it->path() << std::endl;
                             return 1;
-                            }
                         }
                     }
                 }
@@ -72,7 +76,6 @@ namespace adafs { namespace linux {
                     kernel_config.name = name;
                     kernel_config.value = str.substr(position + 1);
                     result.kernel_config.push_back(kernel_config);
-                    std::cout << kernel_config.name << " - " << kernel_config.value << std::endl;
                  }
             }
             return true; 
