@@ -21,7 +21,7 @@ namespace adafs { namespace linux {
         return result;
     }
 
-    int Kernel_Extractor::get_kernel_config(data& result)
+    bool Kernel_Extractor::get_kernel_config(data& result)
     {
         for (auto p : paths) 
         {
@@ -43,17 +43,17 @@ namespace adafs { namespace linux {
                             if(boost::ends_with(path_string, ".gz"))
                             {
                                 system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                                return 1;
+                                return true;
                             } 
                             system(("cat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                            return 1;
+                            return true;;
                         }
                     }
                 }
                 it++;
             }
         }
-        return 0;
+        return false;
     }
 
     void Kernel_Extractor::collect_kernel_config(data& result)

@@ -12,7 +12,8 @@ namespace adafs { namespace extractor {
     void Kernel_Extractor::load(Extractor_Set& findings)
     {
         auto data = collect();
-        auto machine = make_value<Map_value>();
+
+        auto machine = make_value<Map_value>(); //contains uname information
         
         machine->add("NodeName", make_value<String_value>(std::move(data.system_info.nodename)));
         machine->add("Version", make_value<String_value>(std::move(data.system_info.version)));
@@ -20,28 +21,36 @@ namespace adafs { namespace extractor {
         machine->add("Sysname", make_value<String_value>(std::move(data.system_info.sysname)));
         machine->add("Machine", make_value<String_value>(std::move(data.system_info.machine)));
 
-        auto kernel = make_value<Map_value>();
+        auto kernel = make_value<Map_value>(); //contains kernel config information
         for (const auto& config : data.kernel_config)
         {
+
             kernel->add(config.name, make_value<String_value>(boost::lexical_cast<std::string>(config.value)));
         }
+        data.kernel_config.clear();
 
-        auto modules = make_value<Map_value>();
+        auto modules = make_value<Array_value>(); //contains module information
         for (const auto& config : data.modules)
         {
-//            int module_information[2] = { config.size, config.loaded }
-            modules->add(config.name, make_value<Int_value>(config.size));
-        }
+            auto value = make_value<Map_value>();
+            value->add("Name", make_value<String_value>(config.name));
+            value->add("Size", make_value<Int_value>(config.size));
+            value->add("Loaded", make_value<Int_value>(config.loaded));
 
-        findings.add_info("machine_info", std::move(machine));
-        findings.add_info("kernel_info", std::move(kernel));
-        findings.add_info("module_info", std::move(modules));
+            modules->add(std::move(value));
+        }
+        data.modules.clear();
+
+        findings.add_info("machineinfo", std::move(machine));
+        findings.add_info("kernelinfo", std::move(kernel));
+        findings.add_info("moduleinfo", std::move(modules));
 
 
     }
 
     void Kernel_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
+        adafs::utils::log::logging::error() << "[adafs::extractor::Kernel_Extractor] store() is not implemented yet";
     }
 } }
 

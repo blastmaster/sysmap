@@ -37,9 +37,9 @@ namespace adafs { namespace linux {
              * Searches through paths (declared in base class) to locate kernel config file.
              * When succesful file gets copied to /tmp/kernel_config
              * @param result Result is used to get uname.release() (same as uname -r)
-             * @return Returns 1 when kernel config file was found, else 0
+             * @return Returns true when kernel config file was found, else false
              */
-            int get_kernel_config(data& result);
+            bool get_kernel_config(data& result);
 
             /*
              * Calls get_kernel_config(data& result), on success:
