@@ -24,7 +24,7 @@ message("TOP LEVEL CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Find dependencies
 # find boost we use program_options, system and filesystem
-find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem)
+find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem iostreams)
 # find hwloc
 find_package(Hwloc REQUIRED)
 # find sqlite3

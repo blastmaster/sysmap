@@ -39,7 +39,7 @@ namespace adafs { namespace linux {
              * @param result Result is used to get uname.release() (same as uname -r)
              * @return Returns true when kernel config file was found, else false
              */
-            bool get_kernel_config(data& result);
+            std::ifstream get_kernel_config(data& result);
 
             /*
              * Calls get_kernel_config(data& result), on success:

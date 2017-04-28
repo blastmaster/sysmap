@@ -2,8 +2,13 @@
 #include <string>
 #include <vector>
 #include <sys/utsname.h>
+#include <iostream>
+#include <fstream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
 
 #undef linux
 
@@ -21,66 +26,85 @@ namespace adafs { namespace linux {
         return result;
     }
 
-    bool Kernel_Extractor::get_kernel_config(data& result)
+    std::ifstream Kernel_Extractor::get_kernel_config(data& result)
     {
+        //vector<path> paths declared in /include/extractors/kernel_extractor.hpp
         for (auto p : paths) 
         {
-            boost::filesystem::directory_iterator it{p}; //create directory_iterator
-            std::string filename = (p.string() + "config").c_str(); //create filename including its path
-
-            while (it !=  boost::filesystem::directory_iterator{}) //iterate through every file in directory
+            //create directory_iterator
+            boost::filesystem::directory_iterator it{p}; 
+            //create searchterm "/path/to/dir/config"
+            std::string searchterm = (p.string() + "config").c_str(); 
+            
+            //iterate through every file in directory p
+            while (it !=  boost::filesystem::directory_iterator{}) 
             {
-                std::string path_string(it->path().string()); 
-                if(boost::filesystem::is_regular_file(*it) && boost::starts_with(path_string, filename)) 
+                std::string it_(it->path().string()); 
+                //only proceed when it is a regular file and starts with "config"
+                if(boost::filesystem::is_regular_file(*it) && boost::starts_with(it_, searchterm)) 
                 {
-                    std::string uname_filename = std::string("config-") + std::string(result.system_info.release); //uname_filname is same as config-$(uname -r)
-                    std::vector<std::string> filenames {uname_filename, "config.gz", (uname_filename + ".gz").c_str()}; 
+                    //uname_r is same as "config-$(uname -r)"
+                    std::string uname_r = std::string("config-") + std::string(result.system_info.release); 
+                    std::vector<std::string> filenames {uname_r, "config.gz", (uname_r + ".gz")}; 
 
                     for (auto filename_ : filenames)
                     {
-                        if(path_string.compare((p.string() + filename_)) == 0) //if p.string() is same as filename_ 
+                        if(it_.compare((p.string() + filename_)) == 0)
                         {
-                            if(boost::ends_with(path_string, ".gz"))
+                            if(boost::ends_with(it_, ".gz"))
                             {
-                                system(("zcat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                                return true;
+                                //file needs to be decompressed, using boost gzip_decompressor()
+                                std::ifstream file_(it_, std::ios_base::in | std::ios_base::binary);
+                                boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+                                in.push(boost::iostreams::gzip_decompressor());
+                                in.push(file_);
+                               
+//                                file.rdbuf(&in); 
+                                std::istream incom(&in);
+//                                std::string str;
+//                                getline(incom, str);
+//                                std::cout << str << std::endl;
+                                return std::ifstream(incom);
                             } 
-                            system(("cat " + std::string(path_string) + " >> /tmp/kernel_config").c_str());
-                            return true;;
+                           std::ifstream files(it_);
+                           return files;
                         }
                     }
                 }
                 it++;
             }
         }
-        return false;
     }
 
     void Kernel_Extractor::collect_kernel_config(data& result)
     {
-        if(!get_kernel_config(result)){
-            adafs::utils::log::logging::debug() << "Couldnt find Kernel Config";
-        } else {
-        utils::file::for_each_line("/tmp/kernel_config", [&](const std::string& line)
-        {
-            std::string str(line);
+        
+        auto file = get_kernel_config(result);
 
-            if(!boost::starts_with(str, "#") && !str.empty())
-            {
-                auto position = str.find("=");
-                const std::string name = str.substr(0, position);
-                
-                if (position != std::string::npos)
-                {
-                    Kernel_Config kernel_config;
-                    kernel_config.name = name;
-                    kernel_config.value = str.substr(position + 1);
-                    result.kernel_config.push_back(kernel_config);
-                 }
-            }
-            return true; 
-        });
-    }
+        std::string str;
+        getline(file, str);
+        std::cout << str << std::endl;
+
+//            std::istream& file(get_kernel_config(result));
+//            utils::file::for_each_line(file, [&](const std::string& line)
+//            {
+//                std::string str(line);
+//
+//                if(!boost::starts_with(str, "#") && !str.empty())
+//                {
+//                    auto position = str.find("=");
+//                    const std::string name = str.substr(0, position);
+//                    
+//                    if (position != std::string::npos)
+//                    {
+//                        Kernel_Config kernel_config;
+//                        kernel_config.name = name;
+//                        kernel_config.value = str.substr(position + 1);
+//                        result.kernel_config.push_back(kernel_config);
+//                     }
+//                }
+//                return true; 
+//            });
     }
 
     void Kernel_Extractor::collect_kernel_modules(data& result)

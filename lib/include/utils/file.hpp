@@ -12,7 +12,9 @@ namespace adafs { namespace utils { namespace file {
  * @param cb The callback function that is passed each line in the file.
  * @return Returns true if file is successfully read, false otherwise.
  */
-_compressedbool for_each_line(const std::string& path, std::function<bool(const std::string&)> cb);
+bool for_each_line(const std::string& path, std::function<bool(const std::string&)> cb);
+
+bool for_each_line(std::istream& in, std::function<bool(const std::string&)> cb);
 
 /**
  * Execute a callback on each file in a given directory.
