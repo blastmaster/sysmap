@@ -4,6 +4,7 @@
 #include <sys/utsname.h>
 #include <iostream>
 #include <fstream>
+#include <boost/variant.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/copy.hpp>
@@ -26,11 +27,12 @@ namespace adafs { namespace linux {
         return result;
     }
 
-    std::ifstream Kernel_Extractor::get_kernel_config(data& result)
+    void Kernel_Extractor::collect_kernel_config(data& result)
     {
         //vector<path> paths declared in /include/extractors/kernel_extractor.hpp
         for (auto p : paths) 
         {
+
             //create directory_iterator
             boost::filesystem::directory_iterator it{p}; 
             //create searchterm "/path/to/dir/config"
@@ -51,6 +53,27 @@ namespace adafs { namespace linux {
                     {
                         if(it_.compare((p.string() + filename_)) == 0)
                         {
+
+                            auto stream_iterator = [&](const std::string& line)
+                            {
+                                std::string str(line);
+                    
+                                if(!boost::starts_with(str, "#") && !str.empty())
+                                {
+                                    auto position = str.find("=");
+                                    const std::string name = str.substr(0, position);
+                                    
+                                    if (position != std::string::npos)
+                                    {
+                                        Kernel_Config kernel_config;
+                                        kernel_config.name = name;
+                                        kernel_config.value = str.substr(position + 1);
+                                        result.kernel_config.push_back(kernel_config);
+                                     }
+                                }
+                                return true; 
+                            };
+
                             if(boost::ends_with(it_, ".gz"))
                             {
                                 //file needs to be decompressed, using boost gzip_decompressor()
@@ -58,53 +81,25 @@ namespace adafs { namespace linux {
                                 boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
                                 in.push(boost::iostreams::gzip_decompressor());
                                 in.push(file_);
+
+                                std::istream config_stream( &in );
+                                utils::file::for_each_line(config_stream, stream_iterator);
+                                return;
                                
-//                                file.rdbuf(&in); 
-                                std::istream incom(&in);
-//                                std::string str;
-//                                getline(incom, str);
-//                                std::cout << str << std::endl;
-                                return std::ifstream(incom);
                             } 
-                           std::ifstream files(it_);
-                           return files;
+                            else 
+                            {
+                                std::ifstream config_stream( it_ );
+                                utils::file::for_each_line(config_stream, stream_iterator);
+                                return;
+                            } 
                         }
                     }
                 }
                 it++;
             }
         }
-    }
-
-    void Kernel_Extractor::collect_kernel_config(data& result)
-    {
-        
-        auto file = get_kernel_config(result);
-
-        std::string str;
-        getline(file, str);
-        std::cout << str << std::endl;
-
-//            std::istream& file(get_kernel_config(result));
-//            utils::file::for_each_line(file, [&](const std::string& line)
-//            {
-//                std::string str(line);
-//
-//                if(!boost::starts_with(str, "#") && !str.empty())
-//                {
-//                    auto position = str.find("=");
-//                    const std::string name = str.substr(0, position);
-//                    
-//                    if (position != std::string::npos)
-//                    {
-//                        Kernel_Config kernel_config;
-//                        kernel_config.name = name;
-//                        kernel_config.value = str.substr(position + 1);
-//                        result.kernel_config.push_back(kernel_config);
-//                     }
-//                }
-//                return true; 
-//            });
+        adafs::utils::log::logging::debug() << "[sysmap::linux::kernel_extractor] Could not find Kernel Config file";
     }
 
     void Kernel_Extractor::collect_kernel_modules(data& result)
@@ -133,9 +128,7 @@ namespace adafs { namespace linux {
     void Kernel_Extractor::collect_uname(data& result)
     {
         if (uname(&result.system_info) != 0){
-            adafs::utils::log::logging::error() << "Calling uname(&result.system_info) failed";
-        } else {
-            adafs::utils::log::logging::debug() << "Called uname(&result.system_info) successfully";
+            adafs::utils::log::logging::error() << "[sysmap::linux::kernel_extractor] Calling uname(&result.system_info) failed";
         }
     }
 

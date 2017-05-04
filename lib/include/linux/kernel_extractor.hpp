@@ -35,15 +35,7 @@ namespace adafs { namespace linux {
 
             /*
              * Searches through paths (declared in base class) to locate kernel config file.
-             * When succesful file gets copied to /tmp/kernel_config
-             * @param result Result is used to get uname.release() (same as uname -r)
-             * @return Returns true when kernel config file was found, else false
-             */
-            std::ifstream get_kernel_config(data& result);
-
-            /*
-             * Calls get_kernel_config(data& result), on success:
-             * Reads /tmp/kernel_config and returns Kernel information in the structure "result".
+             * Reads kernel config using utils::file::for_each_line() and returns Kernel information in the structure "result".
              * @param result Reference to data object, gets filled with information.
              */
             void collect_kernel_config(data& result);
