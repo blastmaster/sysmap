@@ -1,7 +1,7 @@
 #ifndef __ADAFS_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
 #define __ADAFS_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
 
-#include "../extractors/hwloc_extractor.hpp"
+#include "../extractors/machine_info_extractor.hpp"
 
 extern "C"{
 #include <hwloc.h>
@@ -14,7 +14,7 @@ namespace adafs { namespace hwloc {
      *@class Hwloc_Machine_Info_Extractor
      */
 
-    struct Hwloc_Machine_Info_Extractor : extractor::Hwloc_Extractor
+    struct Hwloc_Machine_Info_Extractor : extractor::Machine_Info_Extractor
     {
         static std::unique_ptr<Extractor> create() { return std::make_unique<Hwloc_Machine_Info_Extractor>(); }
         

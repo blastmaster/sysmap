@@ -33,18 +33,46 @@ namespace adafs { namespace extractor {
 
         struct Machine_Info
         {
-            //sysname - name of this implemantation of the operating system
-            std::string sysname;
-            // nodename
-            std::string nodename;
-            //release
-            std::string release;
-            //machine - name of hardware type on which system is running.
-            std::string machine;
-            // Kernel Version
-            std::string version;
-            // Loaded Kernel Modules - <module name, [size, used (0 or 1)]>
-            std::map<std::string, std::array<int, 2>> modules;
+            // DMIProductName
+            std::string product_name;
+            // DMIProductVersion
+            std::string product_version;
+            // DMIBoardVendor
+            std::string board_vendor;
+            // DMIBoardName
+            std::string board_name;
+            // DMIBoardVersion
+            std::string board_version;
+            // DMIBoardAssetTag
+            std::string board_asset_tag;
+            // DMIChassisVendor
+            std::string chassi_vendor;
+            // DMIChassisType
+            std::string chassi_type;
+            // DMIChassisVersion
+            std::string chassi_version;
+            // DMIChassisAssetTag
+            std::string chassi_asset_tag;
+            // DMIBIOSVendor
+            std::string bios_vendor;
+            // DMIBIOSVersion
+            std::string bios_version;
+            // DMIBIOSDate
+            std::string bios_date;
+            // DMISysVendor
+            std::string sys_vendor;
+            // LinuxCgroup
+            std::string linux_cgroup;
+            // OSName
+            std::string os_name;
+            // OSRelease
+            std::string os_release;
+            // OSVersion
+            std::string os_version;
+            // HostName
+            std::string hostname;
+            // Architecture
+            std::string architecture;
         };
 
         struct data

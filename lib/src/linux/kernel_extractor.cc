@@ -30,7 +30,7 @@ namespace adafs { namespace linux {
     void Kernel_Extractor::collect_kernel_config(data& result)
     {
         //vector<path> paths declared in /include/extractors/kernel_extractor.hpp
-        for (auto p : paths) 
+        for (auto& p : paths) 
         {
 
             //create directory_iterator
@@ -49,7 +49,7 @@ namespace adafs { namespace linux {
                     std::string uname_r = std::string("config-") + std::string(result.system_info.release); 
                     std::vector<std::string> filenames {uname_r, "config.gz", (uname_r + ".gz")}; 
 
-                    for (auto filename_ : filenames)
+                    for (auto& filename_ : filenames)
                     {
                         if(it_.compare((p.string() + filename_)) == 0)
                         {

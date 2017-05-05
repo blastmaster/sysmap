@@ -17,16 +17,32 @@ namespace adafs { namespace extractor {
     void Machine_Info_Extractor::load(Extractor_Set& findings)
     {
         auto data = collect();
+
         auto machine = make_value<Map_value>();
-        machine->add("NodeName", make_value<String_value>(std::move(data.machine_info.nodename)));
-        machine->add("Version", make_value<String_value>(std::move(data.machine_info.version)));
-        machine->add("Release", make_value<String_value>(std::move(data.machine_info.release)));
-        machine->add("Sysname", make_value<String_value>(std::move(data.machine_info.sysname)));
-        machine->add("Machine", make_value<String_value>(std::move(data.machine_info.machine)));
-        for (const auto& module : data.machine_info.modules){
-            machine->add(module.first, make_value<Array_value>(module.second));
-        }
+
+        machine->add("ProductName", make_value<String_value>(std::move(data.machine_info.product_name)));
+        machine->add("ProductVersion", make_value<String_value>(std::move(data.machine_info.product_version)));
+        machine->add("BoardVendor", make_value<String_value>(std::move(data.machine_info.board_vendor)));
+        machine->add("BoardName", make_value<String_value>(std::move(data.machine_info.board_name)));
+        machine->add("BoardVersion", make_value<String_value>(std::move(data.machine_info.board_version)));
+        machine->add("BoardAssetTag", make_value<String_value>(std::move(data.machine_info.board_asset_tag)));
+        machine->add("ChassisVendor", make_value<String_value>(std::move(data.machine_info.chassi_vendor)));
+        machine->add("ChassisType", make_value<String_value>(std::move(data.machine_info.chassi_type)));
+        machine->add("ChassisVersion", make_value<String_value>(std::move(data.machine_info.chassi_version)));
+        machine->add("ChassisAssetTag", make_value<String_value>(std::move(data.machine_info.chassi_asset_tag)));
+        machine->add("BiosVendor", make_value<String_value>(std::move(data.machine_info.bios_vendor)));
+        machine->add("BiosVersion", make_value<String_value>(std::move(data.machine_info.bios_version)));
+        machine->add("BiosDate", make_value<String_value>(std::move(data.machine_info.bios_date)));
+        machine->add("SysVendor", make_value<String_value>(std::move(data.machine_info.sys_vendor)));
+        machine->add("LinuxCgroup", make_value<String_value>(std::move(data.machine_info.linux_cgroup)));
+        machine->add("OsName", make_value<String_value>(std::move(data.machine_info.os_name)));
+        machine->add("OsRelease", make_value<String_value>(std::move(data.machine_info.os_release)));
+        machine->add("OsVersion", make_value<String_value>(std::move(data.machine_info.os_version)));
+        machine->add("Hostname", make_value<String_value>(std::move(data.machine_info.hostname)));
+        machine->add("Architecture", make_value<String_value>(std::move(data.machine_info.architecture)));
+
         findings.add_info("machineinfo", std::move(machine));
+
     }
 
     void Machine_Info_Extractor::store(Extractor_Set& findings, const std::string& dbname)
