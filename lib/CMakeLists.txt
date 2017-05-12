@@ -39,6 +39,7 @@ include_directories(
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${HWLOC_INCLUDE_DIRS}
+    ${PUGIXML_INCLUDE_DIR}
 )
 
 link_directories(

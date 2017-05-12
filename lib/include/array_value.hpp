@@ -108,6 +108,7 @@ struct Array_value : Value {
      */
     virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+    virtual void Array_value::to_xml(pugi::xml_node& node) const override;
     /**
      * Writes the Array_value to the given stream.
      * @param ostream& defines where to write.

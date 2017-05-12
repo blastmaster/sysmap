@@ -2,6 +2,7 @@
 #include "map_value.hpp"
 #include "output.hpp"
 #include "utils.hpp"
+#include "pugixml.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -53,6 +54,14 @@ namespace adafs {
             kvp.second->to_json(writer);
         }
         writer.EndObject();
+    }
+
+    void Map_value::to_xml(pugi::xml_node& node) const
+    {
+        for (const auto& kvp : m_elements) {
+            pugi::xml_node child_node = node.append_child(kvp.first);
+            kvp.second->to_xml(child_node);
+        }
     }
 
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const

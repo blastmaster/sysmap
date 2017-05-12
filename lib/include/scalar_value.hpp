@@ -52,6 +52,8 @@ namespace adafs {
          */
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+        virtual void to_xml(pugi::xml_node& node) const override;
+
         /**
         * Writes the Scalar_value to the given stream.
         * @param ostream& defines where to write.
@@ -87,6 +89,14 @@ namespace adafs {
     template<>
     void Double_value::to_json(Writer<OStreamWrapper>&) const;
 
+    template<>
+    void String_value::to_xml(pugi::xml_node& node) const;
+    template<>
+    void Uint_value::to_xml(pugi::xml_node& node) const;
+    template<>
+    void Int_value::to_xml(pugi::xml_node& node) const;
+    template<>
+    void Double_value::to_xml(pugi::xml_node& node) const;
 } /* closing namespace adafs */
 
 #endif /* __ADAFS_SCALAR_VALUE_HPP__ */

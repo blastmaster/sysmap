@@ -1,16 +1,15 @@
 #include "output.hpp"
 #include "value.hpp"
+#include "pugixml.hpp"
 
 
 namespace adafs {
 
 
     void
-    XML_Writer::make_tag(std::ostream& os, const std::string& tagname, const Value* value)
+    XML_Writer::make_tag(pugi::xml_document& doc, const std::string& tagname, const Value* value)
     {
-        os << "<" << tagname << ">\n";
-        value->write(os, Output_format::XML, true);
-        os << "</" << tagname << ">\n";
+        value->write(doc, Output_format::XML, true);
     }
 
     XML_Writer::XML_Writer(std::ostream& oss) : os{oss} 

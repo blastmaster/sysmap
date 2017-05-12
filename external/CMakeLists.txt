@@ -43,8 +43,21 @@ endif()
 # TODO: destination needed
 #install(DIRECTORY ${SQLITE_MODERN_CPP_INCLUDE_DIR} DESTINATION include)
 
+# pugixml
+message(STATUS "looking for pugixml")
+if ((NOT PUGIXML_INCLUDE_DIR) OR (NOT EXISTS ${PUGIXML_INCLUDE_DIR}))
+    message(STATUS "Unable to find pugixml, cloning...")
+    execute_process(COMMAND git submodule update --init -- pugixml
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    set(PUGIXML_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pugixml/src/
+        CACHE PATH "pugixml include directory")
+endif()
+# TODO: destination needed
+#install(DIRECTORY ${PUGIXML_INCLUDE_DIR} DESTINATION include)
+
 message("rapidjson: ${RAPIDJSON_INCLUDE_DIR}")
 message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
+message("pugixml: ${PUGIXML_INCLUDE_DIR}")
 
 # catch
 message("looking for catch...")

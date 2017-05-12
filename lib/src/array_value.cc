@@ -1,5 +1,6 @@
 #include "array_value.hpp"
 #include "output.hpp"
+#include "pugixml.hpp"
 
 #include <iostream>
 
@@ -40,6 +41,12 @@ namespace adafs {
         writer.EndArray();
     }
 
+    void Array_value::to_xml(pugi::xml_node& node) const
+    {
+        for (const auto& v : m_elements) {
+            v->to_xml(node);
+        }
+    }
 
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
