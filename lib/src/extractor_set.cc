@@ -79,27 +79,30 @@ namespace adafs {
         switch (format)
         {
             case Output_format::XML:
-
+            { 
                 pugi::xml_document doc;
                 for (const auto& kv_info : m_infomap) {
-                    pugi::xml_node node = doc.append_child(kv_info.first); //TODO: Nodename must change for every kv_info
+                    const char *c;
+                    c = kv_info.first.c_str();
+                    pugi::xml_node node = doc.append_child(c);
                     kv_info.second->to_xml(node);
-//                    XML_Writer::make_tag(doc, kv_info.first, kv_info.second.get());
                 }
                 doc.save(os);
                 break;
 
+            }
             case Output_format::JSON:
-
-               OStreamWrapper osw(os);
-               Writer<OStreamWrapper> writer(osw);
-               writer.StartObject();
-               for (const auto& kv_info : m_infomap) {
-                   writer.Key(kv_info.first.c_str());
-                   kv_info.second->to_json(writer);
-               }
-               writer.EndObject();
-               break;
+            { 
+                OStreamWrapper osw(os);
+                Writer<OStreamWrapper> writer(osw);
+                writer.StartObject();
+                for (const auto& kv_info : m_infomap) {
+                    writer.Key(kv_info.first.c_str());
+                    kv_info.second->to_json(writer);
+                }
+                writer.EndObject();
+                break;
+            }
         }
     }
 

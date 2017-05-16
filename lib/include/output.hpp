@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "pugixml.hpp"
 
 namespace adafs {
 
@@ -50,22 +51,6 @@ namespace adafs {
     };
 
     struct Value; //forward declaration
-
-    struct XML_Writer {
-
-        static void make_tag(pugi::xml_document& doc, const std::string& tagname, const Value* value);
-
-        XML_Writer(std::ostream& oss);
-
-        ~XML_Writer();
-
-        void write_xml_attribute(const std::string& key, const Value* value);
-
-        std::ostream& os;
-
-        pugi::xml_document doc;
-
-    };
 
 } /* closing namespace adafs */
 

@@ -3,6 +3,7 @@
 
 #include "value.hpp"
 #include "output.hpp"
+#include "pugixml.hpp"
 
 #include <iostream>
 
@@ -52,7 +53,11 @@ namespace adafs {
          */
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
-        virtual void to_xml(pugi::xml_node& node) const override;
+        /**
+         * Convert the Scalar value to xml.
+         * @param xml_node object
+         */
+        virtual void to_xml(pugi::xml_node& node) const;
 
         /**
         * Writes the Scalar_value to the given stream.
@@ -89,6 +94,7 @@ namespace adafs {
     template<>
     void Double_value::to_json(Writer<OStreamWrapper>&) const;
 
+    // Declare specializations for xml
     template<>
     void String_value::to_xml(pugi::xml_node& node) const;
     template<>

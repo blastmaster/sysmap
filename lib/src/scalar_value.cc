@@ -34,24 +34,32 @@ namespace adafs {
     template<>
     void String_value::to_xml(pugi::xml_node& node) const
     {
-        node.append_attribute("String_value") = m_value;
+          const char *c;
+          c = m_value.c_str();
+          node.append_child(pugi::node_pcdata).set_value(c);
     }
 
     template<>
     void Uint_value::to_xml(pugi::xml_node& node) const
     {
-        node.append_attribute("Uint_value") = m_value;
+        std::string s = std::to_string(m_value);
+        char const *pchar = s.c_str();
+        node.append_child(pugi::node_pcdata).set_value(pchar);
     }
 
     template<>
     void Int_value::to_xml(pugi::xml_node& node) const
     {
-        node.append_attribute("Int_value") = m_value;
+        std::string s = std::to_string(m_value);
+        char const *pchar = s.c_str();
+        node.append_child(pugi::node_pcdata).set_value(pchar);
     }
 
     template<>
     void Double_value::to_xml(pugi::xml_node& node) const
     {
-        node.append_attribute("Double_value") = m_value;
+        std::string s = std::to_string(m_value);
+        char const *pchar = s.c_str();
+        node.append_child(pugi::node_pcdata).set_value(pchar);
     }
 }

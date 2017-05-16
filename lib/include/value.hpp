@@ -50,6 +50,8 @@ struct Value {
     */
     virtual void to_json(Writer<OStreamWrapper>& writer) const = 0;
 
+    virtual void to_xml(pugi::xml_node& node) const = 0;
+
    /**
     * Writes the Map_value to the given stream.
     * Pure virtual method will be implemented in derived classes.
