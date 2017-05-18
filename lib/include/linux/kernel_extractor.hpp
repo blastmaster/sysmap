@@ -40,6 +40,8 @@ namespace adafs { namespace linux {
              */
             void collect_kernel_config(data& result);
 
+            std::string find_kernel_config(const data& result);
+
             /*
              * Reads /proc/modules and returns Module information in the structure "result".
              * @param result Reference to data object, gets filled with information.

@@ -23,6 +23,7 @@ bool for_each_line(std::istream& in, std::function<bool(const std::string&)> cb)
  */
 void for_each_subdirectory(const std::string& path, std::function<bool(const std::string&)> cb);
 
+void for_each_file(const std::string& path, std::function<bool(const std::string&)> cb);
 /**
  * Utility read function.
  * @param path The file that should be read.
