@@ -24,6 +24,10 @@ set(XML_TEST_SOURCES
     "xml_test.cc"
 )
 
+set(SUBDIR_TEST_SOURCES
+    "subdirectory_test.cpp"
+)
+
 set(CMAKE_CXX_FLAGS ${TEST_CXX_FLAGS})
 
 include_directories(
@@ -41,6 +45,7 @@ add_executable(db_test ${DB_TEST_SOURCES})
 add_executable(json_test ${JSON_TEST_SOURCES})
 add_executable(register_test ${REGISTRY_TEST_SOURCES})
 add_executable(xml_test ${XML_TEST_SOURCES})
+add_executable(subdir_test ${SUBDIR_TEST_SOURCES})
 
 target_link_libraries(exec_stdin_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -78,6 +83,13 @@ target_link_libraries(register_test libsysmap
 )
 
 target_link_libraries(xml_test libsysmap
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${SQLITE3_LIBRARY}
+    )
+
+target_link_libraries(subdir_test libsysmap
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}

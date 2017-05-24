@@ -19,7 +19,7 @@ namespace adafs { namespace hwloc {
     {
         hwloc_obj_t root_obj = hwloc_get_root_obj(topology);
         if (!root_obj) {
-            adafs::utils::log::logging::error() << "Error: no hwloc root obj!\n";
+            utils::log::logging::error() << "Error: no hwloc root obj!\n";
             return;
         }
 

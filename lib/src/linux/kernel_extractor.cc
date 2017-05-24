@@ -29,17 +29,16 @@ namespace adafs { namespace linux {
 
     std::string Kernel_Extractor::find_kernel_config(const data& result)
     {
-        std::string uname_r = std::string("config-") + std::string(result.system_info.release); 
+        std::string uname_r = std::string("config-") + result.system_info.release; 
         std::vector<std::string> filenames {uname_r, "config.gz", (uname_r + ".gz")}; 
 
         std::string config_path;
 
-        auto file_iterator = [&](const std::string& file){
+        auto file_iterator = [&](const std::string& path, const std::string& file){
             std::string file_(file);
             for(const auto& filename : filenames)
             {
-                //if(file_.compare(p.string() + filename) == 0)
-                if(boost::ends_with(file_, filename))
+                if(file_.compare(path + filename) == 0)
                 {
                     config_path = file_;
                 }
@@ -51,13 +50,19 @@ namespace adafs { namespace linux {
         {
             utils::file::for_each_file(p.string(), file_iterator);
         }
-        std::cout << config_path << std::endl;
+
         return config_path;
     }
 
     void Kernel_Extractor::collect_kernel_config(data& result)
     {
         std::string config_path = find_kernel_config(result);
+
+        if(config_path.empty()) 
+        { 
+            utils::log::logging::debug() << "[sysmap::linux::kernel_extractor] Kernel Config file not found";
+            return; 
+        }
 
         auto stream_iterator = [&](const std::string& line)
         {
@@ -81,7 +86,6 @@ namespace adafs { namespace linux {
 
         if(boost::ends_with(config_path, ".gz"))
         {
-            //file needs to be decompressed, using boost gzip_decompressor()
             std::ifstream file_(config_path, std::ios_base::in | std::ios_base::binary);
             boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
             in.push(boost::iostreams::gzip_decompressor());
@@ -126,7 +130,7 @@ namespace adafs { namespace linux {
     void Kernel_Extractor::collect_uname(data& result)
     {
         if (uname(&result.system_info) != 0){
-            adafs::utils::log::logging::error() << "[sysmap::linux::kernel_extractor] Calling uname(&result.system_info) failed";
+            utils::log::logging::error() << "[sysmap::linux::kernel_extractor] Calling uname(&result.system_info) failed";
         }
     }
 

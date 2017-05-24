@@ -30,16 +30,16 @@ namespace adafs { namespace hwloc {
     {
         hwloc_obj_t obj;
         auto num_pci_devs = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PCI_DEVICE);
-        adafs::utils::log::logging::debug() << "hwloc pci device extractor number of detected pci devices: " << num_pci_devs;
+        utils::log::logging::debug() << "hwloc pci device extractor number of detected pci devices: " << num_pci_devs;
         for (unsigned i = 0; i < num_pci_devs; ++i) {
             obj = hwloc_get_obj_by_type(topology, HWLOC_OBJ_PCI_DEVICE, i);
             if (obj == nullptr) {
-                adafs::utils::log::logging::error() << "ERROR! hwloc pci device extractor PCI device object is NULL!";
+                utils::log::logging::error() << "ERROR! hwloc pci device extractor PCI device object is NULL!";
                 continue;
             }
             std::string name((obj->name == nullptr) ? "None" : obj->name);
             if (&(obj->attr->pcidev) == nullptr) {
-                adafs::utils::log::logging::error() << "ERROR! hwloc pci device extractor PCI device attributes are NULL!";
+                utils::log::logging::error() << "ERROR! hwloc pci device extractor PCI device attributes are NULL!";
                 continue;
             }
 

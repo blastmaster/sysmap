@@ -15,6 +15,7 @@ extern "C" {
 
 
 namespace adafs { namespace extractor {
+namespace fs = boost::filesystem;
 
     /*
      * @class Kernel_Extractor
@@ -23,6 +24,7 @@ namespace adafs { namespace extractor {
     
     struct Kernel_Extractor : Extractor
     {
+
         /*
          * Constructor
          */
@@ -37,10 +39,11 @@ namespace adafs { namespace extractor {
         virtual void store(Extractor_Set& findings, const std::string& dbname) override;
 
         protected:
+
         /*
          * Vector containing Paths where Kernel Config could be located
          */
-        std::vector<boost::filesystem::path> paths {"/boot/", "/proc/"};
+        std::vector<fs::path> paths {"/boot/", "/proc/"};
 
         struct Kernel_Config
         {

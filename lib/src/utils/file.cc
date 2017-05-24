@@ -58,7 +58,7 @@ void for_each_subdirectory(const std::string& path, std::function<bool(const std
     }
 }
 
-void for_each_file(const std::string& path, std::function<bool(const std::string&)> cb)
+void for_each_file(const std::string& path, std::function<bool(const std::string& path, const std::string&)> cb)
 {
     fs::path p{path};
     auto d_iter = fs::directory_iterator(p);
@@ -66,7 +66,7 @@ void for_each_file(const std::string& path, std::function<bool(const std::string
         if (it.status().type() != fs::regular_file) {
             continue;
         }
-        if (! cb(it.path().string())) {
+        if (! cb(path, it.path().string())) {
             break;
         }
     }

@@ -50,7 +50,7 @@ namespace adafs { namespace extractor {
 
     void Kernel_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        adafs::utils::log::logging::error() << "[adafs::extractor::Kernel_Extractor] store() is not implemented yet";
+        utils::log::logging::error() << "[adafs::extractor::Kernel_Extractor] store() is not implemented yet";
     }
 } }
 
