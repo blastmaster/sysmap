@@ -57,7 +57,11 @@ namespace adafs {
          * Convert the Scalar value to xml.
          * @param xml_node object
          */
-        virtual void to_xml(pugi::xml_node& node) const;
+        virtual void to_xml(pugi::xml_node& node) const override {
+            std::string s = std::to_string(m_value);
+            char const *pchar = s.c_str();
+            node.append_child(pugi::node_pcdata).set_value(pchar);
+        }
 
         /**
         * Writes the Scalar_value to the given stream.
@@ -94,15 +98,9 @@ namespace adafs {
     template<>
     void Double_value::to_json(Writer<OStreamWrapper>&) const;
 
-    // Declare specializations for xml
+    // Declare string specialization for xml
     template<>
     void String_value::to_xml(pugi::xml_node& node) const;
-    template<>
-    void Uint_value::to_xml(pugi::xml_node& node) const;
-    template<>
-    void Int_value::to_xml(pugi::xml_node& node) const;
-    template<>
-    void Double_value::to_xml(pugi::xml_node& node) const;
 } /* closing namespace adafs */
 
 #endif /* __ADAFS_SCALAR_VALUE_HPP__ */

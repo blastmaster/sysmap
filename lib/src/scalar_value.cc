@@ -39,27 +39,4 @@ namespace adafs {
           node.append_child(pugi::node_pcdata).set_value(c);
     }
 
-    template<>
-    void Uint_value::to_xml(pugi::xml_node& node) const
-    {
-        std::string s = std::to_string(m_value);
-        char const *pchar = s.c_str();
-        node.append_child(pugi::node_pcdata).set_value(pchar);
-    }
-
-    template<>
-    void Int_value::to_xml(pugi::xml_node& node) const
-    {
-        std::string s = std::to_string(m_value);
-        char const *pchar = s.c_str();
-        node.append_child(pugi::node_pcdata).set_value(pchar);
-    }
-
-    template<>
-    void Double_value::to_xml(pugi::xml_node& node) const
-    {
-        std::string s = std::to_string(m_value);
-        char const *pchar = s.c_str();
-        node.append_child(pugi::node_pcdata).set_value(pchar);
-    }
 }
