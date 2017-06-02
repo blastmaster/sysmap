@@ -6,28 +6,9 @@
 
 #include "extractors/memory_info_extractor.hpp"
 
-#include <sqlite_modern_cpp.h>
-
 #include <cstdio>
 
-using namespace sqlite;
-
 namespace adafs { namespace extractor {
-    
-    static void create_memory_info_table(database& db)
-    {
-        db << "CREATE TABLE IF NOT EXISTS memory_info (\
-                total_memory integer,\
-                local_memory integer\
-            );";
-    }
-    
-    static void insert_memory_info(const uint64_t tmem, const uint64_t lmem, database& db)
-    {
-        db << "INSERT INTO memory_info VALUES (?, ?);"
-            << (int) tmem
-            << (int) lmem;
-    }
     
     void Memory_Info_Extractor::load(Extractor_Set& findings)
     {
@@ -53,17 +34,6 @@ namespace adafs { namespace extractor {
 
     void Memory_Info_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        database db(dbname);
-        adafs::utils::log::logging::debug() << "memory info extractor created database object: " << dbname;
-        create_memory_info_table(db);
-        adafs::utils::log::logging::debug() << "memory info extractor created memory_info table";
-        
-        auto mem_info = findings.get<Map_value>("MemoryInfo");
-        uint64_t totalmem = mem_info->get<Uint_value>("TotalMemory")->value();
-        uint64_t localmem = mem_info->get<Uint_value>("LocalMemory")->value();
-
-        insert_memory_info(totalmem, localmem, db);
-        adafs::utils::log::logging::debug() << "memory info extractor inserted memory info";
     }
 
     Memory_Info_Extractor::Memory_Info_Extractor() : Extractor("Memory_Extractor")

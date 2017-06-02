@@ -6,11 +6,7 @@
 
 #include "extractors/machine_info_extractor.hpp"
 
-#include <sqlite_modern_cpp.h>
-
 #include <cstdio>
-
-using namespace sqlite;
 
 namespace adafs { namespace extractor {
 

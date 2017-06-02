@@ -6,77 +6,9 @@
 
 #include "extractors/pci_device_extractor.hpp"
 
-#include <sqlite_modern_cpp.h>
-
 #include <cstdio>
 
-using namespace sqlite;
-
 namespace adafs { namespace extractor {
-
-    static void create_pci_device_table(database db)
-    {
-        db << "CREATE TABLE IF NOT EXISTS pci_devices (\
-                name string,\
-                domain string,\
-                busid string,\
-                class_id integer,\
-                vendor_id integer,\
-                device_id integer,\
-                subvendor_id integer,\
-                subdevice_id integer,\
-                revision integer,\
-                linkspeed float\
-            );";
-    }
-
-    static void insert_pci_device(const std::string& name,
-            const std::string& domain,
-            const std::string& busid,
-            const unsigned int class_id,
-            const unsigned int vendor_id,
-            const unsigned int device_id,
-            const unsigned int subvendor_id,
-            const unsigned int subdevice_id,
-            const unsigned int revision,
-            const float linkspeed, database& db)
-    {
-        db << "INSERT INTO pci_devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
-            << name
-            << domain
-            << busid
-            << (int) class_id
-            << (int) vendor_id
-            << (int) device_id
-            << (int) subvendor_id
-            << (int) subdevice_id
-            << (int) revision
-            << linkspeed;
-    }
-
-    static int insert_pci_devices(const Array_value* pci_devs, database& db)
-    {
-        int inserted = 0;
-        for (const auto& pci_dev : *pci_devs) {
-            auto dev_map = pci_dev->as<Map_value>();
-            std::string name = dev_map->get<String_value>("name")->value();
-            std::string domain = dev_map->get<String_value>("domain")->value();
-            std::string busid = dev_map->get<String_value>("busid")->value();
-            unsigned int class_id = dev_map->get<Uint_value>("class_id")->value();
-            unsigned int vendor_id = dev_map->get<Uint_value>("vendor_id")->value();
-            unsigned int device_id = dev_map->get<Uint_value>("device_id")->value();
-            unsigned int subvendor_id = dev_map->get<Uint_value>("subvendor_id")->value();
-            unsigned int subdevice_id = dev_map->get<Uint_value>("subdevice_id")->value();
-            unsigned int revision = dev_map->get<Uint_value>("revision")->value();
-            double linkspeed = dev_map->get<Double_value>("linkspeed")->value();
-
-            insert_pci_device(name, domain, busid, class_id, vendor_id, device_id,
-                    subvendor_id, subdevice_id, revision, linkspeed, db);
-            ++inserted;
-        }
-
-        return inserted;
-    }
 
     PCI_Device_Extractor::PCI_Device_Extractor() : Extractor("PCI_Extractor")
     {
@@ -118,15 +50,6 @@ namespace adafs { namespace extractor {
 
     void PCI_Device_Extractor::store(Extractor_Set& findings, const std::string& dbname)
     {
-        database db(dbname);
-        adafs::utils::log::logging::debug() << "pci device extractor created database object: " << dbname;
-        create_pci_device_table(db);
-        adafs::utils::log::logging::debug() << "pci device extractor created pci_devices table";
-
-        // insert pci devices
-        auto pci_info = findings.get<Array_value>("PCIDevices");
-        int inserted_pci_devices = insert_pci_devices(pci_info, db);
-        adafs::utils::log::logging::debug() << "pci device extractor inserted pci devices: " << inserted_pci_devices;
     }
 
 }} /* closing namesapce adafs::extractor */

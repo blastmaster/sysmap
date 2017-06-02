@@ -14,8 +14,25 @@ option(RUN_TESTS "run test suite" ON)
 # Build documentation
 option(BUILD_DOC "Build the documentation" ON)
 
+# Debbuging disables BUILD_DOC
+option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
+
+if(RUN_TESTS)
+    add_subdirectory(test)
+else()
+    message("ATTETNTION RUN_TESTS Disabled, no Test will be build")
+endif()
+
+if(DEBUG_MODE)
+    message("ATTENTION DEBUG_MODE Enabled, no Documentation will be build")
+    option(BUILD_COD OFF)
+    #    option(BUILD_DOC "Build the documentation" OFF)
+else()
+    add_subdirectory(doc)
+endif()
+
 # set compiler flags
-set(SYSMAP_CXX_FLAGS "-Wall -Wextra -std=c++14 -ggdb")
+set(SYSMAP_CXX_FLAGS "-Wall -Wextra -std=c++14 -ggdb -D PUGIXML_HEADER_ONLY")
 # cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -34,6 +51,7 @@ find_package(Sphinx REQUIRED)
 # find doxygen for API-documentation
 find_package(Doxygen REQUIRED)
 
+
 add_subdirectory(external)
 # include nitro lib
 include(external/nitro/Nitro.cmake)
@@ -49,5 +67,3 @@ message("TOP LEVEL DOXY_INPUT_FILES: ${DOXY_INPUT_FILES}")
 # add lib, bin, doc and test directory
 add_subdirectory(lib)
 add_subdirectory(bin)
-add_subdirectory(doc)
-add_subdirectory(test)

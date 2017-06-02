@@ -6,7 +6,6 @@ message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # nitro
 message(STATUS "looking for nitro")
-
 file(GLOB NITRO_FILES "nitro/*")
 list(LENGTH NITRO_FILES COUNT_NITRO_FILES)
 if (${COUNT_NITRO_FILES} EQUAL 0)
