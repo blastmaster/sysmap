@@ -13,7 +13,7 @@ using namespace adafs;
 TEST_CASE("try extractor registry - add filesystem by tag", "[Extractor]") {
     Extractor_Set extr_set;
 
-    extr_set.add_by_tag("filesystem");
+    extr_set.add_extractor("Filesystem", std::make_shared<linux::Filesystem_Extractor>());
     REQUIRE(extr_set.empty() == false);
 }
 

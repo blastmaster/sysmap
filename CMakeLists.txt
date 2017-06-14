@@ -17,22 +17,9 @@ option(BUILD_DOC "Build the documentation" ON)
 # Debbuging disables BUILD_DOC
 option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
 
-if(RUN_TESTS)
-    add_subdirectory(test)
-else()
-    message("ATTETNTION RUN_TESTS Disabled, no Test will be build")
-endif()
-
-if(DEBUG_MODE)
-    message("ATTENTION DEBUG_MODE Enabled, no Documentation will be build")
-    option(BUILD_COD OFF)
-    #    option(BUILD_DOC "Build the documentation" OFF)
-else()
-    add_subdirectory(doc)
-endif()
 
 # set compiler flags
-set(SYSMAP_CXX_FLAGS "-Wall -Wextra -std=c++14 -ggdb -D PUGIXML_HEADER_ONLY")
+set(SYSMAP_CXX_FLAGS "-Wextra -std=c++14 -ggdb -D PUGIXML_HEADER_ONLY")
 # cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -44,13 +31,6 @@ message("TOP LEVEL CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem iostreams)
 # find hwloc
 find_package(Hwloc REQUIRED)
-# find sqlite3
-find_package(sqlite3 REQUIRED)
-# find sphinx for documentation
-find_package(Sphinx REQUIRED)
-# find doxygen for API-documentation
-find_package(Doxygen REQUIRED)
-
 
 add_subdirectory(external)
 # include nitro lib
@@ -60,9 +40,30 @@ include(external/nitro/Nitro.cmake)
 # sysmap/lib/include
 # sysmap/lib/src
 # sysmap/bin
-list(APPEND DOXY_INPUT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/src ${CMAKE_CURRENT_SOURCE_DIR}/bin")
-message("TOP LEVEL DOXY_INPUT_FILES: ${DOXY_INPUT_FILES}")
+
+
+# Handling Options
+if(RUN_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+else()
+    message("ATTENTION: RUN_TESTS Disabled, no Test will be build")
+endif()
+
+if(DEBUG_MODE OR NOT BUILD_DOC)
+    message("ATTENTION: no Documentation will be build")
+    option(BUILD_COD OFF)
+
+elseif(NOT DEBUG_MODE AND BUILD_DOC)
+    # find sphinx for documentation
+    find_package(Sphinx REQUIRED)
+    # find doxygen for API-documentation
+    find_package(Doxygen REQUIRED)
+    list(APPEND DOXY_INPUT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/src ${CMAKE_CURRENT_SOURCE_DIR}/bin")
+    message("TOP LEVEL DOXY_INPUT_FILES: ${DOXY_INPUT_FILES}")
+    add_subdirectory(doc)
+endif()
 
 # add lib, bin, doc and test directory
 add_subdirectory(lib)

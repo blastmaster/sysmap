@@ -68,7 +68,7 @@ namespace adafs {
 
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
-        static bool first = true;
+        //static bool first = true;
         return os;
     }
 

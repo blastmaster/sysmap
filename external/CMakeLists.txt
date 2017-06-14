@@ -12,6 +12,8 @@ if (${COUNT_NITRO_FILES} EQUAL 0)
     message(STATUS "Unable to find nitro, cloning...")
     execute_process(COMMAND git submodule update --init -- nitro
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    set(NITRO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nitro/include/nitro/
+        CACHE PATH "nitro include directory")
 endif()
 #include(nitro/Nitro.cmake HAVE_NITRO)
 
@@ -28,20 +30,6 @@ endif()
 # TODO: destination needed
 #install(DIRECTORY ${RAPIDJSON_INCLUDE_DIR}/rapidjson DESTINATION include)
 
-
-
-# sqlite_modern_cpp
-message(STATUS "looking for sqlite_modern_cpp")
-if ((NOT SQLITE_MODERN_CPP_INCLUDE_DIR) OR (NOT EXISTS ${SQLITE_MODERN_CPP_INCLUDE_DIR}))
-    message(STATUS "Unable to find sqlite_modern_cpp, cloning...")
-    execute_process(COMMAND git submodule update --init -- sqlite_modern_cpp
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-    set(SQLITE_MODERN_CPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sqlite_modern_cpp/hdr/
-        CACHE PATH "sqlite_modern_cpp include directory")
-endif()
-# TODO: destination needed
-#install(DIRECTORY ${SQLITE_MODERN_CPP_INCLUDE_DIR} DESTINATION include)
-
 # pugixml
 message(STATUS "looking for pugixml")
 if ((NOT PUGIXML_INCLUDE_DIR) OR (NOT EXISTS ${PUGIXML_INCLUDE_DIR}))
@@ -55,7 +43,6 @@ endif()
 #install(DIRECTORY ${PUGIXML_INCLUDE_DIR} DESTINATION include)
 
 message("rapidjson: ${RAPIDJSON_INCLUDE_DIR}")
-message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
 message("pugixml: ${PUGIXML_INCLUDE_DIR}")
 
 # catch
