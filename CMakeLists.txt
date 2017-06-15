@@ -19,7 +19,7 @@ option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
 
 
 # set compiler flags
-set(SYSMAP_CXX_FLAGS "-Wextra -std=c++14 -ggdb -D PUGIXML_HEADER_ONLY")
+set(SYSMAP_CXX_FLAGS "-Wextra -std=c++14 -D PUGIXML_HEADER_ONLY")
 # cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -50,11 +50,13 @@ else()
     message("ATTENTION: RUN_TESTS Disabled, no Test will be build")
 endif()
 
-if(DEBUG_MODE OR NOT BUILD_DOC)
+if(DEBUG_MODE)
+    message("DEBUG_MODE ENABLED")
+    set(SYSMAP_CXX_FLAGS "${SYSMAP_CXX_FLAGS} -ggdb -Wall")
     message("ATTENTION: no Documentation will be build")
-    option(BUILD_COD OFF)
+endif()
 
-elseif(NOT DEBUG_MODE AND BUILD_DOC)
+if(BUILD_DOC AND NOT DEBUG_MODE)
     # find sphinx for documentation
     find_package(Sphinx REQUIRED)
     # find doxygen for API-documentation
