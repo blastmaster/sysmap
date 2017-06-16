@@ -14,6 +14,8 @@ namespace adafs { namespace utils { namespace file {
  */
 bool for_each_line(const std::string& path, std::function<bool(const std::string&)> cb);
 
+bool for_each_line(std::istream& in, std::function<bool(const std::string&)> cb);
+
 /**
  * Execute a callback on each file in a given directory.
  * @param path The path to the directory where traversal should start.
@@ -21,6 +23,7 @@ bool for_each_line(const std::string& path, std::function<bool(const std::string
  */
 void for_each_subdirectory(const std::string& path, std::function<bool(const std::string&)> cb);
 
+void for_each_file(const std::string& path, std::function<bool(const std::string& path, const std::string&)> cb);
 /**
  * Utility read function.
  * @param path The file that should be read.

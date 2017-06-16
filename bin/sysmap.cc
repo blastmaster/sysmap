@@ -2,7 +2,10 @@
 #include "linux/filesystem_extractor.hpp"
 #include "linux/disk_extractor.hpp"
 #include "linux/infiniband_extractor.hpp"
-#include "hwloc/hwloc_extractor.hpp"
+#include "linux/kernel_extractor.hpp"
+#include "hwloc/hwloc_machine_info_extractor.hpp"
+#include "hwloc/hwloc_pci_device_extractor.hpp"
+#include "hwloc/hwloc_memory_info_extractor.hpp"
 #include "output.hpp"
 #include "utils.hpp"
 

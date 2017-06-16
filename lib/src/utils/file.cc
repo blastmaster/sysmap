@@ -29,6 +29,20 @@ bool for_each_line(const std::string& path, std::function<bool(const std::string
     return true;
 }
 
+bool for_each_line(std::istream& in, std::function<bool(const std::string&)> cb)
+{
+    if (!in) {
+        utils::log::logging::error() << "[sysmap::utils] Error, bad ifstream\n";
+        return false;
+    }
+
+    for (std::string line; getline(in, line);) {
+        if (! cb(line)) {
+            break;
+        }
+    }
+    return true;
+}
 
 void for_each_subdirectory(const std::string& path, std::function<bool(const std::string&)> cb)
 {
@@ -44,6 +58,19 @@ void for_each_subdirectory(const std::string& path, std::function<bool(const std
     }
 }
 
+void for_each_file(const std::string& path, std::function<bool(const std::string& path, const std::string&)> cb)
+{
+    fs::path p{path};
+    auto d_iter = fs::directory_iterator(p);
+    for (const auto& it : d_iter) {
+        if (it.status().type() != fs::regular_file) {
+            continue;
+        }
+        if (! cb(path, it.path().string())) {
+            break;
+        }
+    }
+}
 
 std::string read(const std::string& path)
 {

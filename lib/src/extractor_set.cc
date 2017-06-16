@@ -1,5 +1,6 @@
 #include "extractor_set.hpp"
 #include "utils.hpp"
+#include "pugixml.hpp"
 
 namespace adafs {
 
@@ -78,29 +79,36 @@ namespace adafs {
         switch (format)
         {
             case Output_format::XML:
-                os << XML_Writer::xml_preamble << "\n"
-                    << XML_Writer::xml_root_element_open << "\n";
+            { 
+                pugi::xml_document doc;
                 for (const auto& kv_info : m_infomap) {
-                    XML_Writer::make_tag(os, kv_info.first, kv_info.second.get());
+                    const char *c;
+                    c = kv_info.first.c_str();
+                    pugi::xml_node node = doc.append_child(c);
+                    kv_info.second->to_xml(node);
                 }
-                os << XML_Writer::xml_root_element_close << "\n";
+                doc.save(os);
                 break;
+
+            }
             case Output_format::JSON:
-               OStreamWrapper osw(os);
-               Writer<OStreamWrapper> writer(osw);
-               writer.StartObject();
-               for (const auto& kv_info : m_infomap) {
-                   writer.Key(kv_info.first.c_str());
-                   kv_info.second->to_json(writer);
-               }
-               writer.EndObject();
-               break;
+            { 
+                OStreamWrapper osw(os);
+                Writer<OStreamWrapper> writer(osw);
+                writer.StartObject();
+                for (const auto& kv_info : m_infomap) {
+                    writer.Key(kv_info.first.c_str());
+                    kv_info.second->to_json(writer);
+                }
+                writer.EndObject();
+                break;
+            }
         }
     }
 
 
     const Value* Extractor_Set::get_value(const std::string& name)
-    {
+   {
         auto it = m_infomap.find(name);
         if (it == m_infomap.end()) {
             return nullptr;

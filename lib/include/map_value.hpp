@@ -3,12 +3,12 @@
 
 #include "value.hpp"
 #include "output.hpp"
+#include "pugixml.hpp"
 
 #include <map>
 #include <memory>
 
 namespace adafs {
-
     /**
      * @class Map_value
      */
@@ -81,6 +81,8 @@ namespace adafs {
         * @param Writer object. Defines how to write to json.
         */
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
+
+        virtual void to_xml(pugi::xml_node& node) const;
 
        /**
         * Writes the Map_value to the given stream.

@@ -11,11 +11,17 @@ set(LIBSYSMAP_SOURCES
     "src/extractors/filesystem_extractor.cc"
     "src/extractors/disk_extractor.cc"
     "src/extractors/infiniband_extractor.cc"
-    "src/extractors/hwloc_extractor.cc"
+    "src/extractors/kernel_extractor.cc"
+    "src/extractors/pci_device_extractor.cc"
+    "src/extractors/memory_info_extractor.cc"
+    "src/extractors/machine_info_extractor.cc"
     "src/linux/filesystem_extractor.cc"
     "src/linux/disk_extractor.cc"
     "src/linux/infiniband_extractor.cc"
-    "src/hwloc/hwloc_extractor.cc"
+    "src/linux/kernel_extractor.cc"
+    "src/hwloc/hwloc_machine_info_extractor.cc"
+    "src/hwloc/hwloc_pci_device_extractor.cc"
+    "src/hwloc/hwloc_memory_info_extractor.cc"
     "src/utils/file.cc"
     "src/utils/execution.cc"
     "src/array_value.cc"
@@ -33,6 +39,7 @@ include_directories(
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${HWLOC_INCLUDE_DIRS}
+    ${PUGIXML_INCLUDE_DIR}
 )
 
 link_directories(

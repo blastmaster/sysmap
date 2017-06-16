@@ -2,6 +2,7 @@
 #include "map_value.hpp"
 #include "output.hpp"
 #include "utils.hpp"
+#include "pugixml.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -55,28 +56,19 @@ namespace adafs {
         writer.EndObject();
     }
 
+    void Map_value::to_xml(pugi::xml_node& node) const
+    {
+        for (const auto& kvp : m_elements) {
+            const char *c;
+            c = kvp.first.c_str();
+            pugi::xml_node child_node = node.append_child(c);
+            kvp.second->to_xml(child_node);
+        }
+    }
+
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
-        static bool first = true;
-        switch (format) {
-            case Output_format::XML :
-                XML_Writer xml{os};
-                std::ostringstream tmp(std::ios_base::ate);
-                for (const auto& kvp : m_elements) {
-                    const auto v = kvp.second.get();
-                    if (!first && is_array_value(v)) {
-                        XML_Writer::make_tag(tmp, kvp.first, v);
-                        continue;
-                    }
-                    xml.write_xml_attribute(kvp.first, v);
-                }
-                first = false;
-                if (!tmp.str().empty()) {
-                    xml.~XML_Writer();
-                    os << tmp.str();
-                }
-        }
-
+        //static bool first = true;
         return os;
     }
 
