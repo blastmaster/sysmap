@@ -41,7 +41,7 @@ will be automatically cloned and installed via cmake during the build. All other
 cd sysmap
 virtualenv --python=python3 env # create new virtualenv with pip and python3 highly recommended for development
 . env/bin/activate # activate virtualenv
-pip install -U sphinx==1.5.6 breathe # install necessary dependencies (building doc is failing with newer releases than 1.5.6)
+pip install -U "sphinx==1.5.6" breathe # install necessary dependencies (building doc is failing with newer releases than 1.5.6)
 mkdir build/ ; cd build
 cmake ..
 make -j
@@ -69,62 +69,6 @@ ArangoDB is a multi-model NoSQL Database, supporting key-value, documents and gr
 We use ArangoDB as our central Database for collected system information.
 
 For download and installation instructions for your distribution see the [arangodb webite](https://www.arangodb.com/download-major/).
-
-
-### sqlite3 (not used, not maintained, still in source, maybe deprecated)
-
-table node
-    hostname string not null primary key
-    guid string // to identify hosts entry
-
-
-hwloc extractor
-
-table machine_info
-    hostname string not null primary key
-    [...]
-
-table pci_device
-    [...]
-
-table memory_info
-    [...]
-
-
-filesystem extractor
-
-table mountpoint
-    [...]
-
-table partition
-    [...]
-
-
-disk extractor
-
-table disk
-    device_number string not null primary key
-    [...]
-
-
-infiniband extractor (already implemented)
-
-table connections
-    from_guid string not null primary key
-    to_guid string not null primary key
-    from_port int not null primary key
-    to_port int not null primary key
-
-table connection_details
-    [...]
-
-table hosts
-    guid string not null primary key
-    [...]
-
-table switch
-    guid string not null primary key
-    [...]
 
 ## License
 
