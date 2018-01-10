@@ -5,6 +5,8 @@ set(PROJECT_VERSION 0.0.1)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
+include(CTest)
+
 # Build static or shared objects
 option(BUILD_STATIC "link static if this is off a shared lib will be build" ON)
 

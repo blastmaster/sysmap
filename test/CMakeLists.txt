@@ -50,7 +50,7 @@ add_test(NAME exec_stdin_test COMMAND exec_stdin_test)
 add_test(NAME exec_each_line_test COMMAND exec_each_line_test)
 add_test(NAME db_test COMMAND db_test)
 add_test(NAME json_test COMMAND json_test)
-#add_test(NAME register_test COMMAND register_test)
+add_test(NAME register_test COMMAND register_test)
 add_test(NAME xml_test COMMAND xml_test)
 
 target_link_libraries(exec_stdin_test libsysmap
@@ -93,4 +93,4 @@ target_link_libraries(xml_test libsysmap
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
-    )
+)
