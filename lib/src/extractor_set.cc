@@ -108,13 +108,11 @@ namespace adafs {
             case Output_format::YAML:
             {
                 YAML::Emitter output;
-                output << YAML::BeginMap;
                 for (const auto& kv_info : m_infomap) {
                     output << YAML::Key << kv_info.first;
                     output << YAML::Value;
                     kv_info.second->to_yaml(output);
                 }
-                output << YAML::EndMap;
                 std::cout << output.c_str() << std::endl;
                 break;
             }
