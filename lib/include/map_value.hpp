@@ -4,6 +4,7 @@
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <map>
 #include <memory>
@@ -83,6 +84,8 @@ namespace adafs {
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
         virtual void to_xml(pugi::xml_node& node) const;
+
+        virtual void to_yaml(YAML::Emitter& node) const;
 
        /**
         * Writes the Map_value to the given stream.

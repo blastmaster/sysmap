@@ -94,7 +94,11 @@ int main(int argc, char** argv)
 
         if (vm.count("format")) {
             auto fmt_arg = vm["format"].as<std::string>();
-            if (boost::iequals(fmt_arg, "XML")) {
+            if (boost::iequals(fmt_arg, "YAML")) {
+                fmt = Output_format::YAML;
+                utils::log::logging::debug() << "[sysmap] setting format to: YAML\n";
+            }
+            else if (boost::iequals(fmt_arg, "XML")) {
                 fmt = Output_format::XML;
                 utils::log::logging::debug() << "[sysmap] setting format to: XML\n";
             }

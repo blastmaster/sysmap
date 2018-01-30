@@ -4,6 +4,7 @@
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <iostream>
 
@@ -61,6 +62,11 @@ namespace adafs {
             std::string s = std::to_string(m_value);
             char const *pchar = s.c_str();
             node.append_child(pugi::node_pcdata).set_value(pchar);
+        }
+
+        virtual void to_yaml(YAML::Emitter& node) const
+        {
+            node << m_value;
         }
 
         /**

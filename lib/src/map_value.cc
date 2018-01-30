@@ -66,6 +66,15 @@ namespace adafs {
         }
     }
 
+    void Map_value::to_yaml(YAML::Emitter& node) const
+    {
+        for (const auto& kvp : m_elements) {
+            node << YAML::BeginMap;
+            node << YAML::Key << kvp.first;
+            kvp.second->to_yaml(node);
+        }
+    }
+
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         //static bool first = true;

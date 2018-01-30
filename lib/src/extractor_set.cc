@@ -1,6 +1,7 @@
 #include "extractor_set.hpp"
 #include "utils.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 namespace adafs {
 
@@ -79,7 +80,7 @@ namespace adafs {
         switch (format)
         {
             case Output_format::XML:
-            { 
+            {
                 pugi::xml_document doc;
                 for (const auto& kv_info : m_infomap) {
                     const char *c;
@@ -92,7 +93,7 @@ namespace adafs {
 
             }
             case Output_format::JSON:
-            { 
+            {
                 OStreamWrapper osw(os);
                 Writer<OStreamWrapper> writer(osw);
                 writer.StartObject();
@@ -101,6 +102,20 @@ namespace adafs {
                     kv_info.second->to_json(writer);
                 }
                 writer.EndObject();
+                break;
+            }
+
+            case Output_format::YAML:
+            {
+                YAML::Emitter output;
+                output << YAML::BeginMap;
+                for (const auto& kv_info : m_infomap) {
+                    output << YAML::Key << kv_info.first;
+                    output << YAML::Value;
+                    kv_info.second->to_yaml(output);
+                }
+                output << YAML::EndMap;
+                std::cout << output.c_str() << std::endl;
                 break;
             }
         }

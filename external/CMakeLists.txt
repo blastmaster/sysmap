@@ -4,6 +4,10 @@ message("cmake current list dir: ${CMAKE_CURRENT_LIST_DIR}")
 message("cmake source dir: ${CMAKE_SOURCE_DIR}")
 message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
+# yaml-cpp
+add_subdirectory(yaml-cpp)
+message("yaml: ${YAML_CPP_SOURCE_DIR}")
+
 # nitro
 message(STATUS "looking for nitro")
 file(GLOB NITRO_FILES "nitro/*")

@@ -4,6 +4,7 @@
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <vector>
 #include <memory>
@@ -110,6 +111,9 @@ struct Array_value : Value {
     virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
     virtual void to_xml(pugi::xml_node& node) const;
+
+    virtual void to_yaml(YAML::Emitter& node) const;
+
     /**
      * Writes the Array_value to the given stream.
      * @param ostream& defines where to write.

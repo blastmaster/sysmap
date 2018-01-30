@@ -13,6 +13,7 @@ namespace adafs {
         XML,
         ASCII,
         JSON,
+        YAML,
     };
 
     struct outwrapper
