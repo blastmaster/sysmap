@@ -51,8 +51,18 @@ struct Value {
     */
     virtual void to_json(Writer<OStreamWrapper>& writer) const = 0;
 
+   /**
+    * Converts Map_value to a xml object.
+    * Pure virtual method will be implemented by derived classes.
+    * @param xml_node object is filled with data of Map_value.
+    */
     virtual void to_xml(pugi::xml_node& node) const = 0;
 
+   /**
+    * Converts Map_value to a yaml object.
+    * Pure virtual method will be implemented by derived classes.
+    * @param yaml emitter object is filled with data of Map_value.
+    */
     virtual void to_yaml(YAML::Emitter& node) const = 0;
 
    /**

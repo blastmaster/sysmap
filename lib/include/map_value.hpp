@@ -83,8 +83,14 @@ namespace adafs {
         */
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+       /**
+        * Appends Map_value to a xml object.
+        */
         virtual void to_xml(pugi::xml_node& node) const;
 
+       /**
+        * Appends Map_value to a yaml object.
+        */
         virtual void to_yaml(YAML::Emitter& node) const;
 
        /**

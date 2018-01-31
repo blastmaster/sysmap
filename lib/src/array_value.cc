@@ -55,17 +55,16 @@ namespace adafs {
 
     void Array_value::to_yaml(YAML::Emitter& node) const
     {
-        node << YAML::BeginMap;
+        node << YAML::BeginSeq;
         int i = 0;
         const char *c;
         for(const auto& v : m_elements) {
              c = std::to_string(i).c_str();
-             node << YAML::Key << c;
              node << YAML::Value;
              v->to_yaml(node);
              i++;
         }
-        node << YAML::EndMap;
+        node << YAML::EndSeq;
     }
 
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const

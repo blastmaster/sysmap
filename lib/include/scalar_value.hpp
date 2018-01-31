@@ -56,7 +56,6 @@ namespace adafs {
 
         /**
          * Convert the Scalar value to xml.
-         * @param xml_node object
          */
         virtual void to_xml(pugi::xml_node& node) const override {
             std::string s = std::to_string(m_value);
@@ -64,7 +63,10 @@ namespace adafs {
             node.append_child(pugi::node_pcdata).set_value(pchar);
         }
 
-        virtual void to_yaml(YAML::Emitter& node) const
+        /**
+         * Convert the Scalar value to yaml.
+         */
+        void to_yaml(YAML::Emitter& node) const final
         {
             node << m_value;
         }

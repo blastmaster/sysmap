@@ -110,8 +110,17 @@ struct Array_value : Value {
      */
     virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+    /**
+     * Converts Array_value to a xml by surrounding each array-element
+     * with an index tag starting from zero.
+     * @param xml_node node that is filled with data.
+     */
     virtual void to_xml(pugi::xml_node& node) const;
 
+    /**
+     * Converts Array_value to a yaml sequence
+     * @param yaml emitter that is filled with data.
+     */
     virtual void to_yaml(YAML::Emitter& node) const;
 
     /**
