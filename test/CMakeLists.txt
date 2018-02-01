@@ -37,13 +37,14 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CATCH_INCLUDE_DIR}
     ${PUGIXML_INCLUDE_DIR}
+    ${YAML_INCLUDE_DIR}
 )
 
 add_executable(exec_stdin_test ${EXEC_TEST_STDIN_SOURCES})
 add_executable(exec_each_line_test ${EXEC_EACH_LINE_TEST_SOURCES})
 add_executable(db_test ${DB_TEST_SOURCES})
 add_executable(json_test ${JSON_TEST_SOURCES})
-add_executable(register_test ${REGISTRY_TEST_SOURCES}) 
+add_executable(register_test ${REGISTRY_TEST_SOURCES})
 add_executable(xml_test ${XML_TEST_SOURCES})
 
 add_test(NAME exec_stdin_test COMMAND exec_stdin_test)

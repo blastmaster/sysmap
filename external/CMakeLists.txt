@@ -5,8 +5,27 @@ message("cmake source dir: ${CMAKE_SOURCE_DIR}")
 message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # yaml-cpp
+message(STATUS "looking for yaml-cpp")
+file(GLOB YAML_FILES "yaml-cpp/*")
+list(LENGTH YAML_FILES COUNT_YAML_FILES)
+if  (${COUNT_YAML_FILES} EQUAL 0)
+    message(STATUS "Unable to find yaml-cpp, cloning...")
+    execute_process(COMMAND git submodule update --init -- yaml-cpp
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+#We have to declare YAML_INCLUDE_DIR and YAML_LIBRARIES cached, so they are visible everywhere
+#another way would be using target_include_directories()
+set(YAML_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/include/ CACHE PATH "yaml-cpp include dir")
+set(YAML_LIBRARIES yaml-cpp CACHE PATH "yaml-cpp libraries")
+#disable yaml options we dont need
+#we declare the variables before we add the subdirectory
+#since cmake wont overwrite existing variables even if the value is different
+#they will stay "OFF" and can be set to ON using ccmake or something else
+option(YAML_CPP_BUILD_TESTS "Enable testing" OFF)
+option(YAML_CPP_BUILD_TOOLS "Enable parse tools" OFF)
+option(YAML_CPP_BUILD_CONTRIB "Enable contrib stuff in library" OFF)
 add_subdirectory(yaml-cpp)
-message("yaml: ${YAML_CPP_SOURCE_DIR}")
+message("YAML_INCLUDE_DIR ${YAML_INCLUDE_DIR}")
 
 # nitro
 message(STATUS "looking for nitro")

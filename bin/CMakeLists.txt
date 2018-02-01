@@ -12,7 +12,7 @@ include_directories(
     ${RAPIDJSON_INCLUDE_DIR}
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${PUGIXML_INCLUDE_DIR}
-    ${YAML_CPP_SOURCE_DIR}/include
+    ${YAML_INCLUDE_DIR}
 )
 
 add_executable(sysmap ${SYSMAP_SOURCES})
@@ -25,7 +25,6 @@ if(BUILD_STATIC)
         ${Boost_FILESYSTEM_LIBRARY}
         ${SQLITE3_LIBRARY}
         ${PUGIXML_LIBRARY}
-        yaml-cpp
     )
 else()
     target_link_libraries(sysmap
@@ -35,7 +34,6 @@ else()
         ${Boost_FILESYSTEM_LIBRARY}
         ${SQLITE3_LIBRARY}
         ${PUGIXML_LIBRARY}
-        yaml-cpp
     )
 endif()
 
