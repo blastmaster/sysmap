@@ -1,11 +1,11 @@
-#ifndef __ADAFS_LINUX_KERNEL_EXTRACTOR_HPP__
-#define __ADAFS_LINUX_KERNEL_EXTRACTOR_HPP__ 
+#ifndef __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__
+#define __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__ 
 
 #include "../extractors/kernel_extractor.hpp"
 
 #undef linux
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     struct Kernel_Extractor : extractor::Kernel_Extractor
     {
@@ -57,4 +57,4 @@ namespace adafs { namespace linux {
     };
 } }
 
-#endif /* ifndef __ADAFS_LINUX_KERNEL_EXTRACTOR_HPP__ */
+#endif /* ifndef __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__ */

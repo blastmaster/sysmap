@@ -17,7 +17,7 @@ extern "C" {
 
 namespace fs = boost::filesystem;
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     Registrar Filesystem_Extractor::registrar("filesystem", &Filesystem_Extractor::create);
 
@@ -153,4 +153,4 @@ namespace adafs { namespace linux {
         }
     }
 
-}} /* closing namesapce adafs::linux */
+}} /* closing namesapce sysmap::linux */

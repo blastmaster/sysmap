@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace adafs { namespace utils { namespace file {
+namespace sysmap { namespace utils { namespace file {
 
 namespace fs = boost::filesystem;
 
@@ -102,4 +102,4 @@ std::string trim_regex_match(const std::ssub_match& match)
     return str;
 }
 
-}}} /* closing namespace adafs::utils::file */
+}}} /* closing namespace sysmap::utils::file */

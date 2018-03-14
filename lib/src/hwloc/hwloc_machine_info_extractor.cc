@@ -2,7 +2,7 @@
 #include "utils.hpp"
 
 
-namespace adafs { namespace hwloc {
+namespace sysmap { namespace hwloc {
 
     Registrar Hwloc_Machine_Info_Extractor::registrar("hwloc_machine", &Hwloc_Machine_Info_Extractor::create);
 

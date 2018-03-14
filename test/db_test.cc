@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 using namespace std;
-using namespace adafs;
+using namespace sysmap;
 
 /**
  * TODO

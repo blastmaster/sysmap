@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace adafs::utils;
+using namespace sysmap::utils;
 
 string get_hostname()
 {

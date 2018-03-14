@@ -1,12 +1,12 @@
-#ifndef __ADAFS_OUTPUT_HPP__
-#define __ADAFS_OUTPUT_HPP__
+#ifndef __SYSMAP_OUTPUT_HPP__
+#define __SYSMAP_OUTPUT_HPP__
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "pugixml.hpp"
 
-namespace adafs {
+namespace sysmap {
 
     enum class Output_format
     {
@@ -53,6 +53,6 @@ namespace adafs {
 
     struct Value; //forward declaration
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_OUTPUT_HPP__ */
+#endif /* __SYSMAP_OUTPUT_HPP__ */

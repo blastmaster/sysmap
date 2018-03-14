@@ -1,5 +1,5 @@
-#ifndef __ADAFS_VALUE_HPP__
-#define __ADAFS_VALUE_HPP__
+#ifndef __SYSMAP_VALUE_HPP__
+#define __SYSMAP_VALUE_HPP__
 
 #include "output.hpp"
 
@@ -11,7 +11,7 @@
 
 using namespace rapidjson;
 
-namespace adafs {
+namespace sysmap {
 
 // Note: function with deduced return type cannot be virtual!
 
@@ -91,6 +91,6 @@ std::unique_ptr<T> make_value(Args&& ...args)
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_VALUE_HPP__ */
+#endif /* __SYSMAP_VALUE_HPP__ */

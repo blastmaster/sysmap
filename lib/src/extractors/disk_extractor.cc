@@ -6,7 +6,7 @@
 #include "extractors/disk_extractor.hpp"
 #include "utils.hpp"
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     Disk_Extractor::Disk_Extractor() : Extractor("Disk") {}
 
@@ -35,4 +35,4 @@ namespace adafs { namespace extractor {
     {
     }
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */

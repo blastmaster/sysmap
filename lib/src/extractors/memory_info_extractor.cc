@@ -8,7 +8,7 @@
 
 #include <cstdio>
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
     
     void Memory_Info_Extractor::load(Extractor_Set& findings)
     {
@@ -44,4 +44,4 @@ namespace adafs { namespace extractor {
     {
     }
 
-}} /* closing namesapce adafs::extractor */
+}} /* closing namesapce sysmap::extractor */

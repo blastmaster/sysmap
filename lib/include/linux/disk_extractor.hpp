@@ -1,11 +1,11 @@
-#ifndef __ADAFS_DISK_EXTRACTOR_HPP__
-#define __ADAFS_DISK_EXTRACTOR_HPP__
+#ifndef __SYSMAP_DISK_EXTRACTOR_HPP__
+#define __SYSMAP_DISK_EXTRACTOR_HPP__
 
 #include "../extractors/disk_extractor.hpp"
 
 #undef linux
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     struct Disk_Extractor : extractor::Disk_Extractor
     {
@@ -19,6 +19,6 @@ namespace adafs { namespace linux {
             void collect_disk_data(data& result);
     };
 
-}} /* closing namespace adafs::linux */
+}} /* closing namespace sysmap::linux */
 
-#endif /* __ADAFS_DISK_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_DISK_EXTRACTOR_HPP__ */

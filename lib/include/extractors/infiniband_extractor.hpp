@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__
+#ifndef __SYSMAP_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -7,7 +7,7 @@
 #include "array_value.hpp"
 
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
 struct Infiniband_Extractor : Extractor {
 
@@ -65,6 +65,6 @@ private:
 
 };
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */
 
-#endif /* __ADAFS_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_EXTRACTOR_INFINIBAND_EXTRACTOR_HPP__ */

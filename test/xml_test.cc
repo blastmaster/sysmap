@@ -10,7 +10,7 @@
 #include "output.hpp"
 #include "pugixml.hpp"
 
-using namespace adafs;
+using namespace sysmap;
 using namespace std;
 
 int main()

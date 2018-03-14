@@ -6,7 +6,7 @@
 
 #include "extractors/infiniband_extractor.hpp"
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     Infiniband_Extractor::Infiniband_Extractor() : Extractor("Infiniband") {}
 
@@ -83,4 +83,4 @@ namespace adafs { namespace extractor {
         }
     }
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */

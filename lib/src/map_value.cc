@@ -9,12 +9,12 @@
 #include <typeinfo>
 
 
-namespace adafs {
+namespace sysmap {
 
     void Map_value::add(const std::string& name, std::unique_ptr<Value> value)
     {
         if (!value) {
-            adafs::utils::log::logging::error() << "[Map_value::add] Error, no value!\n";
+            sysmap::utils::log::logging::error() << "[Map_value::add] Error, no value!\n";
             return;
         }
 
@@ -103,4 +103,4 @@ namespace adafs {
         return m_elements.end();
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

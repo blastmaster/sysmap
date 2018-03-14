@@ -14,7 +14,7 @@
 #include <boost/algorithm/string.hpp>
 
 
-using namespace adafs;
+using namespace sysmap;
 
 namespace po = boost::program_options;
 

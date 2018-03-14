@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-namespace adafs {
+namespace sysmap {
 
     void Array_value::add(std::unique_ptr<Value> value)
     {
@@ -99,4 +99,4 @@ namespace adafs {
         return m_elements.end();
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

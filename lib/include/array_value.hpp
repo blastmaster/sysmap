@@ -1,5 +1,5 @@
-#ifndef __ADAFS_ARRAY_VALUE_HPP__
-#define __ADAFS_ARRAY_VALUE_HPP__
+#ifndef __SYSMAP_ARRAY_VALUE_HPP__
+#define __SYSMAP_ARRAY_VALUE_HPP__
 
 #include "value.hpp"
 #include "output.hpp"
@@ -9,7 +9,7 @@
 #include <vector>
 #include <memory>
 
-namespace adafs {
+namespace sysmap {
 
 /**
  * @class Array_value
@@ -137,6 +137,6 @@ struct Array_value : Value {
     std::vector<std::unique_ptr<Value>> m_elements;
 };
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_ARRAY_VALUE_HPP__ */
+#endif /* __SYSMAP_ARRAY_VALUE_HPP__ */

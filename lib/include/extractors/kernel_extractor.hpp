@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ 
+#ifndef __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ 
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -14,7 +14,7 @@ extern "C" {
 };
 
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 namespace fs = boost::filesystem;
 
     /*
@@ -81,4 +81,4 @@ namespace fs = boost::filesystem;
 
 }}
 
-#endif /* ifndef __ADAFS_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ */
+#endif /* ifndef __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ */

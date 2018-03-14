@@ -1,10 +1,10 @@
-#ifndef __ADAFS_UTILS_FILE_HPP__
-#define __ADAFS_UTILS_FILE_HPP__
+#ifndef __SYSMAP_UTILS_FILE_HPP__
+#define __SYSMAP_UTILS_FILE_HPP__
 
 #include <functional>
 #include <regex>
 
-namespace adafs { namespace utils { namespace file {
+namespace sysmap { namespace utils { namespace file {
 
 /**
  * Execute a callback on each line of a given file.
@@ -46,6 +46,6 @@ bool read(const std::string& path, std::string& contents);
  */
 std::string trim_regex_match(const std::ssub_match& match);
 
-}}} /* closing namespace adafs::utils::file */
+}}} /* closing namespace sysmap::utils::file */
 
-#endif /* __ADAFS_UTILS_FILE_HPP__ */
+#endif /* __SYSMAP_UTILS_FILE_HPP__ */

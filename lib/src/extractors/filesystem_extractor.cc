@@ -6,7 +6,7 @@
 
 #include "extractors/filesystem_extractor.hpp"
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     Filesystem_Extractor::Filesystem_Extractor() : Extractor("Filesystem") {}
 
@@ -68,4 +68,4 @@ namespace adafs { namespace extractor {
     {
     }
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */

@@ -1,5 +1,5 @@
-#ifndef __ADAFS_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
-#define __ADAFS_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
+#ifndef __SYSMAP_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
+#define __SYSMAP_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__
 
 #include "../extractors/machine_info_extractor.hpp"
 
@@ -8,7 +8,7 @@ extern "C"{
 }
 
 
-namespace adafs { namespace hwloc {
+namespace sysmap { namespace hwloc {
 
     /**
      *@class Hwloc_Machine_Info_Extractor
@@ -51,6 +51,6 @@ namespace adafs { namespace hwloc {
 
     };
 
-}} /* closing namespace adafs::hwloc */
+}} /* closing namespace sysmap::hwloc */
 
-#endif /* __ADAFS_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_HWLOC_MACHINE_INFO_EXTRACTOR_HPP__ */

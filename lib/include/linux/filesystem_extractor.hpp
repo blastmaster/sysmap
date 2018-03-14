@@ -1,11 +1,11 @@
-#ifndef __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__
-#define __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__
+#ifndef __SYSMAP_LINUX_FILESYSTEM_EXTRACTOR_HPP__
+#define __SYSMAP_LINUX_FILESYSTEM_EXTRACTOR_HPP__
 
 #include "../extractors/filesystem_extractor.hpp"
 
 #undef linux
 
-namespace adafs {  namespace linux {
+namespace sysmap {  namespace linux {
 
     struct Filesystem_Extractor : extractor::Filesystem_Extractor
     {
@@ -23,6 +23,6 @@ namespace adafs {  namespace linux {
                     const std::string& partition_path, const std::string& partition_name);
     };
 
-}} /* closing namespace adafs::linux */
+}} /* closing namespace sysmap::linux */
 
-#endif /* __ADAFS_LINUX_FILESYSTEM_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_LINUX_FILESYSTEM_EXTRACTOR_HPP__ */

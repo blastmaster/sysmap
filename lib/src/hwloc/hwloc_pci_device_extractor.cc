@@ -2,7 +2,7 @@
 #include "utils.hpp"
 
 
-namespace adafs { namespace hwloc {
+namespace sysmap { namespace hwloc {
 
     Registrar Hwloc_PCI_Device_Extractor::registrar("hwloc_pci", &Hwloc_PCI_Device_Extractor::create);
 
