@@ -32,22 +32,6 @@ set(LIBSYSMAP_SOURCES
     "src/output.cc"
 )
 
-include_directories(
-    include
-    ${RAPIDJSON_INCLUDE_DIR}
-    ${SQLITE3_INCLUDE_DIR}
-    ${SQLITE_MODERN_CPP_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-    ${HWLOC_INCLUDE_DIRS}
-    ${PUGIXML_INCLUDE_DIR}
-    ${YAML_INCLUDE_DIR}
-)
-
-link_directories(
-    ${Boost_LIBRARY_DIRS}
-    ${HWLOC_LIBRARIES}
-)
-
 # build static or shared library
 if(BUILD_STATIC)
     add_library(libsysmap STATIC ${LIBSYSMAP_SOURCES})
@@ -55,10 +39,31 @@ else()
     add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
 endif()
 
-target_link_libraries(libsysmap PRIVATE
-    ${Boost_LIBRARIES}
-    ${HWLOC_LIBRARIES}
-    ${YAML_LIBRARIES}
+target_include_directories(libsysmap
+    PUBLIC
+        include
+    PRIVATE
+        ${RAPIDJSON_INCLUDE_DIR}
+        ${SQLITE3_INCLUDE_DIR}
+        ${SQLITE_MODERN_CPP_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
+        ${HWLOC_INCLUDE_DIRS}
+        ${PUGIXML_INCLUDE_DIR}
+        ${YAML_INCLUDE_DIR}
+)
+
+target_link_libraries(libsysmap
+    PRIVATE
+        ${Boost_LIBRARIES}
+        ${HWLOC_LIBRARIES}
+        ${YAML_LIBRARIES}
+)
+
+target_compile_options(libsysmap
+    PUBLIC
+        "-Wextra"
+        "-std=c++14"
+        "-D PUGIXML_HEADER_ONLY"
 )
 
 # install library in lib/
