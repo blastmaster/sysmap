@@ -44,6 +44,10 @@ include(external/nitro/Nitro.cmake)
 
 
 # Handling Options
+
+# find sqlite3
+find_package(sqlite3 REQUIRED)
+
 if(RUN_TESTS)
     enable_testing()
     add_subdirectory(test)
