@@ -3,6 +3,7 @@
 #include "pugixml.hpp"
 #include "yaml-cpp/yaml.h"
 
+
 namespace sysmap {
 
     void Extractor_Set::add_info(const std::string& name, std::unique_ptr<Value> value)
@@ -60,12 +61,86 @@ namespace sysmap {
         }
     }
 
+    std::string get_hostname()
+    {
+        std::string host;
+        auto prog = utils::exec::which("hostname");
+        auto read_host = [&host](const std::string& s) {
+                            if (!s.empty()) {
+                                host = s;
+                                return true;
+                            }
+                            return false;
+                        };
+        if (!prog.empty()) {
+            auto res = utils::exec::for_each_line(prog, {}, read_host);
+            if (res) {
+                return host;
+            }
+        } // if we cannot use the hostname binary try to read Hostname from /proc
+        else {
+            auto res = utils::file::for_each_line("/proc/sys/kernel/hostname", read_host);
+            if (res) {
+                return host;
+            }
+        }
+
+        return host;
+    }
+
 
     void Extractor_Set::save(const std::string& dbname)
     {
-        for (const auto& kv_extr : m_extractormap) {
-            auto extractor = kv_extr.second.get();
-            extractor->store(*this, dbname);
+        auto db = initDB(dbname);
+        auto name = get_hostname();
+        auto exists = 0;
+        try {
+            //kalipso: you should just put a unique constraint on Hostname, then do INSERT OR IGNORE INTO Hosttable (Hostname) VALUES (?)
+            db << "select IFNULL((select HostID from Hosttable where Hostname = ?), 0);"
+                << name
+                >> exists;
+
+            if(!exists){
+                db << "insert into Hosttable (Hostname) values (?);"
+                    << name;
+                exists = db.last_insert_rowid();
+            }
+
+            auto HostID = exists;
+
+            for (const auto& kv_extr : m_infomap) {
+                db << "select IFNULL((select EID from Extractortable where Name = ? limit 1), 0);"
+                    << kv_extr.first.c_str()
+                    >> exists;
+                if(!exists){
+                    db << "insert into Extractortable (name) values (?);"
+                        << kv_extr.first.c_str();
+                }
+
+                std::stringstream os;
+                OStreamWrapper osw(os);
+                Writer<OStreamWrapper> writer(osw);
+                kv_extr.second->to_json(writer);
+
+                std::string eid;
+                db << "select EID from Extractortable where Name = ?;"
+                    << kv_extr.first
+                    >> eid;
+
+                db << "insert into Datatable (EID, Data) values (?, ?);"
+                    << eid
+                    << os.str();
+
+                auto DID = db.last_insert_rowid();
+
+                db << "insert into Host2Data (HostID, DID) values (?, ?);"
+                    << HostID
+                    << DID;
+
+            }
+        }
+        catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
         }
     }
 
@@ -118,6 +193,14 @@ namespace sysmap {
                 os << output.c_str();
                 break;
             }
+
+            case Output_format::SQLITE3:
+            {
+                auto dbname = "sysmap.db";
+                save(dbname);
+                break;
+
+            }
         }
     }
 
@@ -130,5 +213,40 @@ namespace sysmap {
         }
         return it->second.get();
     }
+
+    sqlite::database Extractor_Set::initDB(const std::string& dbname){
+        sqlite::database db(dbname);
+
+      //Init Hosttable
+      db <<
+         "create table if not exists Hosttable ("
+         "   HostID integer primary key autoincrement not null,"
+         "   Hostname text"
+         ");";
+
+      //Init Host2Data
+      db <<
+         "create table if not exists Host2Data ("
+         "   HostID integer,"
+         "   DID integer"
+         ");";
+
+      //Init Datatable
+      db <<
+         "create table if not exists Datatable ("
+         "   DID integer primary key autoincrement not null,"
+         "   EID integer,"
+         "   Data text"
+         ");";
+
+      //Init Extractortable
+      db <<
+         "create table if not exists Extractortable ("
+         "   EID integer primary key autoincrement not null,"
+         "   Name text"
+         ");";
+      return db;
+    }
+
 
 } /* closing namespace sysmap */

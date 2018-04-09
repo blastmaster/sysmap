@@ -110,6 +110,10 @@ int main(int argc, char** argv)
                 fmt = Output_format::JSON;
                 utils::log::logging::debug() << "[sysmap] setting format to: JSON\n";
             }
+            else if (boost::iequals(fmt_arg, "SQLITE3")) {
+                fmt = Output_format::SQLITE3;
+                utils::log::logging::debug() << "[sysmap] setting format to: SQLITE3\n";
+            }
             else {
                 utils::log::logging::error() << "[sysmap] Error, format argument: [" << fmt_arg << "] not valid!\n";
             }
@@ -145,6 +149,7 @@ int main(int argc, char** argv)
             utils::log::logging::debug() << "[sysmap] no extractor specified!\n";
             return 1;
         }
+
     }
     catch (const po::error& ex) {
         utils::log::logging::error() << "[sysmap] Error, recieved Exception: " << ex.what() << "\n";

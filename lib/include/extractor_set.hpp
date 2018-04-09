@@ -13,6 +13,8 @@
 #include "value.hpp"
 #include "output.hpp"
 
+#include <sqlite_modern_cpp.h>
+
 #include <memory>
 #include <map>
 
@@ -115,6 +117,8 @@ struct Extractor_Set
     }
 
     private:
+
+    sqlite::database initDB(const std::string& dbname);
 
     const Value* get_value(const std::string& name);
 

@@ -67,7 +67,7 @@ struct Extractor
 
     /**
      * Virtual store method.
-     * 
+     *
      * Each concrete Extractor implements this method to define how to store the extracted data.
      * @param findings Extractor_Set reference where the extracted data is stored.
      * @param dbname The database name where to store the information.
