@@ -1,8 +1,9 @@
-#ifndef __ADAFS_VALUE_HPP__
-#define __ADAFS_VALUE_HPP__
+#ifndef __SYSMAP_VALUE_HPP__
+#define __SYSMAP_VALUE_HPP__
 
 #include "output.hpp"
 
+#include "yaml-cpp/yaml.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/ostreamwrapper.h"
 
@@ -10,7 +11,7 @@
 
 using namespace rapidjson;
 
-namespace adafs {
+namespace sysmap {
 
 // Note: function with deduced return type cannot be virtual!
 
@@ -50,7 +51,19 @@ struct Value {
     */
     virtual void to_json(Writer<OStreamWrapper>& writer) const = 0;
 
+   /**
+    * Converts Map_value to a xml object.
+    * Pure virtual method will be implemented by derived classes.
+    * @param xml_node object is filled with data of Map_value.
+    */
     virtual void to_xml(pugi::xml_node& node) const = 0;
+
+   /**
+    * Converts Map_value to a yaml object.
+    * Pure virtual method will be implemented by derived classes.
+    * @param yaml emitter object is filled with data of Map_value.
+    */
+    virtual void to_yaml(YAML::Emitter& node) const = 0;
 
    /**
     * Writes the Map_value to the given stream.
@@ -78,6 +91,6 @@ std::unique_ptr<T> make_value(Args&& ...args)
     return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_VALUE_HPP__ */
+#endif /* __SYSMAP_VALUE_HPP__ */

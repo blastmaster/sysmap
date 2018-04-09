@@ -1,14 +1,15 @@
-#ifndef __ADAFS_MAP_VALUE_HPP__
-#define __ADAFS_MAP_VALUE_HPP__
+#ifndef __SYSMAP_MAP_VALUE_HPP__
+#define __SYSMAP_MAP_VALUE_HPP__
 
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <map>
 #include <memory>
 
-namespace adafs {
+namespace sysmap {
     /**
      * @class Map_value
      */
@@ -82,7 +83,15 @@ namespace adafs {
         */
         virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+       /**
+        * Appends Map_value to a xml object.
+        */
         virtual void to_xml(pugi::xml_node& node) const;
+
+       /**
+        * Appends Map_value to a yaml object.
+        */
+        virtual void to_yaml(YAML::Emitter& node) const;
 
        /**
         * Writes the Map_value to the given stream.
@@ -124,6 +133,6 @@ namespace adafs {
 
     };
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_MAP_VALUE_HPP__ */
+#endif /* __SYSMAP_MAP_VALUE_HPP__ */

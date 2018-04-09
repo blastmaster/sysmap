@@ -1,5 +1,5 @@
-#ifndef __ADAFS_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__
-#define __ADAFS_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__
+#ifndef __SYSMAP_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__
+#define __SYSMAP_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__
 
 #include "../extractors/memory_info_extractor.hpp"
 
@@ -8,7 +8,7 @@ extern "C"{
 }
 
 
-namespace adafs { namespace hwloc {
+namespace sysmap { namespace hwloc {
 
     /**
      *@class Hwloc_Memory_Info_Extractor
@@ -49,6 +49,6 @@ namespace adafs { namespace hwloc {
             void collect_memory_info(data& result);
     };    
 
-}} /* closing namespace adafs::hwloc */
+}} /* closing namespace sysmap::hwloc */
 
-#endif /* __ADAFS_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_HWLOC_MEMORY_INFO_EXTRACTOR_HPP__ */

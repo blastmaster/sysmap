@@ -14,7 +14,7 @@ extern "C" {
 #include <sys/resource.h>
 }
 
-namespace adafs { namespace utils { namespace exec {
+namespace sysmap { namespace utils { namespace exec {
 
 namespace fs = boost::filesystem;
 
@@ -81,25 +81,25 @@ static void exec_child(int in, int out, int err, char const* program, char const
 {
     // set process group
     if (setpgid(0, 0) == -1) {
-        adafs::utils::log::logging::error() << "setpgid failed\n";
+        sysmap::utils::log::logging::error() << "setpgid failed\n";
         return;
     }
 
     // copy stdin
     if (dup2(in, STDIN_FILENO) == -1) {
-        adafs::utils::log::logging::error() << "dub2 STDIN failed\n";
+        sysmap::utils::log::logging::error() << "dub2 STDIN failed\n";
         return;
     }
 
     // copy stdout
     if (dup2(out, STDOUT_FILENO) == -1) {
-        adafs::utils::log::logging::error() << "dub2 STDOUT failed\n";
+        sysmap::utils::log::logging::error() << "dub2 STDOUT failed\n";
         return;
     }
 
     // copy stderr
     if (dup2(err, STDERR_FILENO) == -1) {
-        adafs::utils::log::logging::error() << "dub2 STDERR failed\n";
+        sysmap::utils::log::logging::error() << "dub2 STDERR failed\n";
         return;
     }
 
@@ -117,7 +117,7 @@ static pid_t create_child(int in, int out, int err, char const* program, char co
 {
     pid_t child = vfork();
     if (child < 0) {
-        adafs::utils::log::logging::error() << "vfork failed\n";
+        sysmap::utils::log::logging::error() << "vfork failed\n";
         throw execution_error("failed to fork child process.");
     }
 
@@ -192,11 +192,11 @@ static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeou
 
         int result = select(ndfs + 1, &read_set, &write_set, nullptr, &t_out);
         if (result < 0) {
-            adafs::utils::log::logging::error() << "Error select failed\n";
+            sysmap::utils::log::logging::error() << "Error select failed\n";
             return;
         }
         else if (result == 0) {
-            adafs::utils::log::logging::debug() << "Warning select timeout\n";
+            sysmap::utils::log::logging::debug() << "Warning select timeout\n";
             continue;
         }
         else {
@@ -213,18 +213,18 @@ static void read_write_child(std::array<descriptor, 3>& fds, unsigned int timeou
                 }
 
                 if (count < 0) {
-                    adafs::utils::log::logging::error() << "Error pipe i/o write failed\n";
+                    sysmap::utils::log::logging::error() << "Error pipe i/o write failed\n";
                     return;
                 }
                 if (count == 0) {
-                    adafs::utils::log::logging::debug() << "pipe has closed\n";
+                    sysmap::utils::log::logging::debug() << "pipe has closed\n";
                     d.release();
                     continue;
                 }
                 if (d.read) {
                     d.buffer.resize(count);
                     if (!d.callback(d.buffer)) {
-                        adafs::utils::log::logging::debug() << "callback exit\n";
+                        sysmap::utils::log::logging::debug() << "callback exit\n";
                         return;
                     }
                 }
@@ -356,7 +356,7 @@ result execute(const std::string& program,
     int pipes[2];
 
     if (pipe(pipes) < 0) {
-        adafs::utils::log::logging::error() << "Error due stdout pipe creation\n";
+        sysmap::utils::log::logging::error() << "Error due stdout pipe creation\n";
         throw execution_error("failed to allocate stdout pipe.");
     }
 
@@ -364,7 +364,7 @@ result execute(const std::string& program,
     int stdout_write = pipes[1];
 
     if (pipe(pipes) < 0) {
-        adafs::utils::log::logging::error() << "Error due stdin pipe creation\n";
+        sysmap::utils::log::logging::error() << "Error due stdin pipe creation\n";
         throw execution_error("failed to allocate stdin pipe.");
     }
 
@@ -372,7 +372,7 @@ result execute(const std::string& program,
     int stdin_write = pipes[1];
 
     if (pipe(pipes) < 0) {
-        adafs::utils::log::logging::error() << "Error due stderr pipe creation\n";
+        sysmap::utils::log::logging::error() << "Error due stderr pipe creation\n";
         throw execution_error("failed to allocate stderr pipe.");
     }
 
@@ -389,7 +389,7 @@ result execute(const std::string& program,
     close(stdout_write);
     close(stderr_write);
     if (!input) {
-        adafs::utils::log::logging::debug() << "[DEBUG] No input, closing stdin\n";
+        sysmap::utils::log::logging::debug() << "[DEBUG] No input, closing stdin\n";
         close(stdin_write);
     }
 
@@ -400,25 +400,25 @@ result execute(const std::string& program,
 
     int status = 0;
     if (waitpid(child, &status, 0) == -1) {
-        adafs::utils::log::logging::error() << "waitpid failed\n";
+        sysmap::utils::log::logging::error() << "waitpid failed\n";
     }
     if (WIFEXITED(status)) {
         status = WEXITSTATUS(status);
         success = status == 0;
-        adafs::utils::log::logging::debug() << "child exited normally: " << status << "\n";
+        sysmap::utils::log::logging::debug() << "child exited normally: " << status << "\n";
     }
     if (WIFSIGNALED(status)) {
         status = WTERMSIG(status);
-        adafs::utils::log::logging::debug() << "child terminated by signal: " << status << "\n";
+        sysmap::utils::log::logging::debug() << "child terminated by signal: " << status << "\n";
     }
 
-    adafs::utils::log::logging::debug() << "Result: " << (success ? "success " : "failed ")
+    sysmap::utils::log::logging::debug() << "Result: " << (success ? "success " : "failed ")
         << " Exit code: " << status  << " child pid " << child << "\n";
 
     return {success, status, child};
 }
 
-}}} /* closing namespace adafs::utils::exec */
+}}} /* closing namespace sysmap::utils::exec */
 
 
 namespace environment {

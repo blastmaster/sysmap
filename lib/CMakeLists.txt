@@ -40,6 +40,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${HWLOC_INCLUDE_DIRS}
     ${PUGIXML_INCLUDE_DIR}
+    ${YAML_INCLUDE_DIR}
 )
 
 link_directories(
@@ -57,6 +58,7 @@ endif()
 target_link_libraries(libsysmap PRIVATE
     ${Boost_LIBRARIES}
     ${HWLOC_LIBRARIES}
+    ${YAML_LIBRARIES}
 )
 
 # install library in lib/

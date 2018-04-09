@@ -1,5 +1,5 @@
-#ifndef __ADAFS_UTILS_EXECUTION_HPP__
-#define __ADAFS_UTILS_EXECUTION_HPP__
+#ifndef __SYSMAP_UTILS_EXECUTION_HPP__
+#define __SYSMAP_UTILS_EXECUTION_HPP__
 
 #include <vector>
 #include <map>
@@ -10,7 +10,7 @@ extern "C" {
 #include <unistd.h>
 }
 
-namespace adafs { namespace utils { namespace exec {
+namespace sysmap { namespace utils { namespace exec {
 
 
 /**
@@ -156,7 +156,7 @@ result execute(const std::string& program,
                unsigned int timeout = 0);
 
 
-}}} /* closing namespace adafs::utils::exec */
+}}} /* closing namespace sysmap::utils::exec */
 
 namespace environment {
 
@@ -170,4 +170,4 @@ std::vector<std::string> path();
 
 } /* closing namespace environment */
 
-#endif /* __ADAFS_UTILS_EXECUTION_HPP__ */
+#endif /* __SYSMAP_UTILS_EXECUTION_HPP__ */

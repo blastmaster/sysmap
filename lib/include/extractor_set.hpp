@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_SET_HPP__
-#define __ADAFS_EXTRACTOR_SET_HPP__
+#ifndef __SYSMAP_EXTRACTOR_SET_HPP__
+#define __SYSMAP_EXTRACTOR_SET_HPP__
 
 /**
  * @file extractor_set.hpp
@@ -16,7 +16,7 @@
 #include <memory>
 #include <map>
 
-namespace adafs {
+namespace sysmap {
 
 /**
  * @class Extractor_Set
@@ -125,6 +125,6 @@ struct Extractor_Set
 };
 
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS__EXTRACTOR_SET_HPP__ */
+#endif /* __SYSMAP__EXTRACTOR_SET_HPP__ */

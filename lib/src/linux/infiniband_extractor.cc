@@ -2,7 +2,7 @@
 #include "utils.hpp"
 
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     Registrar Infiniband_Extractor::registrar("infiniband", &Infiniband_Extractor::create);
 
@@ -151,7 +151,7 @@ namespace adafs { namespace linux {
 
         }
         else {
-            adafs::utils::log::logging::error() << "[Error] Infiniband_Extractor::assemble_connection invalid type.\n";
+            sysmap::utils::log::logging::error() << "[Error] Infiniband_Extractor::assemble_connection invalid type.\n";
             return;
         }
 
@@ -159,4 +159,4 @@ namespace adafs { namespace linux {
         result_graph.connections.push_back(con);
     }
 
-}} /* closing namespace adafs::linux */
+}} /* closing namespace sysmap::linux */

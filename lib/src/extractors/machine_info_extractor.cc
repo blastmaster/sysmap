@@ -8,7 +8,7 @@
 
 #include <cstdio>
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     void Machine_Info_Extractor::load(Extractor_Set& findings)
     {
@@ -48,8 +48,8 @@ namespace adafs { namespace extractor {
 //        std::string hostname = m_info->get<String_value>("Hostname")->value();
 //        std::string kernel_version = m_info->get<String_value>("Kernel_Version")->value();
 //        std::map<std::string, std::string> kernel_modules = m_info->get<Map_value>("Kernel_Modules")->value();
-        adafs::utils::log::logging::debug() << "machine info extractor insterted machine info";
+        sysmap::utils::log::logging::debug() << "machine info extractor insterted machine info";
 
     }
 
-}} /* closing namesapce adafs::extractor */
+}} /* closing namesapce sysmap::extractor */

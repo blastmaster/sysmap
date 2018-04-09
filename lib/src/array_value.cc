@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-namespace adafs {
+namespace sysmap {
 
     void Array_value::add(std::unique_ptr<Value> value)
     {
@@ -46,11 +46,25 @@ namespace adafs {
         int i = 0;
         const char *c;
         for (const auto& v : m_elements) {
-            c = std::to_string(i).c_str(); 
+            c = std::to_string(i).c_str();
             pugi::xml_node child_node = node.append_child(c);
             v->to_xml(child_node);
             i++;
         }
+    }
+
+    void Array_value::to_yaml(YAML::Emitter& node) const
+    {
+        node << YAML::BeginSeq;
+        int i = 0;
+        const char *c;
+        for(const auto& v : m_elements) {
+             c = std::to_string(i).c_str();
+             node << YAML::Value;
+             v->to_yaml(node);
+             i++;
+        }
+        node << YAML::EndSeq;
     }
 
     std::ostream& Array_value::write(std::ostream& os, const Output_format format, bool quoted) const
@@ -85,4 +99,4 @@ namespace adafs {
         return m_elements.end();
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

@@ -7,7 +7,7 @@
 
 #include "extractors/kernel_extractor.hpp"
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     void Kernel_Extractor::load(Extractor_Set& findings)
     {

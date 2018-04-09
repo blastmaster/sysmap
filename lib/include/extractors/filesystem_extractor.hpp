@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
+#ifndef __SYSMAP_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
 namespace fs = boost::filesystem;
 
@@ -92,6 +92,6 @@ protected:
     virtual data collect() = 0;
 };
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */
 
-#endif /* __ADAFS_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_EXTRACTOR_FILESYSTEM_EXTRACTOR_HPP__ */

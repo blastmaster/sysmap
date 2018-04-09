@@ -3,7 +3,7 @@
 
 using namespace rapidjson;
 
-namespace adafs {
+namespace sysmap {
 
     //JSON
     template<>

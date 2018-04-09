@@ -1,12 +1,12 @@
-#ifndef __ADAFS_EXTRACTOR_DISK_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_DISK_EXTRACTOR_HPP__
+#ifndef __SYSMAP_EXTRACTOR_DISK_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_DISK_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
 
 #include <vector>
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     struct Disk_Extractor : Extractor {
 
@@ -41,6 +41,6 @@ namespace adafs { namespace extractor {
 
     };
 
-}} /* closing namespace adafs::extractor */
+}} /* closing namespace sysmap::extractor */
 
-#endif /* __ADAFS_EXTRACTOR_DISK_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_EXTRACTOR_DISK_EXTRACTOR_HPP__ */

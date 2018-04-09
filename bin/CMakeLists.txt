@@ -12,6 +12,7 @@ include_directories(
     ${RAPIDJSON_INCLUDE_DIR}
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${PUGIXML_INCLUDE_DIR}
+    ${YAML_INCLUDE_DIR}
 )
 
 add_executable(sysmap ${SYSMAP_SOURCES})

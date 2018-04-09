@@ -1,5 +1,5 @@
-#ifndef __ADAFS_UTILS_LOG_HPP__
-#define __ADAFS_UTILS_LOG_HPP__
+#ifndef __SYSMAP_UTILS_LOG_HPP__
+#define __SYSMAP_UTILS_LOG_HPP__
 
 #include <nitro/log/log.hpp>
 #include <nitro/log/sink/stderr.hpp>
@@ -12,7 +12,7 @@
 #include <nitro/log/filter/and_filter.hpp>
 #include <nitro/log/filter/severity_filter.hpp>
 
-namespace adafs { namespace utils {
+namespace sysmap { namespace utils {
 
     namespace log
     {
@@ -33,7 +33,7 @@ namespace adafs { namespace utils {
                     {
                         std::stringstream s;
 
-                        s << "ADAFS-System-Map: [" << r.hostname() << "][" << r.timestamp().count() << "]["
+                        s << "SYSMAP-System-Map: [" << r.hostname() << "][" << r.timestamp().count() << "]["
                             << r.severity() << "]: " << r.message();
 
                         return s.str();
@@ -57,6 +57,6 @@ namespace adafs { namespace utils {
 
     using log::logging;
 
-}} /* closing namespace adafs::utils */
+}} /* closing namespace sysmap::utils */
 
-#endif /* __ADAFS_UTILS_LOG_HPP__ */
+#endif /* __SYSMAP_UTILS_LOG_HPP__ */

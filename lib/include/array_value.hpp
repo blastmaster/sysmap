@@ -1,14 +1,15 @@
-#ifndef __ADAFS_ARRAY_VALUE_HPP__
-#define __ADAFS_ARRAY_VALUE_HPP__
+#ifndef __SYSMAP_ARRAY_VALUE_HPP__
+#define __SYSMAP_ARRAY_VALUE_HPP__
 
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <vector>
 #include <memory>
 
-namespace adafs {
+namespace sysmap {
 
 /**
  * @class Array_value
@@ -109,7 +110,19 @@ struct Array_value : Value {
      */
     virtual void to_json(Writer<OStreamWrapper>& writer) const override;
 
+    /**
+     * Converts Array_value to a xml by surrounding each array-element
+     * with an index tag starting from zero.
+     * @param xml_node node that is filled with data.
+     */
     virtual void to_xml(pugi::xml_node& node) const;
+
+    /**
+     * Converts Array_value to a yaml sequence
+     * @param yaml emitter that is filled with data.
+     */
+    virtual void to_yaml(YAML::Emitter& node) const;
+
     /**
      * Writes the Array_value to the given stream.
      * @param ostream& defines where to write.
@@ -124,6 +137,6 @@ struct Array_value : Value {
     std::vector<std::unique_ptr<Value>> m_elements;
 };
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_ARRAY_VALUE_HPP__ */
+#endif /* __SYSMAP_ARRAY_VALUE_HPP__ */

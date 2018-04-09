@@ -1,13 +1,14 @@
-#ifndef __ADAFS_SCALAR_VALUE_HPP__
-#define __ADAFS_SCALAR_VALUE_HPP__
+#ifndef __SYSMAP_SCALAR_VALUE_HPP__
+#define __SYSMAP_SCALAR_VALUE_HPP__
 
 #include "value.hpp"
 #include "output.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
 #include <iostream>
 
-namespace adafs {
+namespace sysmap {
 
     /**
      * @class Scalar_value
@@ -55,12 +56,19 @@ namespace adafs {
 
         /**
          * Convert the Scalar value to xml.
-         * @param xml_node object
          */
         virtual void to_xml(pugi::xml_node& node) const override {
             std::string s = std::to_string(m_value);
             char const *pchar = s.c_str();
             node.append_child(pugi::node_pcdata).set_value(pchar);
+        }
+
+        /**
+         * Convert the Scalar value to yaml.
+         */
+        void to_yaml(YAML::Emitter& node) const final
+        {
+            node << m_value;
         }
 
         /**
@@ -101,6 +109,6 @@ namespace adafs {
     // Declare string specialization for xml
     template<>
     void String_value::to_xml(pugi::xml_node& node) const;
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_SCALAR_VALUE_HPP__ */
+#endif /* __SYSMAP_SCALAR_VALUE_HPP__ */

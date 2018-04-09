@@ -3,7 +3,7 @@
 #include "pugixml.hpp"
 
 
-namespace adafs {
+namespace sysmap {
 
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

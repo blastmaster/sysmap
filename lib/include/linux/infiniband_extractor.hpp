@@ -1,12 +1,12 @@
-#ifndef __ADAFS_LINUX_INFINIBAND_EXTRACTOR_HPP__
-#define __ADAFS_LINUX_INFINIBAND_EXTRACTOR_HPP__
+#ifndef __SYSMAP_LINUX_INFINIBAND_EXTRACTOR_HPP__
+#define __SYSMAP_LINUX_INFINIBAND_EXTRACTOR_HPP__
 
 #include "../extractors/infiniband_extractor.hpp"
 #include <regex>
 
 #undef linux
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     struct Infiniband_Extractor : extractor::Infiniband_Extractor
     {
@@ -23,6 +23,6 @@ namespace adafs { namespace linux {
             void assemble_connection(const std::smatch& matches, data& result_graph, const Peer_Type type, const std::string& from_guid);
     };
 
-}} /* closing namespace adafs::linux */
+}} /* closing namespace sysmap::linux */
 
-#endif /* __ADAFS_LINUX_INFINIBAND_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_LINUX_INFINIBAND_EXTRACTOR_HPP__ */

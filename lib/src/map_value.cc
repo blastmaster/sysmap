@@ -9,12 +9,12 @@
 #include <typeinfo>
 
 
-namespace adafs {
+namespace sysmap {
 
     void Map_value::add(const std::string& name, std::unique_ptr<Value> value)
     {
         if (!value) {
-            adafs::utils::log::logging::error() << "[Map_value::add] Error, no value!\n";
+            sysmap::utils::log::logging::error() << "[Map_value::add] Error, no value!\n";
             return;
         }
 
@@ -66,6 +66,16 @@ namespace adafs {
         }
     }
 
+    void Map_value::to_yaml(YAML::Emitter& node) const
+    {
+        node << YAML::BeginMap;
+        for (const auto& kvp : m_elements) {
+            node << YAML::Key << kvp.first;
+            kvp.second->to_yaml(node);
+        }
+        node << YAML::EndMap;
+    }
+
     std::ostream& Map_value::write(std::ostream& os, const Output_format format, bool quoted) const
     {
         //static bool first = true;
@@ -93,4 +103,4 @@ namespace adafs {
         return m_elements.end();
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

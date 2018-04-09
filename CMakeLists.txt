@@ -19,7 +19,6 @@ option(BUILD_DOC "Build the documentation" ON)
 # Debbuging disables BUILD_DOC
 option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
 
-
 # set compiler flags
 set(SYSMAP_CXX_FLAGS "-Wextra -std=c++14 -D PUGIXML_HEADER_ONLY")
 # cmake modules

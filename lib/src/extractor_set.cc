@@ -1,13 +1,14 @@
 #include "extractor_set.hpp"
 #include "utils.hpp"
 #include "pugixml.hpp"
+#include "yaml-cpp/yaml.h"
 
-namespace adafs {
+namespace sysmap {
 
     void Extractor_Set::add_info(const std::string& name, std::unique_ptr<Value> value)
     {
         if (!value) {
-            adafs::utils::log::logging::error() << "[Extractor_Set::add_info] Error, no value!\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::add_info] Error, no value!\n";
             return;
         }
 
@@ -29,7 +30,7 @@ namespace adafs {
     void Extractor_Set::add(const std::shared_ptr<Extractor>& extractor)
     {
         if (!extractor) {
-            adafs::utils::log::logging::error() << "[Extractor_Set::add] Error, no extractor\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::add] Error, no extractor\n";
             return;
         }
 
@@ -41,7 +42,7 @@ namespace adafs {
                                       const std::shared_ptr<Extractor>& extractor)
     {
         if (!extractor) {
-            adafs::utils::log::logging::error() << "[Extractor_Set::add_extractor] Error, no extractor!\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::add_extractor] Error, no extractor!\n";
             return;
         }
 
@@ -72,14 +73,14 @@ namespace adafs {
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {
-            adafs::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
             return;
         }
 
         switch (format)
         {
             case Output_format::XML:
-            { 
+            {
                 pugi::xml_document doc;
                 for (const auto& kv_info : m_infomap) {
                     const char *c;
@@ -92,7 +93,7 @@ namespace adafs {
 
             }
             case Output_format::JSON:
-            { 
+            {
                 OStreamWrapper osw(os);
                 Writer<OStreamWrapper> writer(osw);
                 writer.StartObject();
@@ -101,6 +102,20 @@ namespace adafs {
                     kv_info.second->to_json(writer);
                 }
                 writer.EndObject();
+                break;
+            }
+
+            case Output_format::YAML:
+            {
+                YAML::Emitter output;
+                output << YAML::BeginMap;
+                for (const auto& kv_info : m_infomap) {
+                    output << YAML::Key << kv_info.first;
+                    output << YAML::Value;
+                    kv_info.second->to_yaml(output);
+                }
+                output << YAML::EndMap;
+                os << output.c_str();
                 break;
             }
         }
@@ -116,4 +131,4 @@ namespace adafs {
         return it->second.get();
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */

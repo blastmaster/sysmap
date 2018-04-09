@@ -4,7 +4,7 @@
 
 
 using namespace std;
-using namespace adafs::utils::exec;
+using namespace sysmap::utils::exec;
 
 
 void do_some(const string& cmd, const vector<string>& args)

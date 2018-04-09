@@ -8,7 +8,7 @@
 
 #include <cstdio>
 
-namespace adafs { namespace extractor {
+namespace sysmap { namespace extractor {
 
     PCI_Device_Extractor::PCI_Device_Extractor() : Extractor("PCI_Extractor")
     {
@@ -52,4 +52,4 @@ namespace adafs { namespace extractor {
     {
     }
 
-}} /* closing namesapce adafs::extractor */
+}} /* closing namesapce sysmap::extractor */

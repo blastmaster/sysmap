@@ -13,7 +13,7 @@
 
 #undef linux
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     Registrar Kernel_Extractor::registrar("kernel_extractor", &Kernel_Extractor::create);
 

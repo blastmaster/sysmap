@@ -6,7 +6,7 @@
 
 namespace fs = boost::filesystem;
 
-namespace adafs { namespace linux {
+namespace sysmap { namespace linux {
 
     Registrar Disk_Extractor::registrar("disk", &linux::Disk_Extractor::create);
 
@@ -54,4 +54,4 @@ namespace adafs { namespace linux {
                 });
     }
 
-}} /* closing namespace adafs::linux */
+}} /* closing namespace sysmap::linux */

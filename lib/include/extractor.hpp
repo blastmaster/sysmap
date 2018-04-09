@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_HPP__
+#ifndef __SYSMAP_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_HPP__
 
 /**
  * @file extractor.hpp
@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <memory>
 
-namespace adafs
+namespace sysmap
 {
 
 /// forward declaration @see Extractor_Set
@@ -99,6 +99,6 @@ struct Registrar
     Registrar(const std::string& name, Extractor::extractor_ptr extr);
 };
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
 
-#endif /* __ADAFS_EXTRACTOR_HPP__ */
+#endif /* __SYSMAP_EXTRACTOR_HPP__ */

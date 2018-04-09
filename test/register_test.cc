@@ -8,7 +8,7 @@
 #include "linux/disk_extractor.hpp"
 
 using namespace std;
-using namespace adafs;
+using namespace sysmap;
 
 TEST_CASE("try extractor registry - add filesystem by tag", "[Extractor]") {
     Extractor_Set extr_set;

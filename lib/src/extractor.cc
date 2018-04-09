@@ -1,7 +1,7 @@
 #include "extractor.hpp"
 #include "utils.hpp"
 
-namespace adafs
+namespace sysmap
 {
     Extractor::registry_map & Extractor::registry()
     {
@@ -24,4 +24,4 @@ namespace adafs
         utils::log::logging::debug() << "[Registrar::Registrar] Register extractor: " << name << "\n";
     }
 
-} /* closing namespace adafs */
+} /* closing namespace sysmap */
