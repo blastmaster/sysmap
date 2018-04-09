@@ -95,7 +95,8 @@ namespace sysmap {
         auto name = get_hostname();
         auto exists = 0;
         try {
-            //kalipso: you should just put a unique constraint on Hostname, then do INSERT OR IGNORE INTO Hosttable (Hostname) VALUES (?)
+            //kalipso: you should just put a unique constraint on Hostname,
+            //then do INSERT OR IGNORE INTO Hosttable (Hostname) VALUES (?)
             db << "select IFNULL((select HostID from Hosttable where Hostname = ?), 0);"
                 << name
                 >> exists;
@@ -148,7 +149,8 @@ namespace sysmap {
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {
-            sysmap::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty,"
+               << " extract data before trying to write!\n";
             return;
         }
 
@@ -196,6 +198,7 @@ namespace sysmap {
 
             case Output_format::SQLITE3:
             {
+                // /scratch/s8946413/querytest
                 auto dbname = "sysmap.db";
                 save(dbname);
                 break;
