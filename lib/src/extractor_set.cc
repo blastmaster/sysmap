@@ -3,7 +3,6 @@
 #include "pugixml.hpp"
 #include "yaml-cpp/yaml.h"
 
-
 namespace sysmap {
 
     void Extractor_Set::add_info(const std::string& name, std::unique_ptr<Value> value)
@@ -97,6 +96,7 @@ namespace sysmap {
         try {
             //kalipso: you should just put a unique constraint on Hostname,
             //then do INSERT OR IGNORE INTO Hosttable (Hostname) VALUES (?)
+            db << "begin;";
             db << "select IFNULL((select HostID from Hosttable where Hostname = ?), 0);"
                 << name
                 >> exists;
@@ -139,6 +139,7 @@ namespace sysmap {
                     << DID;
 
             }
+        db << "commit;";
         }
         catch (std::exception& e) {
             std::cout << e.what() << std::endl;
@@ -220,6 +221,7 @@ namespace sysmap {
     sqlite::database Extractor_Set::initDB(const std::string& dbname){
         sqlite::database db(dbname);
 
+      db << "begin;"; // begin a transaction ...
       //Init Hosttable
       db <<
          "create table if not exists Hosttable ("
@@ -248,6 +250,7 @@ namespace sysmap {
          "   EID integer primary key autoincrement not null,"
          "   Name text"
          ");";
+      db << "commit;"; // begin a transaction ...
       return db;
     }
 

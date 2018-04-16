@@ -54,15 +54,15 @@ int main(int argc, char** argv)
     }
 
     sqlite::database db(filename);
-    std::stringstream sstr;
-    OStreamWrapper osw(os);
+    /* std::stringstream sstr; */
+    /* OStreamWrapper osw(os); */
 
-    db << query_string
-         >> [&](std::string Name, std::string foo, std::string faa) {
-             query_results.push_back(Name);
-             std::cout << Name << std::endl;
-             std::cout << foo << std::endl;
-         };
+    /* db << query_string */
+    /*      >> [&](std::string Name, std::string foo, std::string faa) { */
+    /*          query_results.push_back(Name); */
+    /*          std::cout << Name << std::endl; */
+    /*          std::cout << foo << std::endl; */
+    /*      }; */
 
     return 0;
 }
