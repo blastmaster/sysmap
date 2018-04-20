@@ -15,6 +15,7 @@ namespace sysmap {
         JSON,
         YAML,
         SQLITE3,
+        SQL,
     };
 
     struct outwrapper

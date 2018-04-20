@@ -114,6 +114,10 @@ int main(int argc, char** argv)
                 fmt = Output_format::SQLITE3;
                 utils::log::logging::debug() << "[sysmap] setting format to: SQLITE3\n";
             }
+            else if (boost::iequals(fmt_arg, "SQL")) {
+                fmt = Output_format::SQL;
+                utils::log::logging::debug() << "[sysmap] setting format to: SQL\n";
+            }
             else {
                 utils::log::logging::error() << "[sysmap] Error, format argument: [" << fmt_arg << "] not valid!\n";
             }

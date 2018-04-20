@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "pugixml.hpp"
 #include "yaml-cpp/yaml.h"
+#include <cassert>
 
 namespace sysmap {
 
@@ -87,6 +88,32 @@ namespace sysmap {
         return host;
     }
 
+    void Extractor_Set::toSQL(std::string path){
+        assert(&path.back() == std::string("/"));
+        auto hostname = get_hostname();
+        auto filename = path + hostname + ".sql";
+        std::ofstream file(filename);
+
+        file << "insert into Hosttable (Hostname) values (" << hostname << ");\n";
+        auto HostID = "SELECT IDENT_CURRENCT('Hosttable')";
+
+        for (const auto& kv_extr : m_infomap) {
+            file << "insert into Extractortable (name) values (" << kv_extr.first.c_str() << ");\n";
+
+            std::stringstream os;
+            OStreamWrapper osw(os);
+            Writer<OStreamWrapper> writer(osw);
+            kv_extr.second->to_json(writer);
+
+            std::string eid = "select EID from Extractortable where Name = " + kv_extr.first + ";";
+
+            file << "insert into Datatable (EID, Data) values (" << eid << ", " << os.str() << ");\n";
+
+            auto DID = "SELECT IDENT_CURRENT('Datatable')";
+
+            file << "insert into Host2Data (HostID, DID) values (" << HostID << ", " << DID << ");\n";
+        }
+    }
 
     void Extractor_Set::save(const std::string& dbname)
     {
@@ -204,6 +231,10 @@ namespace sysmap {
                 save(dbname);
                 break;
 
+            }
+            case Output_format::SQL:
+            {
+                toSQL("./");
             }
         }
     }
