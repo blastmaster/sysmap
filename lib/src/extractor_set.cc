@@ -95,10 +95,9 @@ namespace sysmap {
         //TODO: --output flag cant take full paths. it allways appends the "hostname-" to the given string
         os << "insert or ignore into Hosttable (Hostname) values ('" << hostname << "');\n";
 
-        //returns max of given row at given table, which is the last inserted column
-        //TODO: only works on a freshly created db
-        auto getID = [] (std::string table, std::string returnRow, std::string rowName, std::string value) {
-            return "select " + returnRow + " from " + table + " where " + rowName + " = '" + value + "'";
+        //creates a select statement which returns the field in a given table where rowName equals the given value
+        auto getID = [] (std::string table, std::string returnField, std::string rowName, std::string value) {
+            return "select " + returnField + " from " + table + " where " + rowName + " = '" + value + "'";
         };
 
         auto HostID = getID("Hosttable", "HostID", "Hostname", hostname);
@@ -131,8 +130,6 @@ namespace sysmap {
         auto name = get_hostname();
         auto exists = 0;
         try {
-            //kalipso: you should just put a unique constraint on Hostname,
-            //then do INSERT OR IGNORE INTO Hosttable (Hostname) VALUES (?)
             db << "begin;";
             db << "select IFNULL((select HostID from Hosttable where Hostname = ?), 0);"
                 << name
