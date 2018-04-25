@@ -116,7 +116,7 @@ struct Extractor_Set
         return dynamic_cast<const T*>(get_value(name));
     }
 
-    void toSQL(std::string path);
+    void toSQL(std::ostream& os);
     private:
 
     sqlite::database initDB(const std::string& dbname);
