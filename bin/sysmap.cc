@@ -49,7 +49,17 @@ std::string get_hostname()
 std::string filename_prefix_host(const std::string& name)
 {
     auto host = get_hostname();
-    return host + "-" + name;
+
+    //search backwards for '/' using std::string.rfind()
+    //to determine if a full path or just a filename is given
+    auto pathName = name;
+    auto isPath = pathName.rfind('/');
+    if (isPath == std::string::npos) {
+        return host + "-" + name;
+    } else {
+        pathName.insert(++isPath, host + "-");
+        return pathName;
+    }
 }
 
 /**
@@ -126,9 +136,8 @@ int main(int argc, char** argv)
         if (vm.count("output")) {
             auto output_arg = vm["output"].as<std::string>();
             auto fname = filename_prefix_host(output_arg);
-            utils::log::logging::debug() << "[sysmap] set actual filename to: [" << fname << "]\n";
             out.set_file(fname);
-            utils::log::logging::debug() << "[sysmap] Setting output to: [" << output_arg << "]\n";
+            utils::log::logging::debug() << "[sysmap] Setting output to: [" << fname << "]\n";
         }
         else {
             utils::log::logging::debug() << "[sysmap] Setting output to stdout.\n";
