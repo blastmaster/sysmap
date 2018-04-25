@@ -89,29 +89,38 @@ namespace sysmap {
     }
 
     void Extractor_Set::toSQL(std::string path){
+        //TODO: instead of path parameter the  --output flag should handle writing to file
         assert(&path.back() == std::string("/"));
         auto hostname = get_hostname();
         auto filename = path + hostname + ".sql";
         std::ofstream file(filename);
 
-        file << "insert into Hosttable (Hostname) values (" << hostname << ");\n";
-        auto HostID = "SELECT IDENT_CURRENCT('Hosttable')";
+        file << "insert into Hosttable (Hostname) values ('" << hostname << "');\n";
+
+        //returns max of given row at given table, which is the last inserted column
+        //TODO: only works on a freshly created db
+        auto getID = [] (std::string table, std::string rowName) { 
+            return "select " + rowName + " from " + table + " where " + rowName + " = \
+               (select max(" + rowName + ") from " + table + ")" ;
+        };
+
+        auto HostID = getID("Hosttable", "HostID");
 
         for (const auto& kv_extr : m_infomap) {
-            file << "insert into Extractortable (name) values (" << kv_extr.first.c_str() << ");\n";
+            file << "insert into Extractortable (name) values ('" << kv_extr.first.c_str() << "');\n";
 
             std::stringstream os;
             OStreamWrapper osw(os);
             Writer<OStreamWrapper> writer(osw);
             kv_extr.second->to_json(writer);
 
-            std::string eid = "select EID from Extractortable where Name = " + kv_extr.first + ";";
+            std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
 
-            file << "insert into Datatable (EID, Data) values (" << eid << ", " << os.str() << ");\n";
+            file << "insert into Datatable (EID, Data) values ((" << eid << "), '" << os.str() << "');\n";
 
-            auto DID = "SELECT IDENT_CURRENT('Datatable')";
+            auto DID = getID("Datatable", "DID");
 
-            file << "insert into Host2Data (HostID, DID) values (" << HostID << ", " << DID << ");\n";
+            file << "insert into Host2Data (HostID, DID) values ((" << HostID << "), (" << DID << "));\n";
         }
     }
 
