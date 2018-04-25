@@ -90,25 +90,21 @@ namespace sysmap {
 
 
     void Extractor_Set::toSQL(std::ostream& os){
-        //TODO: instead of path parameter the  --output flag should handle writing to file
-        /* assert(&path.back() == std::string("/")); */
         auto hostname = get_hostname();
-        /* auto filename = path + hostname + ".sql"; */
-        /* std::ofstream file(filename); */
 
-        os << "insert into Hosttable (Hostname) values ('" << hostname << "');\n";
+        //TODO: --output flag cant take full paths. it allways appends the "hostname-" to the given string
+        os << "insert or ignore into Hosttable (Hostname) values ('" << hostname << "');\n";
 
         //returns max of given row at given table, which is the last inserted column
         //TODO: only works on a freshly created db
-        auto getID = [] (std::string table, std::string rowName) { 
-            return "select " + rowName + " from " + table + " where " + rowName + " = " +
-               "(select max(" + rowName + ") from " + table + ")" ;
+        auto getID = [] (std::string table, std::string returnRow, std::string rowName, std::string value) {
+            return "select " + returnRow + " from " + table + " where " + rowName + " = '" + value + "'";
         };
 
-        auto HostID = getID("Hosttable", "HostID");
+        auto HostID = getID("Hosttable", "HostID", "Hostname", hostname);
 
         for (const auto& kv_extr : m_infomap) {
-            os << "insert into Extractortable (name) values ('" << kv_extr.first.c_str() << "');\n";
+            os << "insert or ignore into Extractortable (name) values ('" << kv_extr.first.c_str() << "');\n";
 
             std::stringstream jsonstring;
             OStreamWrapper osw(jsonstring);
@@ -117,11 +113,15 @@ namespace sysmap {
 
             std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
 
-            os << "insert into Datatable (EID, Data) values ((" << eid << "), '" << jsonstring.str() << "');\n";
+            os << "insert or ignore into Datatable (EID, Data) values ((" << eid << "), '" << jsonstring.str() << "');\n";
 
-            auto DID = getID("Datatable", "DID");
+            auto DID = getID("Datatable", "DID", "Data", jsonstring.str());
 
-            os << "insert into Host2Data (HostID, DID) values ((" << HostID << "), (" << DID << "));\n";
+            /* os << "insert or ignore into Host2Data (HostID, DID) values ((" << HostID << "), (" << DID << "));\n"; */
+            os << "insert into Host2Data (HostID, DID) select (" << HostID << "), (" << DID
+                << ") where not exists (select 1 from Host2Data where HostID = ("
+                << HostID << ") AND DID = (" << DID << "));\n";
+
         }
     }
 
@@ -262,12 +262,12 @@ namespace sysmap {
     sqlite::database Extractor_Set::initDB(const std::string& dbname){
         sqlite::database db(dbname);
 
-      db << "begin;"; // begin a transaction ...
+      //UNIQUE(users_id, lessoninfo_id)
       //Init Hosttable
       db <<
          "create table if not exists Hosttable ("
          "   HostID integer primary key autoincrement not null,"
-         "   Hostname text"
+         "   Hostname text UNIQUE"
          ");";
 
       //Init Host2Data
@@ -282,16 +282,15 @@ namespace sysmap {
          "create table if not exists Datatable ("
          "   DID integer primary key autoincrement not null,"
          "   EID integer,"
-         "   Data text"
+         "   Data text UNIQUE"
          ");";
 
       //Init Extractortable
       db <<
          "create table if not exists Extractortable ("
          "   EID integer primary key autoincrement not null,"
-         "   Name text"
+         "   Name text UNIQUE"
          ");";
-      db << "commit;"; // begin a transaction ...
       return db;
     }
 
