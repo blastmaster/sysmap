@@ -18,8 +18,6 @@ namespace po = boost::program_options;
 
 std::map<int, std::vector<int>> getHostIDs(const std::string dbname, const std::vector<std::string>& names = {}){
     sqlite::database db(dbname);
-    utils::log::logging::debug() <<
-        "[sysquery::getHostIDs] getting HostIDs...";
     std::map<int, std::vector<int>> results;
 
     //returns std::vector<int> of DIDs for the given HostID
@@ -36,10 +34,6 @@ std::map<int, std::vector<int>> getHostIDs(const std::string dbname, const std::
     //fills resuls with HostID : { DID, DID, DID, ... }
     auto fillHostID = [&](int HostID){
         results[HostID] = getDIDofHost(HostID);
-        utils::log::logging::debug() << "[sysquery::getHostIDs]Pusing back HostID: " << HostID;
-        for(auto did : results[HostID]) {
-            utils::log::logging::debug() << "DID: " << did;
-        }
     };
 
     if(names.size() == 0){
@@ -78,12 +72,69 @@ std::vector<int> getEIDs(const std::string dbname, const std::vector<std::string
     return std::move(results);
 }
 
-std::stringstream queryToJSON(const std::map<int, std::vector<int>>& hosts, const std::vector<int>& extractors){
-    /* //init jsonstring and fill it with data */
-    /* std::stringstream jsonstring; */
-    /* OStreamWrapper osw(jsonstring); */
-    /* Writer<OStreamWrapper> writer(osw); */
-    /* kv_extr.second->to_json(writer); */
+std::stringstream queryToJSON(std::string filename, const std::map<int, std::vector<int>>& hosts, const std::vector<int>& extractors){
+    //init jsonstring and fill it with data
+    sqlite::database db(filename);
+    std::stringstream jsonstring;
+    rapidjson::OStreamWrapper osw(jsonstring);
+    rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
+
+    auto getHostName = [&db](int hostid){
+        std::string name;
+        db << "select Hostname from Hosttable where HostID = ? ;"
+           << hostid
+           >> name;
+        return std::move(name);
+    };
+
+    auto getExtractorName = [&db](int EID){
+        std::string name;
+        db << "select Name from Extractortable where EID = ? ;"
+           << EID
+           >> name;
+        return std::move(name);
+
+    };
+
+    auto getData = [&db](int EID, int DID){
+        std::string data("");
+
+        try {
+            db << "select Data from Datatable where (EID, DID) = (?, ?);"
+               << EID
+               << DID
+               >> data;
+        }
+        //Catches err if query returns nothing
+        catch (sqlite::sqlite_exception& e) {
+            /* std::cerr  << e.get_code() << ": " << e.what() << " during " */
+                 /* << e.get_sql() << std::endl; */
+        }
+
+        return std::move(data);
+    };
+
+    writer.StartObject();
+    for(const auto host : hosts){
+        writer.Key(getHostName(host.first).c_str());
+            writer.StartArray();
+        for(const auto eid : extractors){
+            /* auto extractor_name = ; */
+            /* std::cout << extractor_name << " FOOO" << std::endl; */
+            for(const auto did : host.second){
+                auto data = getData(eid, did);
+                if(data.size() != 0){
+                    writer.StartArray();
+                    writer.String(getExtractorName(eid).c_str());
+                    writer.String(data.c_str());
+                    writer.EndArray();
+                }
+            }
+        }
+            writer.EndArray();
+    }
+    writer.EndObject();
+    return jsonstring;
 }
 
 int main(int argc, char** argv)
@@ -157,7 +208,11 @@ int main(int argc, char** argv)
     utils::log::logging::debug() << "[sysquery] opened database file";
 
     auto host_map = getHostIDs(filename, hosts);
+    utils::log::logging::debug() << "[sysquery] host_map filled with data";
     auto extr_vec = getEIDs(filename, extractors);
+    utils::log::logging::debug() << "[sysquery] extr_vec filled with data";
+
+    std::cout << queryToJSON(filename, host_map, extr_vec).str() << std::endl;
 
     return 0;
 }
