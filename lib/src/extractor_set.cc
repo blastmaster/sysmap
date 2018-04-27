@@ -92,38 +92,38 @@ namespace sysmap {
     void Extractor_Set::toSQL(std::ostream& os){
         auto hostname = get_hostname();
 
-        //TODO: --output flag cant take full paths. it allways appends the "hostname-" to the given string
-        os << "insert or ignore into Hosttable (Hostname) values ('" << hostname << "');\n";
-
-        //creates a select statement which returns the field in a given table where rowName equals the given value
-        auto getID = [] (std::string table, std::string returnField, std::string rowName, std::string value) {
-            return "select " + returnField + " from " + table + " where " + rowName + " = '" + value + "'";
+        //creates a select statement which returns column_return in a given table where column_name equals the given value
+        auto getID = [] (std::string table, std::string column_return, std::string column_name, std::string value) {
+            return "select " + column_return + " from " + table + " where " + column_name + " = '" + value + "'";
         };
 
+        //insert into Hosttable, then get HostID from database
+        os << "insert or ignore into Hosttable (Hostname) values ('" << hostname << "');\n";
         auto HostID = getID("Hosttable", "HostID", "Hostname", hostname);
 
         for (const auto& kv_extr : m_infomap) {
+            //insert into Extractortable, then get EID from database
             os << "insert or ignore into Extractortable (name) values ('" << kv_extr.first.c_str() << "');\n";
+            std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
 
+            //init jsonstring and fill it with data
             std::stringstream jsonstring;
             OStreamWrapper osw(jsonstring);
             Writer<OStreamWrapper> writer(osw);
             kv_extr.second->to_json(writer);
 
-            std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
-
+            //insert into Datatable, then get DID from database
             os << "insert or ignore into Datatable (EID, Data) values ((" << eid << "), '" << jsonstring.str() << "');\n";
-
             auto DID = getID("Datatable", "DID", "Data", jsonstring.str());
 
-            /* os << "insert or ignore into Host2Data (HostID, DID) values ((" << HostID << "), (" << DID << "));\n"; */
+            //insert into Host2Data
             os << "insert into Host2Data (HostID, DID) select (" << HostID << "), (" << DID
                 << ") where not exists (select 1 from Host2Data where HostID = ("
                 << HostID << ") AND DID = (" << DID << "));\n";
-
         }
     }
 
+    [[deprecated]]
     void Extractor_Set::save(const std::string& dbname)
     {
         auto db = initDB(dbname);
@@ -239,6 +239,7 @@ namespace sysmap {
                 break;
 
             }
+
             case Output_format::SQL:
             {
                 toSQL(os);
@@ -256,6 +257,7 @@ namespace sysmap {
         return it->second.get();
     }
 
+    [[deprecated]]
     sqlite::database Extractor_Set::initDB(const std::string& dbname){
         sqlite::database db(dbname);
 
