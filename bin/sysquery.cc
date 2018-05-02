@@ -5,6 +5,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/ostreamwrapper.h"
 
+#include "output.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <boost/program_options.hpp>
@@ -28,7 +30,7 @@ std::map<int, std::vector<int>> getHostIDs(const std::string dbname, const std::
            >> [&](int DID) {
                DIDs.push_back(DID);
            };
-        return DIDs;
+        return std::move(DIDs);
     };
 
     //fills resuls with HostID : { DID, DID, DID, ... }
@@ -72,10 +74,8 @@ std::vector<int> getEIDs(const std::string dbname, const std::vector<std::string
     return std::move(results);
 }
 
-std::stringstream queryToJSON(std::string filename, const std::map<int, std::vector<int>>& hosts, const std::vector<int>& extractors){
-    //init jsonstring and fill it with data
+void queryToJSON(std::ostream& jsonstring, std::string filename, const std::map<int, std::vector<int>>& hosts, const std::vector<int>& extractors){
     sqlite::database db(filename);
-    std::stringstream jsonstring;
     rapidjson::OStreamWrapper osw(jsonstring);
     rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
 
@@ -117,10 +117,8 @@ std::stringstream queryToJSON(std::string filename, const std::map<int, std::vec
     writer.StartObject();
     for(const auto host : hosts){
         writer.Key(getHostName(host.first).c_str());
-            writer.StartArray();
+        writer.StartArray();
         for(const auto eid : extractors){
-            /* auto extractor_name = ; */
-            /* std::cout << extractor_name << " FOOO" << std::endl; */
             for(const auto did : host.second){
                 auto data = getData(eid, did);
                 if(data.size() != 0){
@@ -131,10 +129,25 @@ std::stringstream queryToJSON(std::string filename, const std::map<int, std::vec
                 }
             }
         }
-            writer.EndArray();
+        writer.EndArray();
     }
     writer.EndObject();
-    return jsonstring;
+}
+
+void listHosts(std::ostream& os, std::string dbname){
+    sqlite::database db(dbname);
+    db << "select Hostname from Hosttable;"
+       >> [&](std::string Hostname){
+           os << Hostname << std::endl;
+       };
+}
+
+void listExtractors(std::ostream& os, std::string dbname){
+    sqlite::database db(dbname);
+    db << "select Name from Extractortable;"
+       >> [&](std::string Extractorname){
+           os << Extractorname << std::endl;
+       };
 }
 
 int main(int argc, char** argv)
@@ -148,12 +161,15 @@ int main(int argc, char** argv)
         ("output,o", po::value<std::string>(), "If specified, output will be written to given file")
         ("nodes,n", po::value<std::vector<std::string>>()->multitoken()->composing(), "Only Query given hosts")
         ("extractors,e", po::value<std::vector<std::string>>()->multitoken()->composing(), "Only Query given extractors")
-        ("query-string,q", po::value<std::string>(), "Query String");
+        ("query-string,q", po::value<std::string>(), "Query String")
+        ("listHosts,l", "Lists all Hostnames found in database")
+        ("listExtractors,L", "Lists all Extractors found in database");
 
     po::variables_map vm;
     std::string filename, query_string;
     std::vector<std::string> hosts {};
     std::vector<std::string> extractors {};
+    outwrapper out;
 
     try
     {
@@ -171,25 +187,34 @@ int main(int argc, char** argv)
             //check if given file exists
             std::ifstream file(filename);
             if(!file.good()){
-                utils::log::logging::debug() << 
+                utils::log::logging::debug() <<
                     "[sysquery] given database file doesnt exist or is corrupted. exiting...";
                 return -1;
             }
             file.close();
 
-            utils::log::logging::debug() << 
+            utils::log::logging::debug() <<
                 "[sysquery] set actual database filename to: [" << filename << "]";
         }
 
+        if (vm.count("output")) {
+            auto fname = vm["output"].as<std::string>();
+            out.set_file(fname);
+            utils::log::logging::debug() << "[sysquery] Setting output to: [" << fname << "]\n";
+        }
+        else {
+            utils::log::logging::debug() << "[sysquery] Setting output to stdout.\n";
+        }
+
         if (vm.count("nodes")){
-            hosts = vm["nodes"].as<std::vector<std::string>>(); 
+            hosts = vm["nodes"].as<std::vector<std::string>>();
             for (const auto& host : hosts) {
                 utils::log::logging::debug() << "[sysquery] host: " << host << " defined";
             }
         }
 
         if (vm.count("extractors")){
-            extractors = vm["extractors"].as<std::vector<std::string>>(); 
+            extractors = vm["extractors"].as<std::vector<std::string>>();
             for (const auto& extr : extractors) {
                 utils::log::logging::debug() << "[sysquery] extr: " << extr << " defined";
             }
@@ -197,6 +222,15 @@ int main(int argc, char** argv)
 
         if (vm.count("query-string")){
             query_string = vm["query-string"].as<std::string>();
+        }
+
+        if (vm.count("listHosts")){
+            listHosts(out, filename);
+            exit(1);
+        }
+        if (vm.count("listExtractors")){
+            listExtractors(out, filename);
+            exit(1);
         }
 
     }
@@ -212,7 +246,7 @@ int main(int argc, char** argv)
     auto extr_vec = getEIDs(filename, extractors);
     utils::log::logging::debug() << "[sysquery] extr_vec filled with data";
 
-    std::cout << queryToJSON(filename, host_map, extr_vec).str() << std::endl;
+    queryToJSON(out, filename, host_map, extr_vec);
 
     return 0;
 }
