@@ -18,9 +18,12 @@
 using namespace sysmap;
 namespace po = boost::program_options;
 
-std::map<int, std::vector<int>> getHostIDs(const std::string dbname, const std::vector<std::string>& names = {}){
+//mapping HostIDs to all DataIDs (DIDs) connected to that Host
+using hostMap = std::map<int, std::vector<int>>;
+
+hostMap getHostIDs(const std::string dbname, const std::vector<std::string>& names = {}){
     sqlite::database db(dbname);
-    std::map<int, std::vector<int>> results;
+    hostMap results;
 
     //returns std::vector<int> of DIDs for the given HostID
     auto getDIDofHost = [&](int HostID){
@@ -74,8 +77,8 @@ std::vector<int> getEIDs(const std::string dbname, const std::vector<std::string
     return std::move(results);
 }
 
-void queryToJSON(std::ostream& jsonstring, std::string filename, const std::map<int, std::vector<int>>& hosts, const std::vector<int>& extractors){
-    sqlite::database db(filename);
+void queryToJSON(std::ostream& jsonstring, std::string dbfile, const hostMap& hosts, const std::vector<int>& extractors){
+    sqlite::database db(dbfile);
     rapidjson::OStreamWrapper osw(jsonstring);
     rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
 
@@ -166,7 +169,7 @@ int main(int argc, char** argv)
         ("listExtractors,L", "Lists all Extractors found in database");
 
     po::variables_map vm;
-    std::string filename, query_string;
+    std::string dbfile, query_string;
     std::vector<std::string> hosts {};
     std::vector<std::string> extractors {};
     outwrapper out;
@@ -182,10 +185,10 @@ int main(int argc, char** argv)
         }
 
         if (vm.count("filename")) {
-            filename = vm["filename"].as<std::string>();
+            dbfile = vm["filename"].as<std::string>();
 
             //check if given file exists
-            std::ifstream file(filename);
+            std::ifstream file(dbfile);
             if(!file.good()){
                 utils::log::logging::debug() <<
                     "[sysquery] given database file doesnt exist or is corrupted. exiting...";
@@ -194,7 +197,7 @@ int main(int argc, char** argv)
             file.close();
 
             utils::log::logging::debug() <<
-                "[sysquery] set actual database filename to: [" << filename << "]";
+                "[sysquery] set actual database dbfile to: [" << dbfile << "]";
         }
 
         if (vm.count("output")) {
@@ -225,11 +228,11 @@ int main(int argc, char** argv)
         }
 
         if (vm.count("listHosts")){
-            listHosts(out, filename);
+            listHosts(out, dbfile);
             exit(1);
         }
         if (vm.count("listExtractors")){
-            listExtractors(out, filename);
+            listExtractors(out, dbfile);
             exit(1);
         }
 
@@ -239,14 +242,15 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    utils::log::logging::debug() << "[sysquery] opened database file";
-
-    auto host_map = getHostIDs(filename, hosts);
+    //collect HostIDs and their DIDs
+    auto host_map = getHostIDs(dbfile, hosts);
     utils::log::logging::debug() << "[sysquery] host_map filled with data";
-    auto extr_vec = getEIDs(filename, extractors);
+    //collect all EIDs
+    auto extr_vec = getEIDs(dbfile, extractors);
     utils::log::logging::debug() << "[sysquery] extr_vec filled with data";
 
-    queryToJSON(out, filename, host_map, extr_vec);
+    //query DB and write to cout or file
+    queryToJSON(out, dbfile, host_map, extr_vec);
 
     return 0;
 }
