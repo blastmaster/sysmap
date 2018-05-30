@@ -62,13 +62,53 @@ Thats it, propably you need to export the environment variables:
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 ```
+## sysquery - A tool for querying the sysmap database
 
-## Arangodb
+**Usage**
 
-ArangoDB is a multi-model NoSQL Database, supporting key-value, documents and graph storage.
-We use ArangoDB as our central Database for collected system information.
+###### Print help message:
+```
+    sysquery -h
+```
 
-For download and installation instructions for your distribution see the [arangodb webite](https://www.arangodb.com/download-major/).
+###### Query everything:
+```
+    sysquery -f path/to/db/file
+```
+This returns a JSON String containing all Hosts and their Datastrings of each extractor
+
+###### Query specific Host:
+```
+    sysquery -f path/to/db/file -n hostname
+```
+
+###### Query specific Extractor:
+```
+    sysquery -f path/to/db/file -e disks
+```
+
+###### Querying specific Hosts and Extractors:
+```
+    sysquery -f path/to/db/file -n hostname1 hostname2 hostname 3 -e disks pcidevices
+```
+This returns the Datastrings of the given Extractors for the given Hosts
+
+###### Listing available Hosts:
+```
+    sysquery -f path/to/db/file -l
+```
+
+###### Listing available Extractors:
+```
+    sysquery -f path/to/db/file -L
+```
+
+###### Specifying Output file:
+```
+    sysquery -f path/to/db/file -o path/to/file
+```
+This will write the output to the given file instead of std::cout
+
 
 ## License
 

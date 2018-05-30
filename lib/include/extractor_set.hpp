@@ -116,7 +116,14 @@ struct Extractor_Set
         return dynamic_cast<const T*>(get_value(name));
     }
 
+    /**
+     * Parses extracted infomap and generates SQL commands which can be used
+     * to insert the given data into a Database.
+     *
+     * @param os The out-stream where to write to.
+     */
     void toSQL(std::ostream& os);
+
     private:
 
     sqlite::database initDB(const std::string& dbname);

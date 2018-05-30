@@ -14,7 +14,6 @@ namespace sysmap {
         ASCII,
         JSON,
         YAML,
-        SQLITE3,
         SQL,
     };
 

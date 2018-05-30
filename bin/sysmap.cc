@@ -120,10 +120,6 @@ int main(int argc, char** argv)
                 fmt = Output_format::JSON;
                 utils::log::logging::debug() << "[sysmap] setting format to: JSON\n";
             }
-            else if (boost::iequals(fmt_arg, "SQLITE3")) {
-                fmt = Output_format::SQLITE3;
-                utils::log::logging::debug() << "[sysmap] setting format to: SQLITE3\n";
-            }
             else if (boost::iequals(fmt_arg, "SQL")) {
                 fmt = Output_format::SQL;
                 utils::log::logging::debug() << "[sysmap] setting format to: SQL\n";

@@ -90,11 +90,16 @@ namespace sysmap {
 
 
     void Extractor_Set::toSQL(std::ostream& os){
-        auto hostname = get_hostname();
+        const auto hostname = get_hostname();
 
-        //creates a select statement which returns column_return in a given table where column_name equals the given value
-        auto getID = [] (std::string table, std::string column_return, std::string column_name, std::string value) {
-            return "select " + column_return + " from " + table + " where " + column_name + " = '" + value + "'";
+        //creates a select statement which returns column_return in a given table
+        //where column_name equals the given value
+        auto getID = [] (std::string table,
+                         std::string column_return,
+                         std::string column_name,
+                         std::string value) {
+            return "select " + column_return + " from " + table
+                 + " where " + column_name + " = '" + value + "'";
         };
 
         //insert into Hosttable, then get HostID from database
@@ -103,7 +108,8 @@ namespace sysmap {
 
         for (const auto& kv_extr : m_infomap) {
             //insert into Extractortable, then get EID from database
-            os << "insert or ignore into Extractortable (name) values ('" << kv_extr.first.c_str() << "');\n";
+            os << "insert or ignore into Extractortable (name) values ('"
+               << kv_extr.first.c_str() << "');\n";
             std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
 
             //init jsonstring and fill it with data
@@ -113,7 +119,8 @@ namespace sysmap {
             kv_extr.second->to_json(writer);
 
             //insert into Datatable, then get DID from database
-            os << "insert or ignore into Datatable (EID, Data) values ((" << eid << "), '" << jsonstring.str() << "');\n";
+            os << "insert or ignore into Datatable (EID, Data) values ((" << eid << "), '"
+               << jsonstring.str() << "');\n";
             auto DID = getID("Datatable", "DID", "Data", jsonstring.str());
 
             //insert into Host2Data
@@ -123,63 +130,9 @@ namespace sysmap {
         }
     }
 
-    [[deprecated]]
     void Extractor_Set::save(const std::string& dbname)
     {
-        auto db = initDB(dbname);
-        auto name = get_hostname();
-        auto exists = 0;
-        try {
-            db << "begin;";
-            db << "select IFNULL((select HostID from Hosttable where Hostname = ?), 0);"
-                << name
-                >> exists;
-
-            if(!exists){
-                db << "insert into Hosttable (Hostname) values (?);"
-                    << name;
-                exists = db.last_insert_rowid();
-            }
-
-            auto HostID = exists;
-
-            for (const auto& kv_extr : m_infomap) {
-                db << "select IFNULL((select EID from Extractortable where Name = ? limit 1), 0);"
-                    << kv_extr.first.c_str()
-                    >> exists;
-                if(!exists){
-                    db << "insert into Extractortable (name) values (?);"
-                        << kv_extr.first.c_str();
-                }
-
-                std::stringstream os;
-                OStreamWrapper osw(os);
-                Writer<OStreamWrapper> writer(osw);
-                kv_extr.second->to_json(writer);
-
-                std::string eid;
-                db << "select EID from Extractortable where Name = ?;"
-                    << kv_extr.first
-                    >> eid;
-
-                db << "insert into Datatable (EID, Data) values (?, ?);"
-                    << eid
-                    << os.str();
-
-                auto DID = db.last_insert_rowid();
-
-                db << "insert into Host2Data (HostID, DID) values (?, ?);"
-                    << HostID
-                    << DID;
-
-            }
-        db << "commit;";
-        }
-        catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-        }
     }
-
 
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
@@ -231,15 +184,6 @@ namespace sysmap {
                 break;
             }
 
-            case Output_format::SQLITE3:
-            {
-                // /scratch/s8946413/querytest
-                auto dbname = "sysmap.db";
-                save(dbname);
-                break;
-
-            }
-
             case Output_format::SQL:
             {
                 toSQL(os);
@@ -247,8 +191,7 @@ namespace sysmap {
         }
     }
 
-
-    const Value* Extractor_Set::get_value(const std::string& name)
+   const Value* Extractor_Set::get_value(const std::string& name)
    {
         auto it = m_infomap.find(name);
         if (it == m_infomap.end()) {
@@ -256,42 +199,5 @@ namespace sysmap {
         }
         return it->second.get();
     }
-
-    [[deprecated]]
-    sqlite::database Extractor_Set::initDB(const std::string& dbname){
-        sqlite::database db(dbname);
-
-      //UNIQUE(users_id, lessoninfo_id)
-      //Init Hosttable
-      db <<
-         "create table if not exists Hosttable ("
-         "   HostID integer primary key autoincrement not null,"
-         "   Hostname text UNIQUE"
-         ");";
-
-      //Init Host2Data
-      db <<
-         "create table if not exists Host2Data ("
-         "   HostID integer,"
-         "   DID integer"
-         ");";
-
-      //Init Datatable
-      db <<
-         "create table if not exists Datatable ("
-         "   DID integer primary key autoincrement not null,"
-         "   EID integer,"
-         "   Data text UNIQUE"
-         ");";
-
-      //Init Extractortable
-      db <<
-         "create table if not exists Extractortable ("
-         "   EID integer primary key autoincrement not null,"
-         "   Name text UNIQUE"
-         ");";
-      return db;
-    }
-
 
 } /* closing namespace sysmap */
