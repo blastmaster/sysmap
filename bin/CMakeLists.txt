@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS ${SYSMAP_CXX_FLAGS})
 
 include_directories(
     ../lib/include
+    ${SQLITE3_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${RAPIDJSON_INCLUDE_DIR}
     ${SQLITE_MODERN_CPP_INCLUDE_DIR}
