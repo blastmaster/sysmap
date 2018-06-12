@@ -124,15 +124,15 @@ void queryToJSON(std::ostream& jsonstring, sqlite::database& db, const hostMap_t
         std::string data;
 
         try {
-            db << "select Data from Datatable where (EID, DID) = (?, ?);"
+            db << "select Data from Datatable where EID = ? and DID = ?;"
                << EID
                << DID
                >> data;
         }
         //Catches err if query returns nothing
         catch (sqlite::sqlite_exception& e) {
-            /* std::cerr  << e.get_code() << ": " << e.what() << " during " */
-                 /* << e.get_sql() << std::endl; */
+            utils::log::logging::error() << e.get_code() << ": " << e.what() << " during "
+                  << e.get_sql() << " EID " << EID << " DID " << DID;
         }
 
         return data;
