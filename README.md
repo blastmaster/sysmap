@@ -62,9 +62,40 @@ Thats it, propably you need to export the environment variables:
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 ```
-## sysquery - A tool for querying the sysmap database
 
-**Usage**
+## Usage
+
+###### Print help message:
+```
+    sysmap -h
+```
+
+###### List available extractors:
+```
+    sysmap -l
+```
+
+###### Define which extractors will be used:
+```
+    sysmap -e extractor_name1 extractor_name2
+```
+
+###### Define which output format should be used:
+
+```
+    sysmap -e extractor_name -f xml
+```
+Possible Formats:  json (default), xml, yaml, sql
+
+###### Define an output file instead of writing to stdout:
+
+```
+    sysmap -e extractor_name -o filename
+```
+
+# sysquery - A tool for querying the sysmap database
+
+## Usage
 
 ###### Print help message:
 ```
@@ -89,7 +120,7 @@ This returns a JSON String containing all Hosts and their Datastrings of each ex
 
 ###### Querying specific Hosts and Extractors:
 ```
-    sysquery -f path/to/db/file -n hostname1 hostname2 hostname 3 -e disks pcidevices
+    sysquery -f path/to/db/file -n hostname1 hostname2 hostname3 -e disks pcidevices
 ```
 This returns the Datastrings of the given Extractors for the given Hosts
 
@@ -107,7 +138,7 @@ This returns the Datastrings of the given Extractors for the given Hosts
 ```
     sysquery -f path/to/db/file -o path/to/file
 ```
-This will write the output to the given file instead of std::cout
+This will write the output to the given file instead of stdout
 
 
 ## License
