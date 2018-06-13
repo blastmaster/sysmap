@@ -59,3 +59,5 @@ target_link_libraries(sysquery
 )
 
 install(TARGETS sysquery DESTINATION bin)
+file(COPY ../share/fillDB.sh DESTINATION .)
+file(COPY ../share/run_sysmap.slurm DESTINATION .)
