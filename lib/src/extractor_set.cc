@@ -130,10 +130,6 @@ namespace sysmap {
         }
     }
 
-    void Extractor_Set::save(const std::string& dbname)
-    {
-    }
-
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {

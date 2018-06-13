@@ -14,7 +14,7 @@ namespace sysmap { namespace extractor {
         auto data = collect();
 
         auto machine = make_value<Map_value>(); //contains uname information
-        
+
         machine->add("NodeName", make_value<String_value>(std::move(data.system_info.nodename)));
         machine->add("Version", make_value<String_value>(std::move(data.system_info.version)));
         machine->add("Release", make_value<String_value>(std::move(data.system_info.release)));

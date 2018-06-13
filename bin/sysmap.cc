@@ -46,19 +46,31 @@ std::string get_hostname()
     return host;
 }
 
-std::string filename_prefix_host(const std::string& name)
+void filename_prefix_host(std::string& name)
 {
     auto host = get_hostname();
 
     //search backwards for '/' using std::string.rfind()
     //to determine if a full path or just a filename is given
-    auto pathName = name;
-    auto isPath = pathName.rfind('/');
+    auto isPath = name.rfind('/');
     if (isPath == std::string::npos) {
-        return host + "-" + name;
+        name = host + "-" + name;
     } else {
-        pathName.insert(++isPath, host + "-");
-        return pathName;
+        name.insert(++isPath, host + "-");
+    }
+}
+
+/**
+ * Appends a file extension if no '.' is found in the given filename
+ *
+ * @param filename name or path of the file as string
+ * @param file_extension file_extension to append
+ */
+void check_for_file_extension(std::string& filename, const std::string& file_extension){
+    auto hasExtension = filename.rfind('.');
+
+    if(hasExtension == std::string::npos){
+        filename += file_extension;
     }
 }
 
@@ -89,6 +101,7 @@ int main(int argc, char** argv)
 
     Extractor_Set extr_set {};
     auto fmt = Output_format::JSON;         // set default to JSON
+    auto file_extension = ".json";
     outwrapper out;
 
     // TODO better exception handling this coarse grained handling sucks!
@@ -106,22 +119,27 @@ int main(int argc, char** argv)
             auto fmt_arg = vm["format"].as<std::string>();
             if (boost::iequals(fmt_arg, "YAML")) {
                 fmt = Output_format::YAML;
+                file_extension = ".yaml";
                 utils::log::logging::debug() << "[sysmap] setting format to: YAML\n";
             }
             else if (boost::iequals(fmt_arg, "XML")) {
                 fmt = Output_format::XML;
+                file_extension = ".xml";
                 utils::log::logging::debug() << "[sysmap] setting format to: XML\n";
             }
             else if (boost::iequals(fmt_arg, "ASCII")) {
                 fmt = Output_format::ASCII;
+                file_extension = ".txt";
                 utils::log::logging::debug() << "[sysmap] setting format to: ASCII\n";
             }
             else if (boost::iequals(fmt_arg, "JSON")) {
                 fmt = Output_format::JSON;
+                file_extension = ".json";
                 utils::log::logging::debug() << "[sysmap] setting format to: JSON\n";
             }
             else if (boost::iequals(fmt_arg, "SQL")) {
                 fmt = Output_format::SQL;
+                file_extension = ".sql";
                 utils::log::logging::debug() << "[sysmap] setting format to: SQL\n";
             }
             else {
@@ -131,9 +149,10 @@ int main(int argc, char** argv)
 
         if (vm.count("output")) {
             auto output_arg = vm["output"].as<std::string>();
-            auto fname = filename_prefix_host(output_arg);
-            out.set_file(fname);
-            utils::log::logging::debug() << "[sysmap] Setting output to: [" << fname << "]\n";
+            filename_prefix_host(output_arg);
+            check_for_file_extension(output_arg, file_extension);
+            out.set_file(output_arg);
+            utils::log::logging::debug() << "[sysmap] Setting output to: [" << output_arg << "]\n";
         }
         else {
             utils::log::logging::debug() << "[sysmap] Setting output to stdout.\n";
