@@ -1,3 +1,4 @@
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -19,8 +20,8 @@ using namespace sysmap;
 using hostMap_t = std::map<int, std::vector<int>>;
 
 static void log(std::string data){
-    std::ofstream logfile("log.txt");
-    logfile << data;
+    std::ofstream logfile("log.txt", std::ios_base::app);
+    logfile << data << std::endl;
     logfile.close();
 }
 
@@ -142,7 +143,7 @@ static void queryToJSON(std::ostream& jsonstring,
         //Catches err if query returns nothing
         catch (sqlite::sqlite_exception& e) {
             std::stringstream error_log;
-            error_log << e.get_code() << ": " << e.what() << " during "
+            error_log << time(0) << " - queryToJSON(..) - " << e.get_code() << ": " << e.what() << " during "
                   << e.get_sql() << " EID " << EID << " DID " << DID;
             log(error_log.str());
         }
@@ -167,6 +168,7 @@ static void queryToJSON(std::ostream& jsonstring,
         writer.EndObject();
     }
     writer.EndObject();
+    jsonstring << std::endl;
 }
 
 /**
