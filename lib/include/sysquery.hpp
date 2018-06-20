@@ -20,7 +20,7 @@ using namespace sysmap;
 using hostMap_t = std::map<int, std::vector<int>>;
 
 static void log(std::string data){
-    std::ofstream logfile("log.txt", std::ios_base::app);
+    std::ofstream logfile("sysquery_log.txt", std::ios_base::app);
     logfile << data << std::endl;
     logfile.close();
 }
