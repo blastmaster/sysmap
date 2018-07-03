@@ -1,5 +1,5 @@
-#ifndef __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
-#define __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
+#ifndef __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
+#define __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -48,7 +48,7 @@ struct Network_Device_Extractor : Extractor
             Network_Device(std::string name_, std::string type_) : name(name_), type(type_) {}
 
             const std::string name, type;
-            std::vector<struct sockaddr_in> ip_addr;
+            std::vector<std::string> ip_addr;
         };
 
         struct data {
@@ -67,5 +67,4 @@ struct Network_Device_Extractor : Extractor
 
 } /* closing namespace extractor */ } /*closing namespace sysmap */
 
-#endif /* ifndef __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__ */
-
+#endif /* ifndef __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__ */
