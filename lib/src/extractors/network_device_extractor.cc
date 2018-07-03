@@ -12,19 +12,28 @@ namespace sysmap { namespace extractor {
     {
         auto data = collect();
 
-        auto devices = make_value<Array_value>();
+        auto devices = make_value<Map_value>();
 
         for(const auto& device : data.network_devices){
             auto value = make_value<Map_value>();
-            value->add("Name", make_value<String_value>(device.name));
+            /* value->add("Name", make_value<String_value>(device.name)); */
             value->add("Type", make_value<String_value>(device.type));
+
+            auto ip_addrs = make_value<Array_value>();
+            for(auto& ip : device.ip_addr){
+                ip_addrs->add(make_value<String_value>(ip));
+            }
+
             //TODO: Getting IPs into Array_value or something like that
-            /* value->add("Addresses", make_value<Array_value>()) */
+            value->add("Addresses", std::move(ip_addrs));
+
+            devices->add(device.name, std::move(value));
+
         }
 
         data.network_devices.clear();
 
-        findings.add_info("deviceinfo", std::move(devices));
+        findings.add_info("networkdevices", std::move(devices));
 
     }
 
