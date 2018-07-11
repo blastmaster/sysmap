@@ -1,7 +1,9 @@
 #include "linux/network_device_extractor.hpp"
 
 #include <string>
+
 //TODO: check which includes are rly needed!
+extern "C" {
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -10,6 +12,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <linux/if_link.h>
+};
 
 #undef linux
 
@@ -25,6 +28,7 @@ namespace sysmap { namespace linux {
     }
 
     std::string Network_Device_Extractor::get_device_type(const std::string& device_name){
+        //TODO: document that only up interfaces are extracted
         std::stringstream filepath;
         filepath << "/sys/class/net/" << device_name << "/type";
         std::ifstream file(filepath.str(), std::ios::in);
@@ -33,13 +37,31 @@ namespace sysmap { namespace linux {
             utils::log::logging::debug() << "[sysmap::linux::network_device_extractor]"
                                          << " Unable to open " << filepath.str();
             return "Unknown";
-        } else {
-            std::string line;
-            getline(file,line);
-            file.close();
-            return line;
         }
 
+        std::string line, type;
+        getline(file,line);
+        file.close();
+
+        //Assing Name of Devicetype defined in <net/if_arp.h>
+        if(line == "1"){
+            type = "ETHERNET";
+        } else if (line == "32"){
+            type = "INFINIBAND";
+        } else if (line == "772"){
+            type = "LOOPBACK";
+        } else {
+            type = "UNKNOWN";
+        }
+
+        return type;
+    }
+
+    void Network_Device_Extractor::clean_up_ip_aliasing(std::string& device_name){
+        if(device_name.find(":") == std::string::npos){
+            return;
+        }
+        device_name.erase(device_name.find(':'));
     }
 
     void Network_Device_Extractor::collect_device_information(data& result){
@@ -47,52 +69,57 @@ namespace sysmap { namespace linux {
         std::map<std::string, std::vector<std::string>> network_devices;
 
         struct ifaddrs *ifaddr, *ifa;
-        int family, n, s;
+        int family;
         char host[NI_MAXHOST];
 
         if (getifaddrs(&ifaddr) == -1) {
+            //collect() will proceed with empty data
             utils::log::logging::error() << "[sysmap::linux::network_device_extractor]"
-                                         <<" Calling getifaddrs(..) failed!";
-            //TODO: return? --> collect() would proceed with empty data
+                                         << " Calling getifaddrs(..) failed!"
+                                         << " No Network Device will be extracted";
             return;
         }
 
-        for (ifa = ifaddr, n = 0; ifa != NULL; ifa = ifa->ifa_next, n++) {
-            if (ifa->ifa_addr == NULL)
+        for (ifa = ifaddr; ifa != nullptr; ifa = ifa->ifa_next) {
+            if (ifa->ifa_addr == nullptr)
                 continue;
 
             family = ifa->ifa_addr->sa_family;
 
             //getType by Name
-            auto type = get_device_type( ifa->ifa_name);
-            auto name =  ifa->ifa_name;
+            std::string name = ifa->ifa_name;
 
-            Network_Device device(name, type);
+            //WARINING: REMOVES :*, CHANGES ib0:* to ib0
+            //If that ib0:0 device should be stored as an extra device
+            //this function should be called in get_device_type(..)
+            clean_up_ip_aliasing(name);
 
             /* For an AF_INET* interface address, display the address */
 
             if (family == AF_INET || family == AF_INET6) {
-                s = getnameinfo(ifa->ifa_addr,
+                int ret = getnameinfo(ifa->ifa_addr,
                         (family == AF_INET) ? sizeof(struct sockaddr_in) :
                                               sizeof(struct sockaddr_in6),
                         host, NI_MAXHOST,
-                        NULL, 0, NI_NUMERICHOST);
-                if (s != 0) {
-                    printf("getnameinfo() failed: %s\n", gai_strerror(s));
-                    exit(EXIT_FAILURE);
+                        nullptr, 0, NI_NUMERICHOST);
+                if (ret != 0) {
+                    utils::log::logging::error() << "[sysmap::linux::network_device_extractor]"
+                                                 << " getnameinfo() failed: " << gai_strerror(ret)
+                                                 << "\n";
+                    continue;
                 }
                 network_devices[name].push_back(host);
             }
         }
 
-        for(const auto& network_device : network_devices){
-            auto type = get_device_type(network_device.first);
-            Network_Device device(network_device.first, type);
+        for(auto& network_device : network_devices){
+            auto device_name = network_device.first;
+            auto type = get_device_type(device_name);
+            Network_Device device(device_name, type);
             for(const auto& ip : network_device.second){
                 device.ip_addr.push_back(ip);
             }
             result.network_devices.push_back(device);
         }
     }
-
 }}

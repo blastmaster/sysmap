@@ -15,7 +15,7 @@ struct Network_Device_Extractor : extractor::Network_Device_Extractor
     virtual ~Network_Device_Extractor() {}
 
     protected:
-        /*
+        /**
          * Calls methods to collect information about the Kernel
          * Overrides virtual function from the base class
          */
@@ -24,12 +24,23 @@ struct Network_Device_Extractor : extractor::Network_Device_Extractor
     private:
         static Registrar registrar;
 
-        /*
+        /**
          * Helper function for collect_device_information(..)
          * It looks up /sys/class/net/${device_name}/type to
          * determine its type since ifaddrs isnt capable of doing that
          */
         std::string get_device_type(const std::string& device_name);
+
+        /**
+         * If (Depricated) IP Aliasing is used to assign multiple IPs
+         * to a device they will appear with multiple names like:
+         * ib0 and ib0:0.
+         * This behaviour leads to errors, for example when getting the
+         * device type.
+         * To prevent that this function can be used to reduce something
+         * like ib0:0 down to ib0
+         */
+        void clean_up_ip_aliasing(std::string& device_name);
 
         void collect_device_information(data& result);
 
