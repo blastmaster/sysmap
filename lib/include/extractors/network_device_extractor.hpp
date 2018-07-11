@@ -5,7 +5,10 @@
 #include "../extractor.hpp"
 #include <string>
 #include <vector>
+
+extern "C" {
 #include <netinet/in.h>
+};
 
 namespace sysmap { namespace extractor {
 
@@ -33,18 +36,7 @@ struct Network_Device_Extractor : Extractor
 
     protected:
 
-        /*
-         * Those values are defined in if_arp.h:
-         * ARPHRD_ETHER 1
-         * ARPHRD_INFINIBAND 32
-         * ARPHRD_LOOPBACK 772
-         * Since they could differ over time, or another type could be added
-         * i think it is good to keep the struct Type "dynamic" so that the derived
-         * class decides what to do
-        */
-
         struct Network_Device{
-
             Network_Device(std::string name_, std::string type_) : name(name_), type(type_) {}
 
             const std::string name, type;
