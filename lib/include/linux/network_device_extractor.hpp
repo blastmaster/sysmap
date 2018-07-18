@@ -35,15 +35,21 @@ struct Network_Device_Extractor : extractor::Network_Device_Extractor
          * If (Depricated) IP Aliasing is used to assign multiple IPs
          * to a device they will appear with multiple names like:
          * ib0 and ib0:0.
-         * This behaviour leads to errors, for example when getting the
+         * This behaviour leads to problems, for example when getting the
          * device type.
          * To prevent that this function can be used to reduce something
          * like ib0:0 down to ib0
          */
         void clean_up_ip_aliasing(std::string& device_name);
 
+        /**
+         * Collects the following Network Devices Information:
+         * Name, Type and Assigned IP Addresses.
+         * Then stores them in result.
+         * Only collects if the Interface is up and has at least
+         * one IP assigned.
+         */
         void collect_device_information(data& result);
-
 };
 
 } }
