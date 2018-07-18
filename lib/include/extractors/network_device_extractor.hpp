@@ -1,5 +1,5 @@
-#ifndef __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
-#define __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
+#ifndef __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
+#define __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -61,4 +61,4 @@ struct Network_Device_Extractor : Extractor
 
 } /* closing namespace extractor */ } /*closing namespace sysmap */
 
-#endif /* ifndef __ADAFS_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__ */
+#endif /* ifndef __SYSMAP_EXTRACTOR_NETWORK_DEVICE_EXTRACTOR_HPP__ */

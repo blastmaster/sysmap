@@ -1,5 +1,5 @@
 #ifndef __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
-#define __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ 
+#define __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
