@@ -37,7 +37,9 @@ struct Network_Device_Extractor : Extractor
     protected:
 
         struct Network_Device{
-            Network_Device(std::string name_, std::string type_) : name(name_), type(type_) {}
+            Network_Device(std::string name_, std::string type_)
+                : name(name_),
+                  type(type_) {}
 
             const std::string name, type;
             std::vector<std::string> ip_addr;
