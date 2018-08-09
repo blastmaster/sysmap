@@ -39,10 +39,16 @@ else()
     add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
 endif()
 
+add_dependencies(libsysmap yaml-cpp-project)
+add_dependencies(libsysmap nitro-project)
+add_dependencies(libsysmap rapidjson-project)
+add_dependencies(libsysmap pugixml-project)
+
 target_include_directories(libsysmap
     PUBLIC
         include
     PRIVATE
+        ${NITRO_INCLUDE_DIR}
         ${RAPIDJSON_INCLUDE_DIR}
         ${SQLITE3_INCLUDE_DIR}
         ${SQLITE_MODERN_CPP_INCLUDE_DIR}
@@ -56,7 +62,7 @@ target_link_libraries(libsysmap
     PRIVATE
         ${Boost_LIBRARIES}
         ${HWLOC_LIBRARIES}
-        ${YAML_LIBRARIES}
+        yaml-cpp
 )
 
 target_compile_options(libsysmap

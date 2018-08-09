@@ -11,10 +11,10 @@ include(CTest)
 option(BUILD_STATIC "link static if this is off a shared lib will be build" ON)
 
 # TODO add option for running tests
-option(RUN_TESTS "run test suite" ON)
+option(RUN_TESTS "run test suite" OFF)
 
 # Build documentation
-option(BUILD_DOC "Build the documentation" ON)
+option(BUILD_DOC "Build the documentation" OFF)
 
 # Debbuging disables BUILD_DOC
 option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
@@ -35,7 +35,7 @@ find_package(Hwloc REQUIRED)
 
 add_subdirectory(external)
 # include nitro lib
-include(external/nitro/Nitro.cmake)
+# include(external/nitro/Nitro.cmake)
 
 # setting the doxygen input directories to:
 # sysmap/lib/include
@@ -53,7 +53,7 @@ endif()
 
 if(DEBUG_MODE)
     message("DEBUG_MODE ENABLED")
-    set(SYSMAP_CXX_FLAGS "${SYSMAP_CXX_FLAGS} -ggdb -Wall")
+    set(SYSMAP_CXX_FLAGS "${SYSMAP_CXX_FLAGS} -ggdb")
     message("ATTENTION: no Documentation will be build")
 endif()
 
