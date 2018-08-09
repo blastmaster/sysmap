@@ -7,6 +7,7 @@ add_executable(sysmap
 target_include_directories(sysmap
     PRIVATE
         ../lib/include
+        ${NITRO_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
         ${RAPIDJSON_INCLUDE_DIR}
         ${SQLITE_MODERN_CPP_INCLUDE_DIR}
@@ -23,16 +24,19 @@ if(BUILD_STATIC)
             ${Boost_FILESYSTEM_LIBRARY}
             ${SQLITE3_LIBRARY}
             ${PUGIXML_LIBRARY}
+            yaml-cpp
     )
 
 else()
     target_link_libraries(sysmap
-        libsysmap
-        ${Boost_PROGRAM_OPTIONS_LIBRARY}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_FILESYSTEM_LIBRARY}
-        ${SQLITE3_LIBRARY}
-        ${PUGIXML_LIBRARY}
+        PRIVATE
+            libsysmap
+            ${Boost_PROGRAM_OPTIONS_LIBRARY}
+            ${Boost_SYSTEM_LIBRARY}
+            ${Boost_FILESYSTEM_LIBRARY}
+            ${SQLITE3_LIBRARY}
+            ${PUGIXML_LIBRARY}
+            yaml-cpp
     )
 endif()
 
