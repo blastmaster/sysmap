@@ -77,3 +77,16 @@ ExternalProject_Add(pugixml-project
 )
 set(PUGIXML_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/pugixml/src/pugixml-project/src/ CACHE PATH "pugixml include dir" FORCE)
 message("pugixml: ${PUGIXML_INCLUDE_DIR}")
+
+# sqlite_modern_cpp
+ExternalProject_Add(sqlite_modern_cpp-project
+    PREFIX "${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp"
+    GIT_REPOSITORY "https://github.com/aminroosta/sqlite_modern_cpp"
+    GIT_PROGRESS 1
+    GIT_TAG e2248fae15c9e1a240f54d29a148e501f4ea2347
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
+set(SQLITE_MODERN_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp/hdr/ CACHE PATH "sqlite_modern_cpp include dir" FORCE)
+message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
