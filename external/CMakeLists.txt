@@ -4,6 +4,23 @@ message("cmake current list dir: ${CMAKE_CURRENT_LIST_DIR}")
 message("cmake source dir: ${CMAKE_SOURCE_DIR}")
 message("cmake current source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 
+# UPDATING:
+# Updating is done by changing the "GIT_TAG" of an ExternalProject to another Commit Hash.
+# For finding a newer Commit no Browser is needed, the cloned Repositorys are often up to date,
+# but checked out to the defined Commit Hash. That means they could allready contain newer Commits.
+# If that is not the case a "git fetch" in the specific Repo will fetch newer commits.
+
+# EXAMPLE:
+# Updating yaml-cpp (starting from sysmap source dir):
+# cd external/yaml-cpp/src/yaml-cpp-project/
+# git log --all # Shows the newest commits, if HEAD is allready set to the newest perform a "git fetch".
+#               # A simple "git log" would not show newer commits.
+#
+# Now pick a new Commit Hash and replace it inside this file with the old Hash after "GIT_TAG"
+# Move into the sysmap/build directory and perform a "make". The ExternalProject and sysmap
+# will be rebuild automaticly.
+# If you are happy with the result just commit and push the changes made to this CMakeLists.txt file
+
 include(ExternalProject)
 #Clone and Build
 ExternalProject_Add(yaml-cpp-project
