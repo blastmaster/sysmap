@@ -36,12 +36,20 @@ ExternalProject_Add(yaml-cpp-project
 )
 
 #Create Target
-set(YAML_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/yaml-cpp/src/yaml-cpp-project/include CACHE PATH "yaml-cpp include dir" FORCE)
-add_library(yaml-cpp UNKNOWN IMPORTED)
-set_target_properties(yaml-cpp PROPERTIES
-    IMPORTED_LOCATION
-    ${PROJECT_SOURCE_DIR}/external/yaml-cpp-project/src/yaml-cpp-project-build/${CMAKE_STATIC_LIBRARY_PREFIX}libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}
+set(YAML_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/yaml-cpp/src/yaml-cpp-project/include)
+set(YAML_LIB
+    "${PROJECT_SOURCE_DIR}/external/yaml-cpp/src/yaml-cpp-project-build/${CMAKE_STATIC_LIBRARY_PREFIX}yaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
+message("yaml-cpp: ${YAML_INCLUDE_DIR}")
+
+message("check for yaml-cpp target")
+if(NOT TARGET YAML::YAML)
+    message("yaml-cpp target not found")
+    add_library(YAML::YAML UNKNOWN IMPORTED)
+    set_target_properties(YAML::YAML PROPERTIES IMPORTED_GLOBAL TRUE
+        INTERFACE_INCLUDE_DIRECTORIES ${YAML_INCLUDE_DIR}
+        IMPORTED_LOCATION ${YAML_LIB}
     )
+endif()
 
 # nitro
 ExternalProject_Add(nitro-project
@@ -52,8 +60,17 @@ ExternalProject_Add(nitro-project
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-set(NITRO_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/nitro/src/nitro-project/include/ CACHE PATH "nitro include dir" FORCE)
+set(NITRO_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/nitro/src/nitro-project/include/)
 message("nitro: ${NITRO_INCLUDE_DIR}")
+
+message("check for nitro target")
+if(NOT TARGET Nitro::Nitro)
+    message("nitro target not found")
+    add_library(Nitro::Nitro INTERFACE IMPORTED)
+    set_target_properties(Nitro::Nitro PROPERTIES IMPORTED_GLOBAL TRUE
+        INTERFACE_INCLUDE_DIRECTORIES ${NITRO_INCLUDE_DIR}
+    )
+endif()
 
 # rapidjson
 ExternalProject_Add(rapidjson-project
@@ -64,8 +81,17 @@ ExternalProject_Add(rapidjson-project
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-set(RAPIDJSON_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/rapidjson/src/rapidjson-project/include/ CACHE PATH "rapidjson include dir" FORCE)
+set(RAPIDJSON_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/rapidjson/src/rapidjson-project/include/)
 message("rapidjson: ${RAPIDJSON_INCLUDE_DIR}")
+
+message("check for rapidjson target")
+if(NOT TARGET RapidJSON::RapidJSON)
+    message("rapidjson target not found")
+    add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
+    set_target_properties(RapidJSON::RapidJSON PROPERTIES IMPORTED_GLOBAL TRUE
+        INTERFACE_INCLUDE_DIRECTORIES ${RAPIDJSON_INCLUDE_DIR}
+    )
+endif()
 
 # pugixml
 ExternalProject_Add(pugixml-project
@@ -73,10 +99,21 @@ ExternalProject_Add(pugixml-project
     GIT_REPOSITORY "https://github.com/zeux/pugixml"
     GIT_PROGRESS 1
     GIT_TAG 38edf255aee473ade74d955faa79e4f7a5c38eb1
+    BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-set(PUGIXML_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/pugixml/src/pugixml-project/src/ CACHE PATH "pugixml include dir" FORCE)
+set(PUGIXML_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/pugixml/src/pugixml-project/src/)
 message("pugixml: ${PUGIXML_INCLUDE_DIR}")
+
+message("check for pugixml target")
+if(NOT TARGET PugiXML::PugiXML)
+    message("pugixml target not found")
+    add_library(PugiXML::PugiXML INTERFACE IMPORTED)
+    set_target_properties(PugiXML::PugiXML PROPERTIES IMPORTED_GLOBAL TRUE
+        INTERFACE_INCLUDE_DIRECTORIES ${PUGIXML_INCLUDE_DIR}
+    )
+endif()
+
 
 # sqlite_modern_cpp
 ExternalProject_Add(sqlite_modern_cpp-project
@@ -88,5 +125,14 @@ ExternalProject_Add(sqlite_modern_cpp-project
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-set(SQLITE_MODERN_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp/hdr/ CACHE PATH "sqlite_modern_cpp include dir" FORCE)
+set(SQLITE_MODERN_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp/hdr/)
 message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
+
+message("check for sqlite_modern_cpp target")
+if(NOT TARGET SQLITE_MODERN_CPP::SQLITE_MODERN_CPP)
+    message("sqlite_modern_cpp target not found")
+    add_library(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP INTERFACE IMPORTED)
+    set_target_properties(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP PROPERTIES IMPORTED_GLOBAL TRUE
+        INTERFACE_INCLUDE_DIRECTORIES ${SQLITE_MODERN_CPP_INCLUDE_DIR}
+    )
+endif()

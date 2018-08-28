@@ -24,7 +24,6 @@ if(BUILD_STATIC)
             ${Boost_FILESYSTEM_LIBRARY}
             ${SQLITE3_LIBRARY}
             ${PUGIXML_LIBRARY}
-            yaml-cpp
     )
 
 else()
@@ -36,7 +35,6 @@ else()
             ${Boost_FILESYSTEM_LIBRARY}
             ${SQLITE3_LIBRARY}
             ${PUGIXML_LIBRARY}
-            yaml-cpp
     )
 endif()
 
