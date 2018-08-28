@@ -48,21 +48,22 @@ target_include_directories(libsysmap
     PUBLIC
         include
     PRIVATE
-        ${NITRO_INCLUDE_DIR}
-        ${RAPIDJSON_INCLUDE_DIR}
         ${SQLITE3_INCLUDE_DIR}
-        ${SQLITE_MODERN_CPP_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
         ${HWLOC_INCLUDE_DIRS}
-        ${PUGIXML_INCLUDE_DIR}
-        ${YAML_INCLUDE_DIR}
+        $<TARGET_PROPERTY:RapidJSON::RapidJSON,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:SQLITE_MODERN_CPP::SQLITE_MODERN_CPP,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:YAML::YAML,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:Nitro::Nitro,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:PugiXML::PugiXML,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 target_link_libraries(libsysmap
     PRIVATE
         ${Boost_LIBRARIES}
         ${HWLOC_LIBRARIES}
-        yaml-cpp
+        YAML::YAML
+
 )
 
 target_compile_options(libsysmap
