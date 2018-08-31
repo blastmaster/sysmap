@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10.1)
+
 # handle thrird-party dependencies.
 
 message("cmake current list dir: ${CMAKE_CURRENT_LIST_DIR}")
@@ -44,8 +46,8 @@ message("yaml-cpp: ${YAML_INCLUDE_DIR}")
 message("check for yaml-cpp target")
 if(NOT TARGET YAML::YAML)
     message("yaml-cpp target not found")
-    add_library(YAML::YAML UNKNOWN IMPORTED)
-    set_target_properties(YAML::YAML PROPERTIES IMPORTED_GLOBAL TRUE
+    add_library(YAML::YAML UNKNOWN IMPORTED GLOBAL)
+    set_target_properties(YAML::YAML PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${YAML_INCLUDE_DIR}
         IMPORTED_LOCATION ${YAML_LIB}
     )
@@ -66,8 +68,8 @@ message("nitro: ${NITRO_INCLUDE_DIR}")
 message("check for nitro target")
 if(NOT TARGET Nitro::Nitro)
     message("nitro target not found")
-    add_library(Nitro::Nitro INTERFACE IMPORTED)
-    set_target_properties(Nitro::Nitro PROPERTIES IMPORTED_GLOBAL TRUE
+    add_library(Nitro::Nitro UNKNOWN IMPORTED GLOBAL)
+    set_target_properties(Nitro::Nitro PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${NITRO_INCLUDE_DIR}
     )
 endif()
@@ -87,8 +89,8 @@ message("rapidjson: ${RAPIDJSON_INCLUDE_DIR}")
 message("check for rapidjson target")
 if(NOT TARGET RapidJSON::RapidJSON)
     message("rapidjson target not found")
-    add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
-    set_target_properties(RapidJSON::RapidJSON PROPERTIES IMPORTED_GLOBAL TRUE
+    add_library(RapidJSON::RapidJSON UNKNOWN IMPORTED GLOBAL)
+    set_target_properties(RapidJSON::RapidJSON PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${RAPIDJSON_INCLUDE_DIR}
     )
 endif()
@@ -108,8 +110,8 @@ message("pugixml: ${PUGIXML_INCLUDE_DIR}")
 message("check for pugixml target")
 if(NOT TARGET PugiXML::PugiXML)
     message("pugixml target not found")
-    add_library(PugiXML::PugiXML INTERFACE IMPORTED)
-    set_target_properties(PugiXML::PugiXML PROPERTIES IMPORTED_GLOBAL TRUE
+    add_library(PugiXML::PugiXML UNKNOWN IMPORTED GLOBAL)
+    set_target_properties(PugiXML::PugiXML PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${PUGIXML_INCLUDE_DIR}
     )
 endif()
@@ -131,8 +133,8 @@ message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
 message("check for sqlite_modern_cpp target")
 if(NOT TARGET SQLITE_MODERN_CPP::SQLITE_MODERN_CPP)
     message("sqlite_modern_cpp target not found")
-    add_library(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP INTERFACE IMPORTED)
-    set_target_properties(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP PROPERTIES IMPORTED_GLOBAL TRUE
+    add_library(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP UNKNOWN IMPORTED GLOBAL)
+    set_target_properties(SQLITE_MODERN_CPP::SQLITE_MODERN_CPP PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     )
 endif()
