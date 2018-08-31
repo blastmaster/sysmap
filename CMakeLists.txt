@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.10.1)
 
 set(PROJECT_NAME "sysmap")
 set(PROJECT_VERSION 0.0.1)
@@ -34,14 +34,6 @@ find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem io
 find_package(Hwloc REQUIRED)
 
 add_subdirectory(external)
-# include nitro lib
-# include(external/nitro/Nitro.cmake)
-
-# setting the doxygen input directories to:
-# sysmap/lib/include
-# sysmap/lib/src
-# sysmap/bin
-
 
 # Handling Options
 if(RUN_TESTS)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.10.1)
 
 set(LIBSYSMAP_VERSION_MAJOR 0)
 set(LIBSYSMAP_VERSION_MINOR 1)
