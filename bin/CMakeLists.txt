@@ -8,7 +8,6 @@ target_include_directories(sysmap
     PRIVATE
         ../lib/include
         ${Boost_INCLUDE_DIRS}
-        ${SQLITE3_INCLUDE_DIR}
         ${HWLOC_INCLUDE_DIRS}
         $<TARGET_PROPERTY:RapidJSON::RapidJSON,INTERFACE_INCLUDE_DIRECTORIES>
         $<TARGET_PROPERTY:SQLITE_MODERN_CPP::SQLITE_MODERN_CPP,INTERFACE_INCLUDE_DIRECTORIES>
@@ -23,7 +22,6 @@ if(BUILD_STATIC)
             -Wl,--whole-archive libsysmap -Wl,--no-whole-archive
             ${Boost_LIBRARIES}
             ${SQLITE3_LIBRARY}
-            ${PUGIXML_LIBRARY}
     )
 
 else()
@@ -32,7 +30,6 @@ else()
             libsysmap
             ${Boost_LIBRARIES}
             ${SQLITE3_LIBRARY}
-            ${PUGIXML_LIBRARY}
     )
 endif()
 
