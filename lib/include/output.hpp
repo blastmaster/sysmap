@@ -14,6 +14,7 @@ namespace sysmap {
         ASCII,
         JSON,
         YAML,
+        SQL,
     };
 
     struct outwrapper

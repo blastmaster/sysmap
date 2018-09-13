@@ -23,7 +23,7 @@ TEST_CASE("try extractor registry - instantiate through static method", "[Extrac
     REQUIRE(le != nullptr);
 }
 
-TEST_CASE("instantiate extractors by tag - and extrac", "[Extractor_Set]") {
+TEST_CASE("instantiate extractors by tag - and extract", "[Extractor_Set]") {
     Extractor_Set extr_set;
 
     extr_set.add_by_tag("filesystem");

@@ -29,8 +29,8 @@ namespace sysmap { namespace linux {
 
     std::string Kernel_Extractor::find_kernel_config(const data& result)
     {
-        std::string uname_r = std::string("config-") + result.system_info.release; 
-        std::vector<std::string> filenames {uname_r, "config.gz", (uname_r + ".gz")}; 
+        std::string uname_r = std::string("config-") + result.system_info.release;
+        std::vector<std::string> filenames {uname_r, "config.gz", (uname_r + ".gz")};
 
         std::string config_path;
 
@@ -58,21 +58,21 @@ namespace sysmap { namespace linux {
     {
         std::string config_path = find_kernel_config(result);
 
-        if(config_path.empty()) 
-        { 
+        if(config_path.empty())
+        {
             utils::log::logging::debug() << "[sysmap::linux::kernel_extractor] Kernel Config file not found";
-            return; 
+            return;
         }
 
         auto stream_iterator = [&](const std::string& line)
         {
             std::string str(line);
-        
+
             if(!boost::starts_with(str, "#") && !str.empty())
             {
                 auto position = str.find("=");
                 const std::string name = str.substr(0, position);
-                
+
                 if (position != std::string::npos)
                 {
                     Kernel_Config kernel_config;
@@ -81,7 +81,7 @@ namespace sysmap { namespace linux {
                     result.kernel_config.push_back(kernel_config);
                  }
             }
-            return true; 
+            return true;
         };
 
         if(boost::ends_with(config_path, ".gz"))
@@ -94,14 +94,14 @@ namespace sysmap { namespace linux {
             std::istream config_stream( &in );
             utils::file::for_each_line(config_stream, stream_iterator);
             return;
-           
-        } 
-        else 
+
+        }
+        else
         {
             std::ifstream config_stream( config_path );
             utils::file::for_each_line(config_stream, stream_iterator);
             return;
-        } 
+        }
     }
 
     void Kernel_Extractor::collect_kernel_modules(data& result)

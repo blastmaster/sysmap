@@ -36,9 +36,15 @@ find_package(Hwloc REQUIRED)
 add_subdirectory(external)
 
 # Handling Options
+
+# find sqlite3
+find_package(sqlite3 REQUIRED)
+
 if(RUN_TESTS)
     enable_testing()
     add_subdirectory(test)
+    execute_process( COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/share/fillDB.sh ./test/sql_data/ ${CMAKE_CURRENT_BINARY_DIR}/test/sysmap.db
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ )
 else()
     message("ATTENTION: RUN_TESTS Disabled, no Test will be build")
 endif()

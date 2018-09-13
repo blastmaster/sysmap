@@ -39,3 +39,24 @@ target_compile_options(sysmap
 )
 
 install(TARGETS sysmap DESTINATION bin)
+
+add_executable(sysquery
+    sysquery.cc
+)
+
+target_include_directories(sysquery
+    PRIVATE
+        ../lib/include
+        ${Boost_INCLUDE_DIRS}
+        ${SQLITE_MODERN_CPP_INCLUDE_DIR}
+)
+
+target_link_libraries(sysquery
+    PRIVATE
+        ${SQLITE3_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
+
+install(TARGETS sysquery DESTINATION bin)
+file(COPY ../share/fillDB.sh DESTINATION .)
+file(COPY ../share/run_sysmap.slurm DESTINATION .)

@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "pugixml.hpp"
 #include "yaml-cpp/yaml.h"
+#include <cassert>
 
 namespace sysmap {
 
@@ -60,20 +61,80 @@ namespace sysmap {
         }
     }
 
-
-    void Extractor_Set::save(const std::string& dbname)
+    std::string get_hostname()
     {
-        for (const auto& kv_extr : m_extractormap) {
-            auto extractor = kv_extr.second.get();
-            extractor->store(*this, dbname);
+        std::string host;
+        auto prog = utils::exec::which("hostname");
+        auto read_host = [&host](const std::string& s) {
+                            if (!s.empty()) {
+                                host = s;
+                                return true;
+                            }
+                            return false;
+                        };
+        if (!prog.empty()) {
+            auto res = utils::exec::for_each_line(prog, {}, read_host);
+            if (res) {
+                return host;
+            }
+        } // if we cannot use the hostname binary try to read Hostname from /proc
+        else {
+            auto res = utils::file::for_each_line("/proc/sys/kernel/hostname", read_host);
+            if (res) {
+                return host;
+            }
         }
+
+        return host;
     }
 
+
+    void Extractor_Set::toSQL(std::ostream& os){
+        const auto hostname = get_hostname();
+
+        //creates a select statement which returns column_return in a given table
+        //where column_name equals the given value
+        auto getID = [] (std::string table,
+                         std::string column_return,
+                         std::string column_name,
+                         std::string value) {
+            return "select " + column_return + " from " + table
+                 + " where " + column_name + " = '" + value + "'";
+        };
+
+        //insert into Hosttable, then get HostID from database
+        os << "insert or ignore into Hosttable (Hostname) values ('" << hostname << "');\n";
+        auto HostID = getID("Hosttable", "HostID", "Hostname", hostname);
+
+        for (const auto& kv_extr : m_infomap) {
+            //insert into Extractortable, then get EID from database
+            os << "insert or ignore into Extractortable (name) values ('"
+               << kv_extr.first.c_str() << "');\n";
+            std::string eid = "select EID from Extractortable where Name = '" + kv_extr.first + "'";
+
+            //init jsonstring and fill it with data
+            std::stringstream jsonstring;
+            OStreamWrapper osw(jsonstring);
+            Writer<OStreamWrapper> writer(osw);
+            kv_extr.second->to_json(writer);
+
+            //insert into Datatable, then get DID from database
+            os << "insert or ignore into Datatable (EID, Data) values ((" << eid << "), '"
+               << jsonstring.str() << "');\n";
+            auto DID = getID("Datatable", "DID", "Data", jsonstring.str());
+
+            //insert into Host2Data
+            os << "insert into Host2Data (HostID, DID) select (" << HostID << "), (" << DID
+                << ") where not exists (select 1 from Host2Data where HostID = ("
+                << HostID << ") AND DID = (" << DID << "));\n";
+        }
+    }
 
     void Extractor_Set::write(std::ostream& os, const Output_format format)
     {
         if (m_infomap.empty()) {
-            sysmap::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty, extract data before trying to write!\n";
+            sysmap::utils::log::logging::error() << "[Extractor_Set::write] Infomap is empty,"
+               << " extract data before trying to write!\n";
             return;
         }
 
@@ -118,11 +179,15 @@ namespace sysmap {
                 os << output.c_str();
                 break;
             }
+
+            case Output_format::SQL:
+            {
+                toSQL(os);
+            }
         }
     }
 
-
-    const Value* Extractor_Set::get_value(const std::string& name)
+   const Value* Extractor_Set::get_value(const std::string& name)
    {
         auto it = m_infomap.find(name);
         if (it == m_infomap.end()) {

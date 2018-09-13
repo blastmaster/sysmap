@@ -63,12 +63,83 @@ export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 ```
 
-## Arangodb
+## Usage
 
-ArangoDB is a multi-model NoSQL Database, supporting key-value, documents and graph storage.
-We use ArangoDB as our central Database for collected system information.
+###### Print help message:
+```
+    sysmap -h
+```
 
-For download and installation instructions for your distribution see the [arangodb webite](https://www.arangodb.com/download-major/).
+###### List available extractors:
+```
+    sysmap -l
+```
+
+###### Define which extractors will be used:
+```
+    sysmap -e extractor_name1 extractor_name2
+```
+
+###### Define which output format should be used:
+
+```
+    sysmap -e extractor_name -f xml
+```
+Possible Formats:  json (default), xml, yaml, sql
+
+###### Define an output file instead of writing to stdout:
+
+```
+    sysmap -e extractor_name -o filename
+```
+
+# sysquery - A tool for querying the sysmap database
+
+## Usage
+
+###### Print help message:
+```
+    sysquery -h
+```
+
+###### Query everything:
+```
+    sysquery -f path/to/db/file
+```
+This returns a JSON String containing all Hosts and their Datastrings of each extractor
+
+###### Query specific Host:
+```
+    sysquery -f path/to/db/file -n hostname
+```
+
+###### Query specific Extractor:
+```
+    sysquery -f path/to/db/file -e disks
+```
+
+###### Querying specific Hosts and Extractors:
+```
+    sysquery -f path/to/db/file -n hostname1 hostname2 hostname3 -e disks pcidevices
+```
+This returns the Datastrings of the given Extractors for the given Hosts
+
+###### Listing available Hosts:
+```
+    sysquery -f path/to/db/file -l
+```
+
+###### Listing available Extractors:
+```
+    sysquery -f path/to/db/file -L
+```
+
+###### Specifying Output file:
+```
+    sysquery -f path/to/db/file -o path/to/file
+```
+This will write the output to the given file instead of stdout
+
 
 ## License
 

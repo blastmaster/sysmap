@@ -13,6 +13,8 @@
 #include "value.hpp"
 #include "output.hpp"
 
+#include <sqlite_modern_cpp.h>
+
 #include <memory>
 #include <map>
 
@@ -89,12 +91,6 @@ struct Extractor_Set
     void extract();
 
     /**
-     * Save extracted infomap in given database.
-     * @param dbname The name of the database.
-     */
-    void save(const std::string& dbname);
-
-    /**
      * Write extracted infomap.
      * @param os The out-stream where to write to.
      * @param format The format in which should be written.
@@ -114,7 +110,16 @@ struct Extractor_Set
         return dynamic_cast<const T*>(get_value(name));
     }
 
+
     private:
+
+    /**
+     * Parses extracted infomap and generates SQL commands which can be used
+     * to insert the given data into a Database.
+     *
+     * @param os The out-stream where to write to.
+     */
+    void toSQL(std::ostream& os);
 
     const Value* get_value(const std::string& name);
 
