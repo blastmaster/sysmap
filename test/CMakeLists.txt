@@ -48,13 +48,13 @@ set(CMAKE_CXX_FLAGS ${TEST_CXX_FLAGS})
 
 include_directories(
     ../lib/include
-    ${RAPIDJSON_INCLUDE_DIR}
-    ${SQLITE_MODERN_CPP_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${CATCH_INCLUDE_DIR}
-    ${PUGIXML_INCLUDE_DIR}
-    ${YAML_INCLUDE_DIR}
-    ${NITRO_INCLUDE_DIR}
+    $<TARGET_PROPERTY:SQLITE_MODERN_CPP::SQLITE_MODERN_CPP,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:PugiXML::PugiXML,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Nitro::Nitro,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:RapidJSON::RapidJSON,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:YAML::YAML,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 add_executable(exec_stdin_test ${EXEC_TEST_STDIN_SOURCES})
@@ -66,7 +66,7 @@ add_executable(xml_test ${XML_TEST_SOURCES})
 add_executable(sysquery_test ${SYSQUERY_TEST_SOURCES})
 add_dependencies(exec_stdin_test catch-project)
 add_dependencies(exec_each_line_test catch-project)
-add_dependencies(db_test catch-project)
+#add_dependencies(db_test catch-project)
 add_dependencies(json_test catch-project)
 add_dependencies(register_test catch-project)
 add_dependencies(xml_test catch-project)
