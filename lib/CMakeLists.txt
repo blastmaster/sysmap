@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.10.1)
 
 set(LIBSYSMAP_VERSION_MAJOR 0)
 set(LIBSYSMAP_VERSION_MINOR 1)
@@ -32,22 +32,6 @@ set(LIBSYSMAP_SOURCES
     "src/output.cc"
 )
 
-include_directories(
-    include
-    ${RAPIDJSON_INCLUDE_DIR}
-    ${SQLITE3_INCLUDE_DIR}
-    ${SQLITE_MODERN_CPP_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-    ${HWLOC_INCLUDE_DIRS}
-    ${PUGIXML_INCLUDE_DIR}
-    ${YAML_INCLUDE_DIR}
-)
-
-link_directories(
-    ${Boost_LIBRARY_DIRS}
-    ${HWLOC_LIBRARIES}
-)
-
 # build static or shared library
 if(BUILD_STATIC)
     add_library(libsysmap STATIC ${LIBSYSMAP_SOURCES})
@@ -55,10 +39,38 @@ else()
     add_library(libsysmap SHARED ${LIBSYSMAP_SOURCES})
 endif()
 
-target_link_libraries(libsysmap PRIVATE
-    ${Boost_LIBRARIES}
-    ${HWLOC_LIBRARIES}
-    ${YAML_LIBRARIES}
+add_dependencies(libsysmap yaml-cpp-project)
+add_dependencies(libsysmap nitro-project)
+add_dependencies(libsysmap rapidjson-project)
+add_dependencies(libsysmap pugixml-project)
+
+target_include_directories(libsysmap
+    PUBLIC
+        include
+    PRIVATE
+        ${SQLITE3_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
+        ${HWLOC_INCLUDE_DIRS}
+        $<TARGET_PROPERTY:RapidJSON::RapidJSON,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:SQLITE_MODERN_CPP::SQLITE_MODERN_CPP,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:YAML::YAML,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:Nitro::Nitro,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:PugiXML::PugiXML,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
+target_link_libraries(libsysmap
+    PRIVATE
+        ${Boost_LIBRARIES}
+        ${HWLOC_LIBRARIES}
+        YAML::YAML
+
+)
+
+target_compile_options(libsysmap
+    PUBLIC
+        "-Wextra"
+        "-std=c++14"
+        "-D PUGIXML_HEADER_ONLY"
 )
 
 # install library in lib/

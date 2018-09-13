@@ -41,7 +41,7 @@ will be automatically cloned and installed via cmake during the build. All other
 cd sysmap
 virtualenv --python=python3 env # create new virtualenv with pip and python3 highly recommended for development
 . env/bin/activate # activate virtualenv
-pip install -U "sphinx==1.5.6" breathe # install necessary dependencies (building doc is failing with newer releases than 1.5.6)
+pip install -U sphinx breathe # install necessary dependencies
 mkdir build/ ; cd build
 cmake ..
 make -j

@@ -67,7 +67,7 @@ struct descriptor
      * Destructor
      * Closes file descriptor if necessary.
      */
-    ~descriptor() {  if (fd_ < 0) close(fd_); }
+    ~descriptor() {  if (fd_ >= 0) close(fd_); }
 
     /**
      * Close file descriptor.
