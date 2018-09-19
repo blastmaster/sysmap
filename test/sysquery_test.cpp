@@ -62,15 +62,15 @@ TEST_CASE("Test if returned JSON of queryToJSON(...) is right", "[Sysquery]"){
     auto eids = getEIDs(db, {"nonexistent"});
     std::stringstream str, str2;
     queryToJSON(str, db, hostMap, eids);
-    REQUIRE(str.str().length() == 2);
+    REQUIRE(str.str().length() == 3);
 
     hostMap = getHostIDs(db, {"taurusi6493"});
     eids = getEIDs(db, {"disks"});
     queryToJSON(str2, db, hostMap, eids);
-    REQUIRE(str2.str().length() == 123);
+    REQUIRE(str2.str().length() == 124);
 
     //hash of the string
-    const size_t hashed_str = 14598195260041437121;
+    const size_t hashed_str = 7096572220250064185;
     REQUIRE(std::hash<std::string>{}(str2.str()) == hashed_str);
 }
 
@@ -79,9 +79,9 @@ TEST_CASE("Test if returned JSON of many Hosts is right", "[Sysquery]"){
     auto eids = getEIDs(db, {"disks", "machineinfo", "memoryinfo"});
     std::stringstream str;
     queryToJSON(str, db, hostMap, eids);
-    REQUIRE(str.str().length() == 3441);
+    REQUIRE(str.str().length() == 3442);
 
     //hash of the string
-    const size_t hashed_str = 439064883875412482;
+    const size_t hashed_str = 8975623670210686788;
     REQUIRE(std::hash<std::string>{}(str.str()) == hashed_str);
 }
