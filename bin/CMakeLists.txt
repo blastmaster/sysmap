@@ -4,6 +4,8 @@ add_executable(sysmap
     "sysmap.cc"
 )
 
+add_dependencies(sysmap libsysmap)
+
 target_include_directories(sysmap
     PRIVATE
         ../lib/include
@@ -43,6 +45,12 @@ install(TARGETS sysmap DESTINATION bin)
 add_executable(sysquery
     sysquery.cc
 )
+
+add_dependencies(sysquery yaml-cpp-project)
+add_dependencies(sysquery nitro-project)
+add_dependencies(sysquery rapidjson-project)
+add_dependencies(sysquery pugixml-project)
+add_dependencies(sysquery sqlite_modern_cpp-project)
 
 target_include_directories(sysquery
     PRIVATE

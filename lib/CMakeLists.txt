@@ -43,6 +43,7 @@ add_dependencies(libsysmap yaml-cpp-project)
 add_dependencies(libsysmap nitro-project)
 add_dependencies(libsysmap rapidjson-project)
 add_dependencies(libsysmap pugixml-project)
+add_dependencies(libsysmap sqlite_modern_cpp-project)
 
 target_include_directories(libsysmap
     PUBLIC

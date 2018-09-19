@@ -127,7 +127,7 @@ ExternalProject_Add(sqlite_modern_cpp-project
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-set(SQLITE_MODERN_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp/hdr/)
+set(SQLITE_MODERN_CPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/sqlite_modern_cpp/src/sqlite_modern_cpp-project/hdr)
 message("sqlite_modern_cpp: ${SQLITE_MODERN_CPP_INCLUDE_DIR}")
 
 message("check for sqlite_modern_cpp target")
