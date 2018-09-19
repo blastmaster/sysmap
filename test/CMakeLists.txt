@@ -44,6 +44,10 @@ set(SYSQUERY_TEST_SOURCES
     "sysquery_test.cpp"
     )
 
+set(PARSING_TEST_SOURCES
+    "filesystem_test.cc"
+    )
+
 set(CMAKE_CXX_FLAGS ${TEST_CXX_FLAGS})
 
 include_directories(
@@ -64,12 +68,15 @@ add_executable(json_test ${JSON_TEST_SOURCES})
 add_executable(register_test ${REGISTRY_TEST_SOURCES})
 add_executable(xml_test ${XML_TEST_SOURCES})
 add_executable(sysquery_test ${SYSQUERY_TEST_SOURCES})
+add_executable(parsing_test ${PARSING_TEST_SOURCES})
 add_dependencies(exec_stdin_test catch-project)
 add_dependencies(exec_each_line_test catch-project)
 #add_dependencies(db_test catch-project)
 add_dependencies(json_test catch-project)
 add_dependencies(register_test catch-project)
 add_dependencies(xml_test catch-project)
+add_dependencies(sysquery_test catch-project)
+add_dependencies(parsing_test catch-project)
 
 add_test(NAME exec_stdin_test COMMAND exec_stdin_test)
 add_test(NAME exec_each_line_test COMMAND exec_each_line_test)
@@ -78,6 +85,7 @@ add_test(NAME json_test COMMAND json_test)
 add_test(NAME register_test COMMAND register_test)
 add_test(NAME xml_test COMMAND xml_test)
 add_test(NAME sysquery_test COMMAND sysquery_test)
+add_test(NAME parsing_test COMMAND parsing_test)
 
 target_link_libraries(exec_stdin_test libsysmap
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -127,3 +135,8 @@ target_link_libraries(sysquery_test
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${SQLITE3_LIBRARY}
 )
+
+target_link_libraries(parsing_test
+    libsysmap
+    )
+

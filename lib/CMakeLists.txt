@@ -24,6 +24,7 @@ set(LIBSYSMAP_SOURCES
     "src/hwloc/hwloc_memory_info_extractor.cc"
     "src/utils/file.cc"
     "src/utils/execution.cc"
+    "src/utils/parsing.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/scalar_value.cc"
@@ -43,6 +44,7 @@ add_dependencies(libsysmap yaml-cpp-project)
 add_dependencies(libsysmap nitro-project)
 add_dependencies(libsysmap rapidjson-project)
 add_dependencies(libsysmap pugixml-project)
+add_dependencies(libsysmap sqlite_modern_cpp-project)
 
 target_include_directories(libsysmap
     PUBLIC
