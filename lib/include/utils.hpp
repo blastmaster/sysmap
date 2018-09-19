@@ -4,5 +4,6 @@
 #include "utils/log.hpp"
 #include "utils/file.hpp"
 #include "utils/execution.hpp"
+#include "utils/parsing.hpp"
 
 #endif /* __SYSMAP_UTILS_HPP__ */

@@ -24,6 +24,7 @@ set(LIBSYSMAP_SOURCES
     "src/hwloc/hwloc_memory_info_extractor.cc"
     "src/utils/file.cc"
     "src/utils/execution.cc"
+    "src/utils/parsing.cc"
     "src/array_value.cc"
     "src/map_value.cc"
     "src/scalar_value.cc"
