@@ -6,6 +6,7 @@
 
 #include <map>
 #include <algorithm>
+#include <regex>
 
 extern "C" {
 #include <sys/types.h>
@@ -43,6 +44,17 @@ namespace sysmap { namespace linux {
         return result;
     }
 
+    bool Filesystem_Extractor::contains_remote_address(const std::string& ip){
+        // Should check if the given string contains a ipv4/6 addr or hostname
+
+        // Regex for matching IPv4
+        std::regex is_ipv4(R"((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})");
+
+        if(std::regex_search(ip, is_ipv4)) return true;
+
+        return false;
+    }
+
     void Filesystem_Extractor::collect_mountpoints(data& result)
     {
         FILE *file = setmntent("/proc/self/mounts", "r");
@@ -52,13 +64,18 @@ namespace sysmap { namespace linux {
         while (struct mntent *mnt_ptr = getmntent_r(file, &entry, buffer, sizeof(buffer))) {
             std::string device = mnt_ptr->mnt_fsname;
 
-            // skip anything that doesn't map to a device
-            // can we do this? what is with fuse?
-            if (! boost::starts_with(device, "/dev/")) {
-                continue;
+            Mountpoint mntpnt;
+            // Setting Mountpoint Category
+            if (boost::starts_with(device, "/dev/")) {
+                mntpnt.category = "LOCAL";
+            } else{
+                mntpnt.category = "MISC";
+                // Determine if mointpoint is REMOTE
+                if(contains_remote_address(device)){
+                    mntpnt.category = "REMOTE";
+                }
             }
 
-            Mountpoint mntpnt;
             mntpnt.device = std::move(device);
             mntpnt.mount = mnt_ptr->mnt_dir;
             mntpnt.filesystem = mnt_ptr->mnt_type;

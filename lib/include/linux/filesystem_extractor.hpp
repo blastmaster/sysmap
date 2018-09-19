@@ -17,6 +17,14 @@ namespace sysmap {  namespace linux {
 
         private:
             static Registrar registrar;
+
+            /**
+             * Checks if the given string contains an IPv4 Address
+             * @Param ip string of ip
+             * @Return Returns true if an IPv4 addr is found
+             */
+            bool contains_remote_address(const std::string& ip);
+
             void collect_mountpoints(data& result);
             void collect_partitions(data& result);
             void collect_partition_attributes(Partition& part, const std::map<std::string, std::string>& mntpnts,
