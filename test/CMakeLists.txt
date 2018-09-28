@@ -45,7 +45,7 @@ set(SYSQUERY_TEST_SOURCES
     )
 
 set(PARSING_TEST_SOURCES
-    "filesystem_test.cc"
+    "parsing_test.cc"
     )
 
 set(CMAKE_CXX_FLAGS ${TEST_CXX_FLAGS})
