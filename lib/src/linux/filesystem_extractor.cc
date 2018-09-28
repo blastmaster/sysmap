@@ -59,7 +59,7 @@ namespace sysmap { namespace linux {
                 mntpnt.category = "LOCAL";
             } else{
                 mntpnt.category = "MISC";
-                // Determine if mointpoint is REMOTE
+                // Determine if mountpoint is REMOTE
                 if(utils::parsing::contains_remote_address(device)){
                     mntpnt.category = "REMOTE";
                 }
