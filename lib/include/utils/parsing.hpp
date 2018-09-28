@@ -13,6 +13,10 @@ namespace sysmap { namespace utils {
         bool contains_remote_address(const std::string& ip);
 
         bool is_remote_address(const std::string& ip);
+
+        bool contains_hostname(const std::string& ip);
+
+        bool is_hostname(const std::string& ip);
     }
 
 }} /* closing namespace sysmap::utils */
