@@ -76,7 +76,7 @@ bool for_each_substring(const std::string& str, std::function<const bool(const s
 {
     for(auto start = str.begin(); start < str.end(); start++)
     {
-        for (auto end = str.end(); end > start; end--) {
+        for (auto end = start + 1; end <= str.end(); end++) {
             if(cb(std::string(start, end)))
             {
                 return true;
