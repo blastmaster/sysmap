@@ -15,10 +15,12 @@ set(LIBSYSMAP_SOURCES
     "src/extractors/pci_device_extractor.cc"
     "src/extractors/memory_info_extractor.cc"
     "src/extractors/machine_info_extractor.cc"
+    "src/extractors/lustre_extractor.cc"
     "src/linux/filesystem_extractor.cc"
     "src/linux/disk_extractor.cc"
     "src/linux/infiniband_extractor.cc"
     "src/linux/kernel_extractor.cc"
+    "src/linux/lustre_extractor.cc"
     "src/hwloc/hwloc_machine_info_extractor.cc"
     "src/hwloc/hwloc_pci_device_extractor.cc"
     "src/hwloc/hwloc_memory_info_extractor.cc"
@@ -61,6 +63,8 @@ target_include_directories(libsysmap
 
 target_link_libraries(libsysmap
     PRIVATE
+        #TODO: add LUSTREAPI_LIBRARY
+        /usr/lib64/liblustreapi.so
         ${Boost_LIBRARIES}
         ${HWLOC_LIBRARIES}
         YAML::YAML

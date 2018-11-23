@@ -19,26 +19,24 @@ namespace sysmap { namespace extractor {
 
         struct abstract_mount
         {
-            unsigned blocks;
-            unsigned used;
-            //available
-            unsigned avail;
-            unsigned usage_percent;
+            std::string blocks;
+            std::string used;
+            std::string avail;
+            std::string usage_percent;
             std::string path;
         };
 
+        //TODO: use more generic naming, representing mdt and ost
         struct mdt : abstract_mount {
             std::string uuid;
-        };
-
-        struct ost : abstract_mount {
-            std::string uuid;
+            std::string index;
         };
 
         struct mountpoint : abstract_mount {
+            std::string name;
             std::vector<mdt> mdts;
-            std::vector<ost> osts;
-        }
+            std::vector<mdt> osts;
+        };
 
         struct data
         {

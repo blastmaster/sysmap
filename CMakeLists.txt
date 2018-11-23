@@ -17,7 +17,7 @@ option(BUILD_DOC "Build the documentation" OFF)
 option(DEBUG_MODE "Provides faster compilation for debugging purpose" OFF)
 
 # set compiler flags
-set(SYSMAP_CXX_FLAGS "-Wextra -std=c++14 -D PUGIXML_HEADER_ONLY")
+set(SYSMAP_CXX_FLAGS "-fpermissive -Wextra -std=c++14 -D PUGIXML_HEADER_ONLY")
 # cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -35,7 +35,11 @@ add_subdirectory(external)
 # Handling Options
 
 # find sqlite3
-find_package(sqlite3 REQUIRED)
+# find_package(sqlite3 REQUIRED)
+# finding sqlite doesnt work on taurus (scs5)
+set(SQLITE3_INCLUDE_DIR "/sw/installed/SQLite/3.24.0-GCCcore-7.3.0/include")
+set(SQLITE3_LIBRARY "/sw/installed/SQLite/3.24.0-GCCcore-7.3.0/lib/libsqlite3.so")
+# /sw/installed/SQLite/3.24.0-GCCcore-7.3.0/include
 
 if(BUILD_TESTING)
     enable_testing()
