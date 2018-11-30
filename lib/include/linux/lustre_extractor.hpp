@@ -31,10 +31,21 @@ namespace sysmap { namespace linux {
                       mountpoint *mntpoint);
             int getname(std::string mntdir, mountpoint *mntpoint);
 
-            /* TODO: create_dummy_file */
-            //TODO: get striping foo to work
-            int getstripe();
-            int file_getstripe();
+            /**
+             * Create a Dummy File using System Default stripe_size, stripe_count, ect
+             *
+             * @param path path to the new file to create
+             * @return returns true if file was created without any error
+             */
+            bool const Lustre_Extractor::create_dummy_file(std::string const &path);
+
+            /**
+             * Gets stripe size of the given file.
+             *
+             * @param path path to the file
+             * @param result container that will be filled with data
+             */
+            bool file_getstripe(std::string const &path, data &result);
 
             void collect_mountpoint_data(data& result);
     };

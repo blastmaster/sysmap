@@ -17,6 +17,15 @@ namespace sysmap { namespace extractor {
 
         protected:
 
+        struct default_values {
+            std::string lmm_stripe_size;
+            std::string lmm_stripe_count;
+            std::string lmm_stripe_offset;
+            std::string lmm_pattern;
+            std::string lmm_magic;
+            std::string lmm_layout_gen;
+        };
+
         struct abstract_mount
         {
             std::string blocks;
@@ -41,6 +50,7 @@ namespace sysmap { namespace extractor {
         struct data
         {
             std::vector<mountpoint> mountpoints;
+            default_values defaults;
         };
 
         virtual data collect() = 0;

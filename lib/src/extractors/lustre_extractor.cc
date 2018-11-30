@@ -16,6 +16,15 @@ namespace sysmap { namespace extractor {
 
         //TODO: add collected data to extractor_set
 
+        auto defaults = make_value<Map_value>();
+        defaults->add("lmm_stripe_size", make_value<String_value>(std::move(data.defaults.lmm_stripe_size)));
+        defaults->add("lmm_stripe_count", make_value<String_value>(std::move(data.defaults.lmm_stripe_count)));
+        defaults->add("lmm_stripe_offset", make_value<String_value>(std::move(data.defaults.lmm_stripe_offset)));
+        defaults->add("lmm_pattern", make_value<String_value>(std::move(data.defaults.lmm_pattern)));
+        defaults->add("lmm_magic", make_value<String_value>(std::move(data.defaults.lmm_magic)));
+        defaults->add("lmm_layout_gen", make_value<String_value>(std::move(data.defaults.lmm_layout_gen)));
+        findings.add_info("default_values", std::move(defaults));
+
         if (!data.mountpoints.empty()) {
             auto mountpoints_ = make_value<Map_value>();
             for (const auto& mountpoint : data.mountpoints) {

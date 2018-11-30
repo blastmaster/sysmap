@@ -2,6 +2,7 @@
 #include "utils.hpp"
 
 #include <boost/format.hpp>
+#include <cerrno>
 
 enum lov_comp_md_flags {
         /* Replication states, use explained in replication HLD. */
@@ -100,8 +101,7 @@ namespace sysmap { namespace linux {
     		for (index = 0; ; index++) {
     			memset(&stat_buf, 0, sizeof(struct obd_statfs));
     			memset(&uuid_buf, 0, sizeof(struct obd_uuid));
-    			/* type = flags & MNTDF_LAZY ? */
-    			/* 	tp->st_op | LL_STATFS_NODELAY : tp->st_op; */
+
     			type = tp->st_op;
     			rc2 = llapi_obd_fstatfs(fd, type, index,
     					       &stat_buf, &uuid_buf);
@@ -109,9 +109,7 @@ namespace sysmap { namespace linux {
     				break;
     			if (rc2 == -EAGAIN)
     				continue;
-    			if (rc2 == -ENODATA) { /* Inactive device, OK. */
-    				/* if (!(flags & MNTDF_VERBOSE)) */
-    				if (!(false))
+    			if (rc2 == -ENODATA) {
     					continue;
     			} else if (rc2 < 0 && rc == 0) {
     				rc = rc2;
@@ -125,12 +123,6 @@ namespace sysmap { namespace linux {
     			if (uuid_buf.uuid[0] == '\0')
     				snprintf(uuid_buf.uuid, sizeof(uuid_buf.uuid),
     					 "%s%04x", tp->st_name, index);
-                        //TODO: UNCOMMENT
-    			/* if (!rc && lsb) { */
-    			/* 	lsb->sb_buf[lsb->sb_count].sd_index = index; */
-    			/* 	lsb->sb_buf[lsb->sb_count].sd_st = stat_buf; */
-    			/* 	lsb->sb_count++; */
-    			/* } */
 
 			int shift = 10;
 			long long avail = (stat_buf.os_bavail * stat_buf.os_bsize) >> shift;
@@ -222,54 +214,70 @@ namespace sysmap { namespace linux {
 
     int Lustre_Extractor::getname(std::string mntdir, mountpoint *mntpoint) {
         char buf[sizeof(obd_uuid)];
-        auto rc = llapi_getname(mntdir.c_str(), buf, sizeof(buf));
+        int rc = llapi_getname(mntdir.c_str(), buf, sizeof(buf));
+
+        if(rc != 0) {
+            utils::log::logging::error() << "[Lustre_Extractor] error occured: "
+                                         << std::strerror(errno);
+        }
         mntpoint->name = buf;
     }
 
-    //not working
-    int Lustre_Extractor::getstripe() {
-        struct find_param param = { 0 };
-        param.fp_max_depth = 1;
-        llapi_getstripe("/lustre/scratch2/s8946413/querytest/taurusi6433.sql", &param);
+    bool const Lustre_Extractor::create_dummy_file(std::string const &path)
+    {
+        //setting arguments as documented in the lustre manual
+        //to get system default values for file
+        int stripe_size = 0;
+        int stripe_offset = -1;
+        int stripe_count = 0;
+        int stripe_pattern = 0;
+        int rc = 0;
+
+        rc = llapi_file_create(path.c_str(), stripe_size,
+                                             stripe_offset,
+                                             stripe_count,
+                                             stripe_pattern);
+
+        //if error occured exept "file exist" error.
+        if(rc) {
+            if(errno != EEXIST) {
+                utils::log::logging::error() << "[Lustre_Extractor] Could not create dummy file. Reason: "
+                                             << std::strerror(errno);
+                return false;
+            }
+            utils::log::logging::error() << "[Lustre_Extractor] dummy file allready exists. "
+                                         << "Returned default values could be wrong. continue...";
+        }
+
+        return true;
     }
 
-    //not working
-    int Lustre_Extractor::file_getstripe() {
-        //TODO: read lustre_manual: llapi_file_get_stripe() example for allocating
-        // struct lov_user_ost_data_v1 contains info ;)
-        //  --> but it doestn contain information after function call.. whyy??????
-        /* int v1, v3, join; */
-        /* v1 = sizeof(struct lov_user_md_v1) + */
-        /* LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1); */
-        /* v3 = sizeof(struct lov_user_md_v3) + */
-        /* LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1); */
-        /* lov_user_md_v1 *lum = NULL; */
-        /* lum = malloc(std::max(v1, v3)); */
+    bool Lustre_Extractor::file_getstripe(std::string const &path, data &result) {
+        //TODO: why is lmm_objects empty?
+        //TODO: why is lmm_stripe_offset 0 instead of 115???
+        int v1, v3, join;
+        v1 = sizeof(struct lov_user_md_v1) +
+                LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1);
+        v3 = sizeof(struct lov_user_md_v3) +
+                LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1);
+        lov_user_md_v1 *lum = NULL;
+        lum = malloc(std::max(v1, v3));
 
-        /* /1* lov_user_md_v1 lum = new lov_user_md_v1(); *1/ */
-        /* if(llapi_file_get_stripe("/lustre/scratch2/s8946413/querytest/taurusi6433.sql", lum) != 0) { */
-        /*     std::cout << "file_get_stripe error" << std::endl; */
-        /* } */
+        if(llapi_file_get_stripe(path.c_str(), lum) != 0) {
+            utils::log::logging::error() << "[Lustre_Extractor] error while file_getstripe: "
+                                         << std::strerror(errno);
+            return false;
+        }
 
-        /* std::cout << "/lustre/scratch2/s8946413/querytest/taurusi6433.sql file_getstripe(): " << std::endl; */
-        /* std::cout << "lmm_magic " << lum->lmm_magic << std::endl; */
-        /* std::cout << "lmm_pattern " << lum->lmm_pattern << std::endl; */
-        /* /1* std::cout "lmm " << << lum.lmm_object_id << std::endl; *1/ */
-        /* /1* std::cout "lmm " << << lum.lmm_object_seq << std::endl; *1/ */
-        /* /1* std::cout << "lmm_pool_name " << lum->lmm_pool_name << std::endl; *1/ */
-        /* std::cout << "lmm_stripe_size " << lum->lmm_stripe_size << std::endl; */
-        /* std::cout << "lmm_strpe_count " << lum->lmm_stripe_count << std::endl; */
-        /* std::cout << "lmm_stripe_offset " << lum->lmm_stripe_offset << std::endl; */
+        result.defaults.lmm_stripe_size = std::to_string(lum->lmm_stripe_size);
+        result.defaults.lmm_stripe_count = std::to_string(lum->lmm_stripe_count);
+        result.defaults.lmm_stripe_offset = std::to_string(lum->lmm_stripe_offset);
+        result.defaults.lmm_pattern = std::to_string(lum->lmm_pattern);
+        result.defaults.lmm_magic = std::to_string(lum->lmm_magic);
+        result.defaults.lmm_layout_gen = std::to_string(lum->lmm_layout_gen);
 
-
-        /* std::cout << sizeof(lum->lmm_objects) << std::endl; */
-        /* size_t size_ = sizeof(lum->lmm_objects)/sizeof(lum->lmm_objects[0]); */
-        /* std::cout << size_ << std::endl; */
-        /* for(int i = 0; i < size_; i++) { */
-        /*     std::cout << lum->lmm_objects[i].l_ost_idx << std::endl; */
-        /* } */
-
-        /* free(lum); */
+        free(lum);
+        return true;
     }
 
     void Lustre_Extractor::collect_mountpoint_data(data& result)
@@ -281,18 +289,22 @@ namespace sysmap { namespace linux {
         char mntdir[PATH_MAX] = {'\0'};
 	int ops = LL_STATFS_LMV | LL_STATFS_LOV;
 
+        //TODO: automaticly generate a path? example by getting username
+        std::string dummy_path = "/lustre/scratch2/s8946413/querytest/lustre_dummy_test_file";
+        if(create_dummy_file(dummy_path)){
+            file_getstripe(dummy_path, result);
+        }
+
         //for every mountpoint do...
 	while (!llapi_search_mounts(path, index++, mntdir, fsname)) {
 		/* Check if we have a mount point */
 		if (mntdir[0] == '\0')
 			continue;
 
-                /* getstripe(); */
                 mountpoint mntpoint;
                 mntpoint.path = mntdir;
 		rc = mntdf(mntdir, fsname, ops, NULL, &mntpoint);
                 getname(std::string(mntdir), &mntpoint);
-                file_getstripe();
                 result.mountpoints.push_back(mntpoint);
 
 		if (rc || path[0] != '\0')
