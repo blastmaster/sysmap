@@ -6,7 +6,6 @@
 
 #include <map>
 #include <algorithm>
-#include <regex>
 
 extern "C" {
 #include <sys/types.h>
