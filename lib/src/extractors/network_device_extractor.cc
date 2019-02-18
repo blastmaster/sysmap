@@ -24,7 +24,6 @@ namespace sysmap { namespace extractor {
                 ip_addrs->add(make_value<String_value>(ip));
             }
 
-            //TODO: Getting IPs into Array_value or something like that
             value->add("Addresses", std::move(ip_addrs));
 
             devices->add(device.name, std::move(value));
