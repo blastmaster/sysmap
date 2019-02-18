@@ -16,14 +16,14 @@ namespace sysmap { namespace linux {
 
         private:
 
-        //TODO: get a better place
-        enum mntdf_flags {
-        	MNTDF_INODES	= 0x0001,
-        	MNTDF_COOKED	= 0x0002,
-        	MNTDF_LAZY	= 0x0004,
-        	MNTDF_VERBOSE	= 0x0008,
-        	MNTDF_SHOW	= 0x0010,
-        };
+            //TODO: get a better place
+            enum mntdf_flags {
+            	MNTDF_INODES	= 0x0001,
+            	MNTDF_COOKED	= 0x0002,
+            	MNTDF_LAZY	= 0x0004,
+            	MNTDF_VERBOSE	= 0x0008,
+            	MNTDF_SHOW	= 0x0010,
+            };
 
             static Registrar registrar;
             int mntdf(char *mntdir, char *fsname,
@@ -37,7 +37,7 @@ namespace sysmap { namespace linux {
              * @param path path to the new file to create
              * @return returns true if file was created without any error
              */
-            bool const Lustre_Extractor::create_dummy_file(std::string const &path);
+            bool create_dummy_file(const std::string &path) const;
 
             /**
              * Gets stripe size of the given file.
@@ -45,7 +45,7 @@ namespace sysmap { namespace linux {
              * @param path path to the file
              * @param result container that will be filled with data
              */
-            bool file_getstripe(std::string const &path, data &result);
+            bool file_getstripe(const std::string &path, data &result);
 
             void collect_mountpoint_data(data& result);
     };

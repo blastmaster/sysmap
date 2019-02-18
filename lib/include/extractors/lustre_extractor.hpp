@@ -17,43 +17,43 @@ namespace sysmap { namespace extractor {
 
         protected:
 
-        struct default_values {
-            std::string lmm_stripe_size;
-            std::string lmm_stripe_count;
-            std::string lmm_stripe_offset;
-            std::string lmm_pattern;
-            std::string lmm_magic;
-            std::string lmm_layout_gen;
-        };
+            struct default_values {
+                std::string lmm_stripe_size;
+                std::string lmm_stripe_count;
+                std::string lmm_stripe_offset;
+                std::string lmm_pattern;
+                std::string lmm_magic;
+                std::string lmm_layout_gen;
+            };
 
-        struct abstract_mount
-        {
-            std::string blocks;
-            std::string used;
-            std::string avail;
-            std::string usage_percent;
-            std::string path;
-        };
+            struct abstract_mount
+            {
+                std::string blocks;
+                std::string used;
+                std::string avail;
+                std::string usage_percent;
+                std::string path;
+            };
 
-        //TODO: use more generic naming, representing mdt and ost
-        struct mdt : abstract_mount {
-            std::string uuid;
-            std::string index;
-        };
+            //TODO: use more generic naming, representing mdt and ost
+            struct mdt : abstract_mount {
+                std::string uuid;
+                std::string index;
+            };
 
-        struct mountpoint : abstract_mount {
-            std::string name;
-            std::vector<mdt> mdts;
-            std::vector<mdt> osts;
-        };
+            struct mountpoint : abstract_mount {
+                std::string name;
+                std::vector<mdt> mdts;
+                std::vector<mdt> osts;
+            };
 
-        struct data
-        {
-            std::vector<mountpoint> mountpoints;
-            default_values defaults;
-        };
+            struct data
+            {
+                std::vector<mountpoint> mountpoints;
+                default_values defaults;
+            };
 
-        virtual data collect() = 0;
+            virtual data collect() = 0;
 
     };
 

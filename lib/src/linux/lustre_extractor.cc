@@ -4,6 +4,13 @@
 #include <boost/format.hpp>
 #include <cerrno>
 
+extern "C" {
+#include "lustre/lustreapi.h"
+#include <fcntl.h>    /* For O_RDONLY */
+#include <unistd.h>   /* For open() */
+#include <stdlib.h>
+};
+
 enum lov_comp_md_flags {
         /* Replication states, use explained in replication HLD. */
         LCM_FL_RS_READ_ONLY     = 0,
@@ -15,19 +22,13 @@ enum lov_comp_md_flags {
         LCM_FL_PRIMARY_SET      = 1 << 15,
 };
 
-extern "C" {
-#include "lustre/lustreapi.h"
-#include <fcntl.h>    /* For O_RDONLY */
-#include <unistd.h>   /* For open() */
-#include <stdlib.h>
-};
-
-#define UUF     "%-20s"
-#define CSF     "%11s"
 #define CDF     "%11llu"
-#define HDF     "%8.1f%c"
-#define RSF     "%4s"
 #define RDF     "%3d%%"
+
+#define MAX_OSTS 1024
+#define LOV_EA_SIZE(lum, num) (sizeof(*lum) + num * sizeof(*lum->lmm_objects))
+#define LOV_EA_MAX(lum) LOV_EA_SIZE(lum, MAX_OSTS)
+
 
 // Calculates ratio bettween used disk space and total disk space
 int obd_statfs_ratio(const obd_statfs *stat_buf)
@@ -223,7 +224,7 @@ namespace sysmap { namespace linux {
         mntpoint->name = buf;
     }
 
-    bool const Lustre_Extractor::create_dummy_file(std::string const &path)
+    bool Lustre_Extractor::create_dummy_file(const std::string &path) const
     {
         //setting arguments as documented in the lustre manual
         //to get system default values for file
@@ -252,7 +253,7 @@ namespace sysmap { namespace linux {
         return true;
     }
 
-    bool Lustre_Extractor::file_getstripe(std::string const &path, data &result) {
+    bool Lustre_Extractor::file_getstripe(const std::string &path, data &result) {
         //TODO: why is lmm_objects empty?
         //TODO: why is lmm_stripe_offset 0 instead of 115???
         int v1, v3, join;
@@ -260,8 +261,13 @@ namespace sysmap { namespace linux {
                 LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1);
         v3 = sizeof(struct lov_user_md_v3) +
                 LOV_MAX_STRIPE_COUNT * sizeof(struct lov_user_ost_data_v1);
-        lov_user_md_v1 *lum = NULL;
-        lum = malloc(std::max(v1, v3));
+        lov_user_md *lum = nullptr;
+        lum = malloc(LOV_EA_MAX(lum));
+
+        if(lum == nullptr){
+            utils::log::logging::error() << "[Lustre_Extractor] Could not allocate memory for lum";
+            return false;
+        }
 
         if(llapi_file_get_stripe(path.c_str(), lum) != 0) {
             utils::log::logging::error() << "[Lustre_Extractor] error while file_getstripe: "
@@ -269,12 +275,15 @@ namespace sysmap { namespace linux {
             return false;
         }
 
+        result.defaults.lmm_magic = std::to_string(lum->lmm_magic);
         result.defaults.lmm_stripe_size = std::to_string(lum->lmm_stripe_size);
         result.defaults.lmm_stripe_count = std::to_string(lum->lmm_stripe_count);
-        result.defaults.lmm_stripe_offset = std::to_string(lum->lmm_stripe_offset);
         result.defaults.lmm_pattern = std::to_string(lum->lmm_pattern);
-        result.defaults.lmm_magic = std::to_string(lum->lmm_magic);
         result.defaults.lmm_layout_gen = std::to_string(lum->lmm_layout_gen);
+
+        //TODO: somehow this offset value is allways 0.
+        //The "lfs getstripe" command gives a different value
+        result.defaults.lmm_stripe_offset = std::to_string(lum->lmm_stripe_offset);
 
         free(lum);
         return true;
@@ -290,6 +299,7 @@ namespace sysmap { namespace linux {
 	int ops = LL_STATFS_LMV | LL_STATFS_LOV;
 
         //TODO: automaticly generate a path? example by getting username
+        //or pass path as commandline argument?
         std::string dummy_path = "/lustre/scratch2/s8946413/querytest/lustre_dummy_test_file";
         if(create_dummy_file(dummy_path)){
             file_getstripe(dummy_path, result);
@@ -303,7 +313,7 @@ namespace sysmap { namespace linux {
 
                 mountpoint mntpoint;
                 mntpoint.path = mntdir;
-		rc = mntdf(mntdir, fsname, ops, NULL, &mntpoint);
+		rc = mntdf(mntdir, fsname, ops, nullptr, &mntpoint);
                 getname(std::string(mntdir), &mntpoint);
                 result.mountpoints.push_back(mntpoint);
 
