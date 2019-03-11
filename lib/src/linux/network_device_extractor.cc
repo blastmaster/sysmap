@@ -56,11 +56,12 @@ namespace sysmap { namespace linux {
 
     void Network_Device_Extractor::clean_up_ip_aliasing(std::string& device_name){
         //Check if the device_name contains a ':'
-        if(device_name.find(':') == std::string::npos){
+        const auto find_colon = device_name.find(':');
+        if(find_colon == std::string::npos){
             return;
         }
         //If ':' is found, erase everything from ':' to the end of the String
-        device_name.erase(device_name.find(':'));
+        device_name.erase(find_colon);
     }
 
     void Network_Device_Extractor::collect_device_information(data& result){
@@ -114,6 +115,8 @@ namespace sysmap { namespace linux {
                 network_devices.at(name).ip_addr.push_back(ip_addr);
             }
         }
+
+        freeifaddrs(ifaddr);
 
         for(const auto& device : network_devices) {
             result.network_devices.push_back(device.second);
