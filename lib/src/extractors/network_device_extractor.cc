@@ -16,7 +16,6 @@ namespace sysmap { namespace extractor {
 
         for(const auto& device : data.network_devices){
             auto value = make_value<Map_value>();
-            /* value->add("Name", make_value<String_value>(device.name)); */
             value->add("Type", make_value<String_value>(device.type));
 
             auto ip_addrs = make_value<Array_value>();
