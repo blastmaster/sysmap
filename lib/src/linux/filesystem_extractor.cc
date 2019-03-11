@@ -46,12 +46,6 @@ namespace sysmap { namespace linux {
 
     void Filesystem_Extractor::collect_mountpoints(data& result)
     {
-        //Returns true if the give string is an IPv4 or IPv6 Address
-        auto is_ip = [](const std::string& ip){
-            unsigned char buf[sizeof(struct in6_addr)];
-            return (inet_pton(AF_INET, ip.c_str(), buf) || inet_pton(AF_INET6, ip.c_str(), buf));
-        };
-
         FILE *file = setmntent("/proc/self/mounts", "r");
         struct mntent entry;
         char buffer[4096];
@@ -66,7 +60,7 @@ namespace sysmap { namespace linux {
             } else{
                 mntpnt.category = "MISC";
                 // Determine if mountpoint is REMOTE
-                if(utils::file::for_each_substring(device, is_ip)){
+                if(utils::file::for_each_substring(device, utils::network::is_ip)){
                     mntpnt.category = "REMOTE";
                 }
             }
