@@ -1,5 +1,5 @@
 #ifndef __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
-#define __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__ 
+#define __SYSMAP_EXTRACTOR_KERNEL_EXTRACTOR_HPP__
 
 #include "../extractor_set.hpp"
 #include "../extractor.hpp"
@@ -21,7 +21,7 @@ namespace fs = boost::filesystem;
      * @class Kernel_Extractor
      * Kernel_Extractor type abstract base class
      */
-    
+
     struct Kernel_Extractor : Extractor
     {
 
@@ -71,7 +71,7 @@ namespace fs = boost::filesystem;
 
             utsname system_info;
         };
-        
+
         /*
          * Calls methods to collect information about the Kernel
          * Pure virtual method will be implemented in derived classes

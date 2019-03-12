@@ -71,12 +71,12 @@ add_executable(sysquery_test ${SYSQUERY_TEST_SOURCES})
 add_executable(filesystem_test ${FILESYSTEM_TEST_SOURCES})
 add_dependencies(exec_stdin_test catch-project)
 add_dependencies(exec_each_line_test catch-project)
-#add_dependencies(db_test catch-project)
 add_dependencies(json_test catch-project)
 add_dependencies(register_test catch-project)
 add_dependencies(xml_test catch-project)
 add_dependencies(sysquery_test catch-project)
 add_dependencies(filesystem_test catch-project)
+
 
 add_test(NAME exec_stdin_test COMMAND exec_stdin_test)
 add_test(NAME exec_each_line_test COMMAND exec_each_line_test)
@@ -138,5 +138,5 @@ target_link_libraries(sysquery_test
 
 target_link_libraries(filesystem_test
     libsysmap
-    )
+)
 

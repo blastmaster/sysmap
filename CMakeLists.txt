@@ -10,9 +10,6 @@ include(CTest)
 # Build static or shared objects
 option(BUILD_STATIC "link static if this is off a shared lib will be build" ON)
 
-# TODO add option for running tests
-option(RUN_TESTS "run test suite" OFF)
-
 # Build documentation
 option(BUILD_DOC "Build the documentation" OFF)
 
@@ -40,13 +37,11 @@ add_subdirectory(external)
 # find sqlite3
 find_package(sqlite3 REQUIRED)
 
-if(RUN_TESTS)
+if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(test)
     execute_process( COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/share/fillDB.sh ./test/sql_data/ ${CMAKE_CURRENT_BINARY_DIR}/test/sysmap.db
                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ )
-else()
-    message("ATTENTION: RUN_TESTS Disabled, no Test will be build")
 endif()
 
 if(DEBUG_MODE)
