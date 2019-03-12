@@ -1,5 +1,5 @@
 #ifndef __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__
-#define __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__ 
+#define __SYSMAP_LINUX_KERNEL_EXTRACTOR_HPP__
 
 #include "../extractors/kernel_extractor.hpp"
 
@@ -11,7 +11,7 @@ namespace sysmap { namespace linux {
     {
 
         static std::unique_ptr<Extractor> create() { return std::make_unique<Kernel_Extractor>(); }
-        
+
         /*
          *Constructor
          */
