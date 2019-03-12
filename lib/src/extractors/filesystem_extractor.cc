@@ -29,6 +29,7 @@ namespace sysmap { namespace extractor {
                 value->add("available", make_value<Uint_value>(mountpoint.available));
                 value->add("blksize", make_value<Uint_value>(mountpoint.blksize));
                 value->add("options", make_value<String_value>(std::move(mountpoint.options)));
+                value->add("category", make_value<String_value>(std::move(mountpoint.category)));
 
                 mounts->add(std::move(value));
             }

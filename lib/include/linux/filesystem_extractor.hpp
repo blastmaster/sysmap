@@ -17,6 +17,7 @@ namespace sysmap {  namespace linux {
 
         private:
             static Registrar registrar;
+
             void collect_mountpoints(data& result);
             void collect_partitions(data& result);
             void collect_partition_attributes(Partition& part, const std::map<std::string, std::string>& mntpnts,

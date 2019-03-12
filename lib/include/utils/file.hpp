@@ -24,6 +24,16 @@ bool for_each_line(std::istream& in, std::function<bool(const std::string&)> cb)
 void for_each_subdirectory(const std::string& path, std::function<bool(const std::string&)> cb);
 
 void for_each_file(const std::string& path, std::function<bool(const std::string& path, const std::string&)> cb);
+
+/**
+ * Utility function that Iterates over every possible substring of the given string str
+ * and calls cb with each substr.
+ * @param str String
+ * @param cb Callback that get called with substring as argument
+ * @return Returns true when cb returns true.
+ */
+bool for_each_substring(const std::string& str, std::function<const bool(const std::string&)> cb);
+
 /**
  * Utility read function.
  * @param path The file that should be read.

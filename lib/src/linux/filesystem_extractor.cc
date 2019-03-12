@@ -13,6 +13,7 @@ extern "C" {
 #include <unistd.h>
 #include <sys/vfs.h>
 #include <mntent.h>
+#include <arpa/inet.h>
 }
 
 namespace fs = boost::filesystem;
@@ -51,14 +52,19 @@ namespace sysmap { namespace linux {
 
         while (struct mntent *mnt_ptr = getmntent_r(file, &entry, buffer, sizeof(buffer))) {
             std::string device = mnt_ptr->mnt_fsname;
+            Mountpoint mntpnt;
 
-            // skip anything that doesn't map to a device
-            // can we do this? what is with fuse?
-            if (! boost::starts_with(device, "/dev/")) {
-                continue;
+            // Setting Mountpoint Category
+            if (boost::starts_with(device, "/dev/")) {
+                mntpnt.category = "LOCAL";
+            } else{
+                mntpnt.category = "MISC";
+                // Determine if mountpoint is REMOTE
+                if(utils::file::for_each_substring(device, utils::network::is_ip)){
+                    mntpnt.category = "REMOTE";
+                }
             }
 
-            Mountpoint mntpnt;
             mntpnt.device = std::move(device);
             mntpnt.mount = mnt_ptr->mnt_dir;
             mntpnt.filesystem = mnt_ptr->mnt_type;

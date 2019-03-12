@@ -72,6 +72,20 @@ void for_each_file(const std::string& path, std::function<bool(const std::string
     }
 }
 
+bool for_each_substring(const std::string& str, std::function<const bool(const std::string&)> cb)
+{
+    for(auto start = str.begin(); start < str.end(); start++)
+    {
+        for (auto end = start + 1; end <= str.end(); end++) {
+            if(cb(std::string(start, end)))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 std::string read(const std::string& path)
 {
     std::string contents;
