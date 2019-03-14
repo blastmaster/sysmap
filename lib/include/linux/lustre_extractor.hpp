@@ -32,6 +32,16 @@ namespace sysmap { namespace linux {
             int getname(std::string mntdir, mountpoint *mntpoint);
 
             /**
+             * Trys to create a file at the given mount_path + '/' + username.
+             * If successful the striping information will be gathered and then
+             * the file will be deleted again
+             * @param mount_path Path to a Lustre Mountpoint
+             * @param result container that will be filled with data
+             * @return true on success
+             */
+            bool handle_getstripe(const std::string& mount_path, data& result);
+
+            /**
              * Create a Dummy File using System Default stripe_size, stripe_count, ect
              *
              * @param path path to the new file to create

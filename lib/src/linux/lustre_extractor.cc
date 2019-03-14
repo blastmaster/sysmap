@@ -1,15 +1,11 @@
 #include "linux/lustre_extractor.hpp"
 #include "utils.hpp"
 
+#include <cstdio>
+#include <experimental/filesystem>
 #include <boost/format.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <cerrno>
-
-extern "C" {
-#include "lustre/lustreapi.h"
-#include <fcntl.h>    /* For O_RDONLY */
-#include <unistd.h>   /* For open() */
-#include <stdlib.h>
-};
 
 enum lov_comp_md_flags {
         /* Replication states, use explained in replication HLD. */
@@ -20,6 +16,13 @@ enum lov_comp_md_flags {
         LCM_FL_RS_MASK          = 0xff,
 
         LCM_FL_PRIMARY_SET      = 1 << 15,
+};
+
+extern "C" {
+#include "lustre/lustreapi.h"
+#include <fcntl.h>    /* For O_RDONLY */
+#include <unistd.h>   /* For open() */
+#include <stdlib.h>
 };
 
 #define CDF     "%11llu"
@@ -265,13 +268,16 @@ namespace sysmap { namespace linux {
         lum = malloc(LOV_EA_MAX(lum));
 
         if(lum == nullptr){
-            utils::log::logging::error() << "[Lustre_Extractor] Could not allocate memory for lum";
+            utils::log::logging::error() << "[Lustre_Extractor] error while file_gestripe: "
+                                         << "Could not allocate memory for lum";
+            free(lum);
             return false;
         }
 
         if(llapi_file_get_stripe(path.c_str(), lum) != 0) {
             utils::log::logging::error() << "[Lustre_Extractor] error while file_getstripe: "
                                          << std::strerror(errno);
+            free(lum);
             return false;
         }
 
@@ -289,6 +295,32 @@ namespace sysmap { namespace linux {
         return true;
     }
 
+    bool Lustre_Extractor::handle_getstripe(const std::string& mount_path, data& result)
+    {
+        //get username of current user
+        const std::string username = getlogin();
+        //create path from mountpoint of lustre filesystem and username
+        const std::string userpath = mount_path + '/' + username;
+
+        //check if path exists
+        if(boost::filesystem::exists(userpath)){
+            //create path to yet non existing dummy file using userpath
+            std::string dummy_file = userpath + "/lustre_dummy_test_file";
+            //try to create dummy file
+            if(create_dummy_file(dummy_file)){
+                //gather striping information of the dummy file
+                file_getstripe(dummy_file, result);
+                //try to remove dummy file
+                if( std::remove(dummy_file.c_str()) ){
+                    utils::log::logging::error()
+                        << "[Lustre_Extractor] could not delete dummy file:";
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     void Lustre_Extractor::collect_mountpoint_data(data& result)
     {
         char fsname[PATH_MAX] = "";
@@ -300,11 +332,8 @@ namespace sysmap { namespace linux {
 
         //TODO: automaticly generate a path? example by getting username
         //or pass path as commandline argument?
-        std::string dummy_path = "/lustre/scratch2/s8946413/querytest/lustre_dummy_test_file";
-        if(create_dummy_file(dummy_path)){
-            file_getstripe(dummy_path, result);
-        }
 
+        bool flag = true;
         //for every mountpoint do...
 	while (!llapi_search_mounts(path, index++, mntdir, fsname)) {
 		/* Check if we have a mount point */
@@ -314,11 +343,17 @@ namespace sysmap { namespace linux {
                 mountpoint mntpoint;
                 mntpoint.path = mntdir;
 		rc = mntdf(mntdir, fsname, ops, nullptr, &mntpoint);
+
+                if(flag){
+                    flag = !handle_getstripe(mntpoint.path, result);
+                }
+
                 getname(std::string(mntdir), &mntpoint);
                 result.mountpoints.push_back(mntpoint);
 
 		if (rc || path[0] != '\0')
 			break;
+
 		fsname[0] = '\0'; /* avoid matching in next loop */
 		mntdir[0] = '\0'; /* avoid matching in next loop */
 	}
