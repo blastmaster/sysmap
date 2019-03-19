@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'python-arango',
         'click',
+        'graphviz',
     ],
     entry_points='''
         [console_scripts]
