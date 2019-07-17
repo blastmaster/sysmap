@@ -16,16 +16,17 @@ set(LIBSYSMAP_SOURCES
     "src/extractors/memory_info_extractor.cc"
     "src/extractors/machine_info_extractor.cc"
     "src/extractors/network_device_extractor.cc"
+    "src/extractors/cpuinfo_extractor.cc"
     "src/extractors/swap_extractor.cc"
     "src/linux/filesystem_extractor.cc"
     "src/linux/disk_extractor.cc"
     "src/linux/infiniband_extractor.cc"
     "src/linux/kernel_extractor.cc"
     "src/linux/network_device_extractor.cc"
+    "src/linux/swap_extractor.cc"
     "src/hwloc/hwloc_machine_info_extractor.cc"
     "src/hwloc/hwloc_pci_device_extractor.cc"
     "src/hwloc/hwloc_memory_info_extractor.cc"
-    "src/linux/swap_extractor.cc"
     "src/utils/file.cc"
     "src/utils/execution.cc"
     "src/utils/network.cc"
@@ -36,6 +37,11 @@ set(LIBSYSMAP_SOURCES
     "src/extractor_set.cc"
     "src/output.cc"
 )
+
+# add lscpu extractor if its available
+if(LSCPU_CMD)
+    list(APPEND LIBSYSMAP_SOURCES "src/linux/lscpu_extractor.cc")
+endif()
 
 # build static or shared library
 if(BUILD_STATIC)

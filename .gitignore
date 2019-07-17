@@ -27,3 +27,9 @@ Thumbs.db
 #####################
 build/
 venv/
+.ccls-cache
+BUILD
+external
+.clangd
+.vscode
+compile_commands.json

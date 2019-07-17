@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "utils.hpp"
-#include <arpa/inet.h>
 
 TEST_CASE("Test if IPv4/IPv6 Addresses are recognized"){
     REQUIRE(sysmap::utils::file::for_each_substring("10.0.0.1", sysmap::utils::network::is_ip) == true);
