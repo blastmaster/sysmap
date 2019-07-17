@@ -24,6 +24,7 @@ set(LIBSYSMAP_SOURCES
     "src/linux/kernel_extractor.cc"
     "src/linux/network_device_extractor.cc"
     "src/linux/swap_extractor.cc"
+    "src/linux/cpuinfo_extractor.cc"
     "src/hwloc/hwloc_machine_info_extractor.cc"
     "src/hwloc/hwloc_pci_device_extractor.cc"
     "src/hwloc/hwloc_memory_info_extractor.cc"

@@ -12,7 +12,6 @@ namespace sysmap
 namespace extractor
 {
 
-// namespace fs = boost::filesystem;
 
 struct Cpuinfo_Extractor : Extractor
 {
@@ -42,7 +41,7 @@ protected:
     virtual data collect() = 0;
 
 private:
-    void add_cache(Extractor_Set& findings, const std::pair<uint64_t, std::string>& cache, const std::string & cache_level);
+    void add_cache(Extractor_Set& findings, const std::pair<uint64_t, std::string>& cache, const std::string& cache_level);
 };
 
 } // namespace extractor
