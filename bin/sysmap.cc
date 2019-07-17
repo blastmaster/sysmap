@@ -60,19 +60,6 @@ void filename_prefix_host(std::string& name)
     }
 }
 
-/**
- * Appends a file extension if no '.' is found in the given filename
- *
- * @param filename name or path of the file as string
- * @param file_extension file_extension to append
- */
-void check_for_file_extension(std::string& filename, const std::string& file_extension){
-    auto hasExtension = filename.rfind('.');
-
-    if(hasExtension == std::string::npos){
-        filename += file_extension;
-    }
-}
 
 /**
  * Options:
@@ -150,7 +137,10 @@ int main(int argc, char** argv)
         if (vm.count("output")) {
             auto output_arg = vm["output"].as<std::string>();
             filename_prefix_host(output_arg);
-            check_for_file_extension(output_arg, file_extension);
+            if (! boost::ends_with(output_arg, file_extension))
+            {
+                output_arg += file_extension;
+            }
             out.set_file(output_arg);
             utils::log::logging::debug() << "[sysmap] Setting output to: [" << output_arg << "]\n";
         }
