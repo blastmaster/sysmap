@@ -19,7 +19,8 @@ using namespace sysmap;
 //mapping HostIDs to all DataIDs (DIDs) connected to that Host
 using hostMap_t = std::map<int, std::vector<int>>;
 
-static void log(std::string data){
+static void log(std::string data)
+{
     std::ofstream logfile("sysquery_log.txt", std::ios_base::app);
     logfile << data << std::endl;
     logfile.close();
@@ -34,7 +35,8 @@ static void log(std::string data){
  * @return Returns hostMap_t
  */
 static hostMap_t getHostIDs(sqlite::database& db,
-                            const std::vector<std::string>& names = {}){
+                            const std::vector<std::string>& names = {})
+{
     hostMap_t results;
 
     //returns std::vector<int> of DIDs for the given HostID
@@ -53,17 +55,20 @@ static hostMap_t getHostIDs(sqlite::database& db,
         results[HostID] = getDIDofHost(HostID);
     };
 
-    if(names.size() == 0){
+    if (names.size() == 0)
+    {
         db << "select HostID from Hosttable;"
              >> fillHostID;
         return results;
     }
 
-    for(const auto name : names){
+    for (const auto& name : names)
+    {
         db << "select HostID from Hosttable where Hostname = ? ;"
            << name
            >> fillHostID;
     }
+
     return results;
 }
 
@@ -76,41 +81,46 @@ static hostMap_t getHostIDs(sqlite::database& db,
  * @return Returns std::vector<int> with the EIDs
  */
 static std::vector<int> getEIDs(sqlite::database& db,
-                                const std::vector<std::string>& names = {}){
+                                const std::vector<std::string>& names = {})
+{
     std::vector<int> results;
 
     auto fillEID = [&results](int EID){
         results.push_back(EID);
     };
 
-    if(names.size() == 0){
+    if (names.size() == 0)
+    {
         db << "select EID from Extractortable;"
              >> fillEID;
         return results;
     }
 
-    for(const auto name : names){
+    for (const auto& name : names)
+    {
         db << "select EID from Extractortable where Name = ? ;"
            << name
            >> fillEID;
     }
+
     return results;
 }
 
 /**
- * Writes a JSON String to an ostream containing Data queried from the Database.
+ * Writes a JSON string to an ostream containing data queried from the database.
  * What actually is queried depends on the given hosts and extractors,
  * those should be gathered using getHostIDs(..) and getEIDs(..)
  *
- * @param jsonstring Ostream to which the JSON String is written to
- * @param db Database Object
+ * @param jsonstring ostream to which the JSON string is written to
+ * @param db database object
  * @param hosts hostMap_t which should be gathered using getHostIDs(..)
  * @param extractors vector of ints which sould be gathered using getEIDs(..)
  */
 static void queryToJSON(std::ostream& jsonstring,
                         sqlite::database& db,
                         const hostMap_t& hosts,
-                        const std::vector<int>& extractors){
+                        const std::vector<int>& extractors)
+{
     rapidjson::OStreamWrapper osw(jsonstring);
     rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
 
@@ -152,13 +162,17 @@ static void queryToJSON(std::ostream& jsonstring,
     };
 
     writer.StartObject();
-    for(const auto& host : hosts){
+    for (const auto& host : hosts)
+    {
         writer.Key(getHostName(host.first).c_str());
         writer.StartObject();
-        for(const auto& eid : extractors){
-            for(const auto& did : host.second){
+        for (const auto& eid : extractors)
+        {
+            for (const auto& did : host.second)
+            {
                 const auto data = getData(eid, did);
-                if(data.size() != 0){
+                if (data.size() != 0)
+                {
                     writer.Key(getExtractorName(eid).c_str());
                     //writer.RawValue(...) takes Raw JSON String and does not modify it like writer.String()
                     writer.RawValue(data.c_str(), data.size(), rapidjson::kStringType);
@@ -178,7 +192,8 @@ static void queryToJSON(std::ostream& jsonstring,
  * @param dbfile Path to the Database file
  */
 static void listHosts(std::ostream& os,
-                      const std::string& dbfile){
+                      const std::string& dbfile)
+{
     sqlite::database db(dbfile);
     db << "select Hostname from Hosttable;"
        >> [&os](std::string Hostname){
@@ -193,11 +208,11 @@ static void listHosts(std::ostream& os,
  * @param dbfile Path to the Database file
  */
 static void listExtractors(std::ostream& os,
-                           const std::string& dbfile){
+                           const std::string& dbfile)
+{
     sqlite::database db(dbfile);
     db << "select Name from Extractortable;"
        >> [&os](std::string Extractorname){
            os << Extractorname << std::endl;
        };
 }
-
