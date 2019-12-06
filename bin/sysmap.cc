@@ -60,7 +60,6 @@ void filename_prefix_host(std::string& name)
     }
 }
 
-
 /**
  * Options:
  * help, version {on/off}
@@ -99,7 +98,7 @@ int main(int argc, char** argv)
 
         if (vm.count("help")) {
             std::cout << description;
-            return 0;
+            return EXIT_SUCCESS;
         }
 
         if (vm.count("format")) {
@@ -171,11 +170,11 @@ int main(int argc, char** argv)
     }
     catch (const po::error& ex) {
         utils::log::logging::error() << "[sysmap] Error, recieved Exception: " << ex.what() << "\n";
-        return -1;
+        return EXIT_FAILURE;
     }
 
     extr_set.extract();
     extr_set.write(out, fmt);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

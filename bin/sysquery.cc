@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 
         if (vm.count("help")) {
             std::cout << description;
-            return 0;
+            return EXIT_SUCCESS;
         }
 
         if (vm.count("filename")) {
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
             if(!file.good()){
                 utils::log::logging::debug() <<
                     "[sysquery] given database file doesnt exist or is corrupted. exiting...";
-                return -1;
+                return EXIT_FAILURE;
             }
             file.close();
 
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
                 "[sysquery] set actual database dbfile to: [" << dbfile << "]";
         } else {
             utils::log::logging::debug() << "No Database file was specified. Aborting...";
-            return 0;
+            return EXIT_SUCCESS;
         }
 
         if (vm.count("logfile")) {
@@ -97,17 +97,18 @@ int main(int argc, char** argv)
 
         if (vm.count("listHosts")){
             listHosts(out, dbfile);
-            return 0;
+            return EXIT_SUCCESS;
         }
+
         if (vm.count("listExtractors")){
             listExtractors(out, dbfile);
-            return 0;
+            return EXIT_SUCCESS;
         }
 
     }
     catch (const po::error& ex) {
         utils::log::logging::error() << "[sysquery] Error, recieved Exception: " << ex.what() << "\n";
-        return -1;
+        return EXIT_FAILURE;
     }
 
     //collect HostIDs and their DIDs
@@ -121,5 +122,5 @@ int main(int argc, char** argv)
     //query DB and write to cout or file
     queryToJSON(out, db, host_map, extr_vec);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
