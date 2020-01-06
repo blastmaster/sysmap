@@ -26,6 +26,7 @@ namespace sysmap { namespace extractor {
 
         struct data
         {
+            bool swap_is_active = false;
             SwapInfo info;
         };
 

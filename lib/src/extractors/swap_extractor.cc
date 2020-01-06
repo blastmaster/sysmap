@@ -12,10 +12,17 @@ namespace sysmap { namespace extractor {
     {
         auto data = collect();
         auto swap = make_value<Map_value>();
-        swap->add("filename", make_value<String_value>(std::move(data.info.filename)));
-        swap->add("type", make_value<String_value>(std::move(data.info.type)));
-        swap->add("size", make_value<Uint_value>(data.info.size));
-        swap->add("used", make_value<Uint_value>(data.info.used));
+        if (data.swap_is_active)
+        {
+            swap->add("filename", make_value<String_value>(std::move(data.info.filename)));
+            swap->add("type", make_value<String_value>(std::move(data.info.type)));
+            swap->add("size", make_value<Uint_value>(data.info.size));
+            swap->add("used", make_value<Uint_value>(data.info.used));
+        }
+        else
+        {
+            swap->add("active", make_value<String_value>("false"));
+        }
         findings.add_info("swap", std::move(swap));
     }
 

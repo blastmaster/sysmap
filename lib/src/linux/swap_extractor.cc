@@ -23,10 +23,18 @@ namespace sysmap { namespace linux {
             }
             std::vector<std::string> words;
             boost::split(words, line, boost::is_any_of("\t "), boost::token_compress_on);
-            result.info.filename = words.at(0);
-            result.info.type = words.at(1);
-            result.info.size = std::stoull(words.at(2));
-            result.info.used = std::stoull(words.at(3));
+            if (words.empty())
+            {
+                result.swap_is_active = false;
+            }
+            else
+            {
+                result.swap_is_active = true;
+                result.info.filename = words.at(0);
+                result.info.type = words.at(1);
+                result.info.size = std::stoull(words.at(2));
+                result.info.used = std::stoull(words.at(3));
+            }
 
             return true;
         });
