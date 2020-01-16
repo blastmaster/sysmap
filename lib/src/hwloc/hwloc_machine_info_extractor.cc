@@ -48,7 +48,7 @@ namespace sysmap { namespace hwloc {
     Hwloc_Machine_Info_Extractor::Hwloc_Machine_Info_Extractor()
     {
         hwloc_topology_init(&topology);
-        hwloc_topology_set_flags(topology, HWLOC_TOPOLOGY_FLAG_WHOLE_IO);
+        hwloc_topology_set_flags(topology, HWLOC_TYPE_FILTER_KEEP_ALL);
         hwloc_topology_load(topology);
     }
 
