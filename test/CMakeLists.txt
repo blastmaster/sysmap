@@ -61,6 +61,17 @@ include_directories(
     $<TARGET_PROPERTY:YAML::YAML,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
+if(LSCPU_CMD)
+    add_executable(test_lscpu_extractor "test_lscpu_extractor.cc")
+    add_test(NAME test_lscpu_extractor COMMAND test_lscpu_extractor)
+    add_dependencies(test_lscpu_extractor catch-project)
+    target_link_libraries(test_lscpu_extractor libsysmap
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${SQLITE3_LIBRARY})
+endif()
+
 add_executable(exec_stdin_test ${EXEC_TEST_STDIN_SOURCES})
 add_executable(exec_each_line_test ${EXEC_EACH_LINE_TEST_SOURCES})
 # add_executable(db_test ${DB_TEST_SOURCES})
@@ -76,7 +87,6 @@ add_dependencies(register_test catch-project)
 add_dependencies(xml_test catch-project)
 add_dependencies(sysquery_test catch-project)
 add_dependencies(filesystem_test catch-project)
-
 
 add_test(NAME exec_stdin_test COMMAND exec_stdin_test)
 add_test(NAME exec_each_line_test COMMAND exec_each_line_test)
@@ -139,4 +149,3 @@ target_link_libraries(sysquery_test
 target_link_libraries(filesystem_test
     libsysmap
 )
-

@@ -1,8 +1,10 @@
 #include "extractor_set.hpp"
+#include "output.hpp"
 #include "utils.hpp"
 #include "pugixml.hpp"
 #include "yaml-cpp/yaml.h"
 #include <cassert>
+#include <stdexcept>
 
 namespace sysmap {
 
@@ -183,6 +185,11 @@ namespace sysmap {
             case Output_format::SQL:
             {
                 toSQL(os);
+            }
+
+            case Output_format::ASCII:
+            {
+                throw std::runtime_error("ASCII output format not implemented");
             }
         }
     }

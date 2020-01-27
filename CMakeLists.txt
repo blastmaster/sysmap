@@ -29,6 +29,8 @@ message("TOP LEVEL CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Boost 1.58 REQUIRED COMPONENTS program_options system filesystem iostreams)
 # find hwloc
 find_package(Hwloc REQUIRED)
+# find lscpu
+find_package(Lscpu)
 
 add_subdirectory(external)
 
