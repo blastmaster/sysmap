@@ -25,18 +25,18 @@ namespace sysmap { namespace hwloc {
             return;
         }
 
-        result.memory_info.total_memory = root_obj->memory.total_memory;
-        result.memory_info.local_memory = root_obj->memory.local_memory;
+        result.memory_info.total_memory = root_obj->total_memory;
+        result.memory_info.local_memory = root_obj->attr->numanode.local_memory;
 
-        for (int i = 0; i < root_obj->memory.page_types_len; ++i) {
-            result.memory_info.page_types.emplace_back(root_obj->memory.page_types[i].size,
-                        root_obj->memory.page_types[i].count);
+        for (int i = 0; i < root_obj->attr->numanode.page_types_len; ++i) {
+            result.memory_info.page_types.emplace_back(root_obj->attr->numanode.page_types[i].size,
+                        root_obj->attr->numanode.page_types[i].count);
         }
     }
     
     Hwloc_Memory_Info_Extractor::Hwloc_Memory_Info_Extractor(){
         hwloc_topology_init(&topology);
-        hwloc_topology_set_flags(topology, HWLOC_TOPOLOGY_FLAG_WHOLE_IO);
+        hwloc_topology_set_flags(topology, HWLOC_TYPE_FILTER_KEEP_ALL);
         hwloc_topology_load(topology);
     }
 
